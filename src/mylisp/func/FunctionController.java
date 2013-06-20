@@ -25,6 +25,8 @@ public class FunctionController {
         funcMap.put("+", new AddFunction());
         funcMap.put("quote", new QuoteFunction());
         funcMap.put("cons", new ConsFunction());
+        funcMap.put("number?", new IsNumber());
+        funcMap.put("atom?", new IsAtom());
     }
     
     public Sexp exec(String func, Cell cell, Map<String, Sexp> env) throws FunctionException{
