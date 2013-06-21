@@ -19,7 +19,7 @@ public abstract class Atom implements Sexp {
         } else if (value instanceof Number) {
             return new AtomNumber((Number) value);
         } else {
-            return new AtomStr(value.toString());
+            return new AtomSymbol(value.toString());
         }
     }
 }

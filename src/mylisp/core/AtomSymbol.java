@@ -6,12 +6,12 @@ package mylisp.core;
  */
 
 /**
- * String Atim
+ * symbol Atim
  * @author mitsu
  */
-public class AtomStr extends Atom{
+public class AtomSymbol extends Atom{
     private String value;
-    AtomStr(String value){
+    AtomSymbol(String value){
         this.value = value;
     }
     

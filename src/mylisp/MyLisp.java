@@ -6,9 +6,9 @@ package mylisp;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
+import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 import mylisp.func.FunctionController;
 import mylisp.func.FunctionException;
@@ -19,11 +19,9 @@ import mylisp.func.FunctionException;
  * @author mitsu
  */
 public class MyLisp {
-
-    private Stack<Map<String, Sexp>> env_stack = new Stack<Map<String, Sexp>>();
+    private Map<String, Sexp> env = new HashMap<String, Sexp>();
 
     public MyLisp() {
-        env_stack.push(new HashMap<String, Sexp>());
     }
 
     public static void main(String[] args) {
@@ -118,6 +116,27 @@ public class MyLisp {
                     System.out.println(err.getMessage() + "    OK!");
                 }
             }
+            {//(define a (+ 100 20)) (+ a 200)
+                Cell cell = new Cell(Atom.newAtom("define"), Atom.newAtom("a"), new Cell(Atom.newAtom("+"), Atom.newAtom(100), Atom.newAtom(20)));
+                Cell cell2 = new Cell(Atom.newAtom("+"), Atom.newAtom("a"), Atom.newAtom(200));
+
+                System.out.println(lisp.eval(cell));
+                System.out.println(lisp.eval(cell2));
+            }
+            {//(define sub1 (lambda (n) (+ n 1))) (sub1 200)
+                Cell cell = new Cell(Atom.newAtom("define"), Atom.newAtom("sub1"), new Cell(Atom.newAtom("lambda"), new Cell(Atom.newAtom("n")), new Cell(Atom.newAtom("+"), Atom.newAtom("n"), Atom.newAtom(1))));
+                Cell cell2 = new Cell(Atom.newAtom("sub1"), Atom.newAtom(200));
+
+                System.out.println(lisp.eval(cell));
+                System.out.println(lisp.eval(cell2));
+            }
+            {//(define sub1 (n) (+ n 1)) (sub1 200)
+                Cell cell = new Cell(Atom.newAtom("define"), Atom.newAtom("sub1"), new Cell(Atom.newAtom("n")), new Cell(Atom.newAtom("+"), Atom.newAtom("n"), Atom.newAtom(1)));
+                Cell cell2 = new Cell(Atom.newAtom("sub1"), Atom.newAtom(200));
+
+                System.out.println(lisp.eval(cell));
+                System.out.println(lisp.eval(cell2));
+            }
         } catch (Exception err) {
             err.printStackTrace();
         }
@@ -131,14 +150,30 @@ public class MyLisp {
      */
     public Sexp eval(Sexp sexp) throws FunctionException {
         System.out.println("[eval] " + sexp.toString());
-        return MyLisp.eval(sexp, env_stack.peek());
+        return MyLisp.eval(sexp, env);
     }
 
     public static Sexp eval(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof Cell) {
-            //Apply は 遅延評価を実現するため各ファンクション内で実施する
-            ret = FunctionController.getInstance().exec(((Cell) sexp).getCar().toString(), (Cell) sexp, env);
+            Cell cell = (Cell) sexp;
+            Sexp car = apply(cell.getCar(), env);
+
+            if(car instanceof Lambda){
+                Lambda lambda = (Lambda)car;
+                Sexp[] keys = ((Cell)lambda.getCdr()[0]).getSexps();
+                Sexp[] value = cell.getCdr();
+                
+                Map<String, Sexp> cpEnv = new HashMap<String, Sexp>(env);
+                for(int i = 0 ; i < keys.length ; i++){
+                    cpEnv.put(keys[i].toString(), value[i]);
+                }
+                
+                ret = eval(lambda.getCdr()[1], cpEnv);
+            }else{
+                //Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
+                ret = FunctionController.getInstance().exec(car.toString(), cell, env);
+            }
         } else {
             ret = sexp;
         }
@@ -152,10 +187,14 @@ public class MyLisp {
             Sexp car = apply(cell.getCar(), env);
             Sexp[] cdr = cell.getCdr();
 
-            ret = eval(new Cell(car, cdr), env);
+            if (car.toString().equals("lambda")) {
+                ret = eval(new Lambda(car, cdr), env);
+            } else {
+                ret = eval(new Cell(car, cdr), env);
+            }
         } else {
             if (env.containsKey(sexp.toString())) {
-                ret = apply(env.get(sexp.toString()), env);
+                ret = env.get(sexp.toString());
             } else {
                 ret = sexp;
             }
