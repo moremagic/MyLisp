@@ -18,11 +18,11 @@ public class Lambda extends Cell{
         super(sexps);
     }
     
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("<#function ").append(getClass().getName()).append("@").append(Integer.toHexString(hashCode()));
-        sb.append(">");
-        return sb.toString();
-    }
+//    @Override
+//    public String toString(){
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("<#function ").append(getClass().getName()).append("@").append(Integer.toHexString(hashCode()));
+//        sb.append(">");
+//        return sb.toString();
+//    }
 }
