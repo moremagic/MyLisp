@@ -13,7 +13,7 @@ import mylisp.core.Sexp;
 
 /**
  * define Function
- * @author mitsu
+ * @author moremagic
  */
 public class DefineFunction implements IFunction{
     @Override

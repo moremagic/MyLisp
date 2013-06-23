@@ -14,7 +14,7 @@ import mylisp.core.Sexp;
 
 /**
  * +(Plus) Function
- * @author mitsu
+ * @author moremagic
  */
 public class AddFunction implements IFunction{
 

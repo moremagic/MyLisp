@@ -11,7 +11,7 @@ import mylisp.core.Sexp;
 
 /**
  * function callable class
- * @author mitsu
+ * @author moremagic
  */
 public class FunctionController {
     private static FunctionController instance = new FunctionController();    

@@ -7,7 +7,7 @@ package mylisp.core;
 
 /**
  * S exp Interface
- * @author mitsu
+ * @author moremagic
  */
 public interface Sexp{
     @Override

@@ -6,7 +6,7 @@ package mylisp.core;
 
 /**
  * boolean atom class
- * @author mitsu
+ * @author moremagic
  */
 public class AtomBoolean extends Atom{
     private boolean value;

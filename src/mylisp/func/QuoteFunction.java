@@ -10,7 +10,7 @@ import mylisp.core.Sexp;
 
 /**
  * '(quote) Function
- * @author mitsu
+ * @author moremagic
  */
 public class QuoteFunction implements IFunction{
     @Override

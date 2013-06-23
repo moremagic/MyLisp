@@ -12,7 +12,7 @@ import mylisp.core.Sexp;
 
 /**
  * number? class
- * @author mitsu
+ * @author moremagic
  */
 public class IsNumber implements IFunction{
 

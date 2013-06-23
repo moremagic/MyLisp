@@ -11,7 +11,7 @@ import mylisp.core.Sexp;
 
 /**
  * Function interface
- * @author mitsu
+ * @author moremagic
  */
 public interface IFunction {
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException;

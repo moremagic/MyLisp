@@ -7,7 +7,7 @@ package mylisp.core;
 
 /**
  * symbol Atim
- * @author mitsu
+ * @author moremagic
  */
 public class AtomSymbol extends Atom{
     private String value;

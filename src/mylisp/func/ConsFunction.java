@@ -10,7 +10,7 @@ import mylisp.core.Sexp;
 
 /**
  * cons Function
- * @author mitsu
+ * @author moremagic
  */
 public class ConsFunction implements IFunction{
     @Override

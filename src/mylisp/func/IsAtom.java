@@ -11,7 +11,7 @@ import mylisp.core.Sexp;
 
 /**
  * atom? class
- * @author mitsu
+ * @author moremagic
  */
 public class IsAtom implements IFunction{
 

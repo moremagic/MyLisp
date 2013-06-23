@@ -12,10 +12,10 @@ import mylisp.core.Sexp;
 import mylisp.func.FunctionController;
 import mylisp.func.FunctionException;
 
+
 /**
- * Application Top Class
- *
- * @author mitsu
+ * 
+ * @author moremagic
  */
 public class MyLisp {
 

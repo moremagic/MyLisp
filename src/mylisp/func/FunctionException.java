@@ -6,7 +6,7 @@ package mylisp.func;
 
 /**
  *
- * @author mitsu
+ * @author moremagic
  */
 public class FunctionException extends Exception{
     public FunctionException(String message){

@@ -7,7 +7,7 @@ package mylisp.core;
 
 /**
  * Cell
- * @author mitsu
+ * @author moremagic
  */
 public class Cell implements Sexp{
     Sexp[] sexps = null;

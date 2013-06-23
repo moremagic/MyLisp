@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author mitsu
+ * @author moremagic
  */
 public class AtomNumber extends Atom{
     private Number value;

@@ -13,8 +13,8 @@ import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- *
- * @author mitsu
+ * 
+ * @author moremagic
  */
 public class MyLispPerser {
 
@@ -72,9 +72,9 @@ public class MyLispPerser {
             }
 
             if (s.equals("(")) {
-                
+
                 //TODO: ここおかしい
-                
+
                 sexpList.add(parseCell(sCell.substring(i + 1, sCell.indexOf(")", i) + 1)));
                 i = sCell.indexOf(")", i);
             }

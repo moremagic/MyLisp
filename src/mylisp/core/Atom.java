@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * Atom class
  *
- * @author mitsu
+ * @author moremagic
  */
 public abstract class Atom implements Sexp {
 

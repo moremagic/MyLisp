@@ -7,7 +7,7 @@ package mylisp.core;
 
 /**
  * Cell
- * @author mitsu
+ * @author moremagic
  */
 public class Lambda extends Cell{
     public Lambda(Sexp car, Sexp[] cdr){
