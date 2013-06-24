@@ -25,29 +25,32 @@ public class MyLisp {
     }
 
     public static void main(String[] args) {
-
         String[] code = {
             "(1 2)",
             "(+ 1 2)",
             "(cons dog (cat tree))",
-            //"(cons dog cat tree)",
+            //"(cons dog cat tree)",//err
             "(quote (+ 1 2))",
             "(+ 1 2 3 4)",
             "(+ 1 2 3 4 (+ 1 2) (+ 1 1))",
-            //"(+ (quote (+ 1 2)) (+ 1 1))",
+            //"(+ (quote (+ 1 2)) (+ 1 1))",//err
             "(+ 1 2 3 4 (+ 1 2 (+ 1 1)))",
             "(number? 1)",
             "(number? aaa)",
-            //"(number? aaa bbb)",
+            //"(number? aaa bbb)",//err
             "(atom? (quote (+ 1 2)))",
             "(atom? 1)",
             "(atom? aaa)",
             "(atom? #f)",
-            //"(atom? aaa bbb)",
+            //"(atom? aaa bbb)",//err
             "(define a (+ 100 20)) (+ a 200)",
             "(define sub1 (lambda (n) (+ n 1))) (sub1 200)",
-            "(define sub1 (n) (+ n 1)) (sub1 200)"};
-
+            "(define sub1 (n) (+ n 1)) (sub1 200)",
+            "(null? (quote ()))",
+            "(null? (quote aaa))",
+            "(null? 0)",
+            "(defun factorial (n)  (if (< n 2)  1  (* n (factorial (- n 1)))))"
+                };        
 
         MyLisp lisp = new MyLisp();
         try {
