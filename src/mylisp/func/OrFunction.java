@@ -5,22 +5,26 @@
 package mylisp.func;
 
 import java.util.Map;
+import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- * atom? class
+ * or class
  * @author moremagic
  */
-public class IsAtom implements IFunction{
+public class OrFunction implements IFunction{
 
     @Override
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException("atom?: expects " + cell.getCdr().length + " argument");
+        for(Sexp sexp: cell.getCdr()){
+            Sexp sexp_apply = MyLisp.apply(sexp, env);
+            if(sexp_apply.toString().equals("#t")){
+                return Atom.newAtom("#t");
+            }
         }
-        return Atom.newAtom((cell.getCdr()[0] instanceof Atom)?"#t":"#f");
+        return Atom.newAtom("#f");
     }
     
 }
