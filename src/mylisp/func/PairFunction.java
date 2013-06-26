@@ -26,4 +26,9 @@ public class PairFunction implements IFunction{
         return (sexp instanceof Cell)?Atom.newAtom("#t"):Atom.newAtom("#f");
     }
     
+    @Override
+    public String functionSymbol() {
+        return "pair?";
+    }
+
 }

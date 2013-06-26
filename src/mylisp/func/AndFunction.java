@@ -27,4 +27,9 @@ public class AndFunction implements IFunction{
         return Atom.newAtom("#t");
     }
     
+    @Override
+    public String functionSymbol() {
+        return "and";
+    }
+
 }

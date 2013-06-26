@@ -38,13 +38,17 @@ public class AddFunction implements IFunction{
         Number ret;
         if(a instanceof Double && b instanceof Double){
              ret = (Double)a + (Double)b;
-        }else if(a instanceof Integer && a instanceof Integer){
+        }else if(a instanceof Integer && b instanceof Integer){
              ret = (Integer)a + (Integer)b;
         }else{
-            ret = new BigDecimal((Double)a).add(new BigDecimal((Double)b));
+            ret = new BigDecimal((double)a.doubleValue()).add(new BigDecimal((double)b.doubleValue()));
         }
     
         return ret;
     }
-    
+
+    @Override
+    public String functionSymbol() {
+        return "+";
+    }    
 }

@@ -17,4 +17,10 @@ public class QuoteFunction implements IFunction{
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException{
         return cell.getCdr()[0];
     }
+    
+    @Override
+    public String functionSymbol() {
+        return "quote";
+    }
+
 }

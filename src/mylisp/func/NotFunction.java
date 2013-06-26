@@ -26,4 +26,9 @@ public class NotFunction implements IFunction{
         return (sexp.toString().equals("#f"))?Atom.newAtom("#t"):Atom.newAtom("#f");
     }
     
+    @Override
+    public String functionSymbol() {
+        return "not";
+    }
+
 }

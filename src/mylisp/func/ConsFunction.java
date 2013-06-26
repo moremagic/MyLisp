@@ -28,4 +28,11 @@ public class ConsFunction implements IFunction{
         
         return new Cell(cell.getCdr()[0], cdr);
     }
+    
+    
+    @Override
+    public String functionSymbol() {
+        return "cons";
+    }
+
 }

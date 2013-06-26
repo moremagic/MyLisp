@@ -27,4 +27,9 @@ public class OrFunction implements IFunction{
         return Atom.newAtom("#f");
     }
     
+    @Override
+    public String functionSymbol() {
+        return "or";
+    }
+
 }

@@ -25,18 +25,25 @@ public class FunctionController {
     }
 
     private FunctionController() {
-        funcMap.put("and", new AndFunction());
-        funcMap.put("or", new OrFunction());
-        funcMap.put("not", new NotFunction());
-        funcMap.put("+", new AddFunction());
-        funcMap.put("-", new SubFunction());
-        funcMap.put("quote", new QuoteFunction());
-        funcMap.put("cons", new ConsFunction());
-        funcMap.put("define", new DefineFunction());
-        funcMap.put("number?", new IsNumber());
-        funcMap.put("null?", new IsNull());
-        funcMap.put("pair?", new PairFunction());
-
+        IFunction[] funcs = {
+            new AndFunction() ,
+            new OrFunction() ,
+            new NotFunction() ,
+            new AddFunction() ,
+            new SubFunction() ,
+            new QuoteFunction() ,
+            new ConsFunction() ,
+            new DefineFunction() ,
+            new IsNumber() ,
+            new IsNull() ,
+            new PairFunction() ,
+            new GThanFunction(),
+            new IFFunction()
+        };
+        
+        for(IFunction f: funcs){
+            funcMap.put(f.functionSymbol(), f);
+        }
     }
 
     public Sexp exec(String func, Cell cell, Map<String, Sexp> env) throws FunctionException {

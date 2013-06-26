@@ -30,4 +30,9 @@ public class DefineFunction implements IFunction{
         
         return env.get(cdrs[0].toString());
     }
+
+    @Override
+    public String functionSymbol() {
+        return "define";
+    }
 }

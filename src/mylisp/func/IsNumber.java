@@ -24,4 +24,9 @@ public class IsNumber implements IFunction{
         return Atom.newAtom((cell.getCdr()[0] instanceof AtomNumber)?"#t":"#f");
     }
     
+    @Override
+    public String functionSymbol() {
+        return "number?";
+    }
+
 }

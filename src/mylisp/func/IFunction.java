@@ -14,5 +14,6 @@ import mylisp.core.Sexp;
  * @author moremagic
  */
 public interface IFunction {
+    public String functionSymbol();
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException;
 }
