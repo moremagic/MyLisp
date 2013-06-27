@@ -12,9 +12,8 @@ import mylisp.core.Sexp;
 import mylisp.func.FunctionController;
 import mylisp.func.FunctionException;
 
-
 /**
- * 
+ *
  * @author moremagic
  */
 public class MyLisp {
@@ -54,8 +53,11 @@ public class MyLisp {
             "(define factorial (lambda (n) (if (< n 2) 1 (* n (factorial (- n 1))))))",
             "(factorial 900)",
             "(* 10 20)",
-            "((lambda (n) (+ 1 n)) 1)"
-        };        
+            "((lambda (n) (+ 1 n)) 1)",
+            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
+            "(define (lat? n) (cond ((atom? n) true)  ((null? n) true)  (else (and (atom? (car n))  (lat? (cdr n))))))",
+            "(lat? (quote (1 (3 4))))"
+        };
 
         MyLisp lisp = new MyLisp();
         try {
@@ -89,7 +91,8 @@ public class MyLisp {
         System.out.println("[eval] " + sexp.toString());
         return MyLisp.eval(sexp, env);
     }
-private static long nestcnt = 0;
+    private static long nestcnt = 0;
+
     public static Sexp eval(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof Cell) {
