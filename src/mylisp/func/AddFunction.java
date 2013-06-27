@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -36,12 +37,12 @@ public class AddFunction implements IFunction{
     
     private Number addNumber(Number a, Number b){
         Number ret;
-        if(a instanceof Double && b instanceof Double){
-             ret = (Double)a + (Double)b;
-        }else if(a instanceof Integer && b instanceof Integer){
-             ret = (Integer)a + (Integer)b;
-        }else{
-            ret = new BigDecimal((double)a.doubleValue()).add(new BigDecimal((double)b.doubleValue()));
+        if (a instanceof Integer && b instanceof Integer) {
+            ret = new BigInteger(((Integer) a).toString()).add(new BigInteger(((Integer) b).toString()));
+        } else {
+            BigDecimal ab = (a instanceof BigDecimal)?(BigDecimal)a:new BigDecimal((double) a.doubleValue());
+            BigDecimal bb = (b instanceof BigDecimal)?(BigDecimal)b:new BigDecimal((double) b.doubleValue());
+            ret = ab.add(bb);
         }
     
         return ret;

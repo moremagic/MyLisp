@@ -38,7 +38,8 @@ public class FunctionController {
             new IsNull() ,
             new PairFunction() ,
             new GThanFunction(),
-            new IFFunction()
+            new IFFunction(),
+            new MultiFunction()
         };
         
         for(IFunction f: funcs){

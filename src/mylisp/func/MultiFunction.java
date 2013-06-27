@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -13,11 +14,11 @@ import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- * -(subtract) Function
+ * *(multiply) Function
  *
  * @author moremagic
  */
-public class SubFunction implements IFunction {
+public class MultiFunction implements IFunction {
 
     @Override
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
@@ -29,7 +30,7 @@ public class SubFunction implements IFunction {
                 if (ret == null) {
                     ret = ((AtomNumber) buf).getValue();
                 } else {
-                    ret = subNumber(ret, ((AtomNumber) buf).getValue());
+                    ret = multiNumber(ret, ((AtomNumber) buf).getValue());
                 }
             } else {
                 throw new FunctionException("reference to undefined identifier: " + buf.toString());
@@ -39,14 +40,14 @@ public class SubFunction implements IFunction {
         return Atom.newAtom(ret);
     }
 
-    private Number subNumber(Number a, Number b) {
+    private Number multiNumber(Number a, Number b) {
         Number ret;
-        if (a instanceof Double && b instanceof Double) {
-            ret = (Double) a - (Double) b;
-        } else if (a instanceof Integer && b instanceof Integer) {
-            ret = (Integer) a - (Integer) b;
+        if (a instanceof Integer && b instanceof Integer) {
+            ret = new BigInteger(((Integer) a).toString()).multiply(new BigInteger(((Integer) b).toString()));
         } else {
-            ret = new BigDecimal((double) a.doubleValue()).subtract(new BigDecimal((double) b.doubleValue()));
+            BigDecimal ab = (a instanceof BigDecimal)?(BigDecimal)a:new BigDecimal((double) a.doubleValue());
+            BigDecimal bb = (b instanceof BigDecimal)?(BigDecimal)b:new BigDecimal((double) b.doubleValue());
+            ret = ab.multiply(bb);
         }
 
         return ret;
@@ -54,6 +55,6 @@ public class SubFunction implements IFunction {
 
     @Override
     public String functionSymbol() {
-        return "-";
+        return "*";
     }
 }
