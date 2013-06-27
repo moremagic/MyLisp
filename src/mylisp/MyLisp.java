@@ -26,35 +26,35 @@ public class MyLisp {
 
     public static void main(String[] args) {
         String[] code = {
-//            //"(1 2)",;err
-//            "(+ 1 2.012)",
-//            "(cons dog (cat tree))",
-//            //"(cons dog cat tree)",//err
-//            "(quote (+ 1 2))",
-//            "(+ 1 2 3 4.10)",
-//            "(+ 1 2 3 4 (+ 1 2) (+ 1 1))",
-//            //"(+ (quote (+ 1 2)) (+ 1 1))",//err
-//            "(+ 1 2 3 4 (+ 1 2 (+ 1 1)))",
-//            "(number? 1)",
-//            //"(number? aaa)",err
-//            //"(number? aaa bbb)",//err
-//            "(define a (+ 100 20)) (+ a 200)",
-//            "(define sub1 (lambda (n) (+ n 1))) (sub1 200)",
-//            "(define sub1 (n) (+ n 1)) (sub1 200)",
-//            "(null? (quote ()))",
-//            "(null? (quote aaa))",
-//            "(null? 0)",
-//            "(and #f #t (null? ()))",
-//            "(or #t (+ a b))",
-//            "(not (+ 1 2))",
-//            "(pair? (quote (1 2 3)))",
-//            "(> 2.12 2.1)",
-//            "(- 10 0.0001)",
+            //"(1 2)",;err
+            "(+ 1 2.012)",
+            "(cons dog (cat tree))",
+            //"(cons dog cat tree)",//err
+            "(quote (+ 1 2))",
+            "(+ 1 2 3 4.10)",
+            "(+ 1 2 3 4 (+ 1 2) (+ 1 1))",
+            //"(+ (quote (+ 1 2)) (+ 1 1))",//err
+            "(+ 1 2 3 4 (+ 1 2 (+ 1 1)))",
+            "(number? 1)",
+            //"(number? aaa)",err
+            //"(number? aaa bbb)",//err
+            "(define a (+ 100 20)) (+ a 200)",
+            "(define sub1 (lambda (n) (+ n 1))) (sub1 200)",
+            "(define sub1 (n) (+ n 1)) (sub1 200)",
+            "(null? (quote ()))",
+            "(null? (quote aaa))",
+            "(null? 0)",
+            "(and #f #t (null? ()))",
+            "(or #t (+ a b))",
+            "(not (+ 1 2))",
+            "(pair? (quote (1 2 3)))",
+            "(> 2.12 2.1)",
+            "(- 10 0.0001)",
             "(define < (a m) (> m a)))",
             "(define factorial (lambda (n) (if (< n 2) 1 (* n (factorial (- n 1))))))",
-            "(factorial 900)"
-//            "(* 10 20)",
- //           "((lambda (n) (+ 1 n)) 1)"
+            "(factorial 900)",
+            "(* 10 20)",
+            "((lambda (n) (+ 1 n)) 1)"
         };        
 
         MyLisp lisp = new MyLisp();
