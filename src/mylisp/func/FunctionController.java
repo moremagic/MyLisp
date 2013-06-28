@@ -7,8 +7,6 @@ package mylisp.func;
 import java.util.HashMap;
 import java.util.Map;
 import mylisp.MyLisp;
-import static mylisp.MyLisp.apply;
-import static mylisp.MyLisp.eval;
 import mylisp.core.Cell;
 import mylisp.core.Lambda;
 import mylisp.core.Sexp;
@@ -59,10 +57,10 @@ public class FunctionController {
 
             Map<String, Sexp> cpEnv = new HashMap<String, Sexp>(env);
             for (int i = 0; i < keys.length; i++) {
-                cpEnv.put(keys[i].toString(), apply(value[i], env));
+                cpEnv.put(keys[i].toString(), MyLisp.apply(value[i], env));
             }
 
-            return eval(lambda.getCdr()[1], cpEnv);
+            return MyLisp.eval(lambda.getCdr()[1], cpEnv);
         } else if (funcMap.containsKey(func.toString())) {
             return funcMap.get(func.toString()).eval(cell, env);
         } else if (cell instanceof Lambda) {
