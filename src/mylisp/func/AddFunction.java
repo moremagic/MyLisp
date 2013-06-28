@@ -15,41 +15,42 @@ import mylisp.core.Sexp;
 
 /**
  * +(Plus) Function
+ *
  * @author moremagic
  */
-public class AddFunction implements IFunction{
+public class AddFunction implements IFunction {
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException{
+    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
         Number ret = 0;
-        for(Sexp s: cell.getCdr()){            
+        for (Sexp s : cell.getCdr()) {
             Sexp buf = MyLisp.apply(s, env);
-            
-            if(buf instanceof AtomNumber){
-                ret = addNumber(ret, ((AtomNumber)buf).getValue());
-            }else{
+
+            if (buf instanceof AtomNumber) {
+                ret = addNumber(ret, ((AtomNumber) buf).getValue());
+            } else {
                 throw new FunctionException("reference to undefined identifier: " + buf.toString());
             }
         }
-        
+
         return Atom.newAtom(ret);
     }
-    
-    private Number addNumber(Number a, Number b){
+
+    private Number addNumber(Number a, Number b) {
         Number ret;
         if (a instanceof Integer && b instanceof Integer) {
             ret = new BigInteger(((Integer) a).toString()).add(new BigInteger(((Integer) b).toString()));
         } else {
-            BigDecimal ab = (a instanceof BigDecimal)?(BigDecimal)a:new BigDecimal((double) a.doubleValue());
-            BigDecimal bb = (b instanceof BigDecimal)?(BigDecimal)b:new BigDecimal((double) b.doubleValue());
+            BigDecimal ab = (a instanceof BigDecimal) ? (BigDecimal) a : new BigDecimal((double) a.doubleValue());
+            BigDecimal bb = (b instanceof BigDecimal) ? (BigDecimal) b : new BigDecimal((double) b.doubleValue());
             ret = ab.add(bb);
         }
-    
+
         return ret;
     }
 
     @Override
     public String functionSymbol() {
         return "+";
-    }    
+    }
 }

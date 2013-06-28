@@ -6,7 +6,6 @@ package mylisp.func;
 
 import java.util.Map;
 import mylisp.MyLisp;
-import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
@@ -25,7 +24,8 @@ public class IFFunction implements IFunction{
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
         if(sexp instanceof AtomBoolean && sexp.toString().equals("#f")){
-            return MyLisp.eval(cell.getCdr()[2], env);
+            MyLisp.tailCall = true;
+            return cell.getCdr()[2];
         }else{
             return MyLisp.eval(cell.getCdr()[1], env);
         }

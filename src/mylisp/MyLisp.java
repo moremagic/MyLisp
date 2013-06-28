@@ -17,7 +17,9 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class MyLisp {
+    //末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする
 
+    public static boolean tailCall = false;
     private Map<String, Sexp> env = new HashMap<String, Sexp>();
 
     public MyLisp() {
@@ -49,14 +51,15 @@ public class MyLisp {
             "(pair? (quote (1 2 3)))",
             "(> 2.12 2.1)",
             "(- 10 0.0001)",
-            "(define < (a m) (> m a)))",
-            "(define factorial (lambda (n) (if (< n 2) 1 (* n (factorial (- n 1))))))",
-            "(factorial 900)",
-            "(* 10 20)",
-            "((lambda (n) (+ 1 n)) 1)",
-            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
-            "(define (lat? n) (cond ((atom? n) true)  ((null? n) true)  (else (and (atom? (car n))  (lat? (cdr n))))))",
-            "(lat? (quote (1 (3 4))))"
+            "(define < (lambda (a m) (> m a)))",
+            "(define factorial (lambda (n m) (if (< n 1) m (factorial (- n 1) (* n m)))))",
+            "(factorial 2800 1)",
+//            "(define factorial2 (lambda (n) (if (< n 1) 1 (* n (factorial2 (- n 1))))))",
+//            "(factorial2 2000)", //            "(* 10 20)",
+//            "((lambda (n) (+ 1 n)) 1)",
+//            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
+//            "(define (lat? n) (cond ((atom? n) true)  ((null? n) true)  (else (and (atom? (car n))  (lat? (cdr n))))))",
+//            "(lat? (quote (1 (3 4))))"
         };
 
         MyLisp lisp = new MyLisp();
@@ -71,7 +74,6 @@ public class MyLisp {
     }
 
     /**
-     *
      * @param sexp
      * @return
      * @throws FunctionException
@@ -91,7 +93,6 @@ public class MyLisp {
         System.out.println("[eval] " + sexp.toString());
         return MyLisp.eval(sexp, env);
     }
-    private static long nestcnt = 0;
 
     public static Sexp eval(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
         Sexp ret;
@@ -99,24 +100,18 @@ public class MyLisp {
             Cell cell = (Cell) sexp;
             Sexp car = apply(cell.getCar(), env);
 
-            if (car instanceof Lambda) {
-                Lambda lambda = (Lambda) car;
-                Sexp[] keys = ((Cell) lambda.getCdr()[0]).getSexps();
-                Sexp[] value = cell.getCdr();
-
-                Map<String, Sexp> cpEnv = new HashMap<String, Sexp>(env);
-                for (int i = 0; i < keys.length; i++) {
-                    cpEnv.put(keys[i].toString(), apply(value[i], env));
-                }
-
-                ret = eval(lambda.getCdr()[1], cpEnv);
-            } else {
-                //Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
-                ret = FunctionController.getInstance().exec(car.toString(), cell, env);
-            }
+            //Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
+            ret = FunctionController.getInstance().exec(car, cell, env);
         } else {
-            ret = sexp;
+            ret = apply(sexp, env);
         }
+
+        //末尾最適化のための再評価:うまく動いていない。。＞＜；
+        if (tailCall) {
+            tailCall = false;
+            ret = eval(ret, env);
+        }
+
         return ret;
     }
 
@@ -124,7 +119,8 @@ public class MyLisp {
         Sexp ret;
         if (sexp instanceof Cell) {
             Cell cell = (Cell) sexp;
-            Sexp car = apply(cell.getCar(), env);
+            //Sexp car = apply(cell.getCar(), env);
+            Sexp car = cell.getCar();
             Sexp[] cdr = cell.getCdr();
 
             if (car.toString().equals("lambda")) {
@@ -134,7 +130,7 @@ public class MyLisp {
             }
         } else {
             if (env.containsKey(sexp.toString())) {
-                ret = apply(env.get(sexp.toString()), env);
+                ret = env.get(sexp.toString());
             } else {
                 ret = sexp;
             }
