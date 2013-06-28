@@ -17,8 +17,7 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class MyLisp {
-    //末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする
-
+    /** 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする **/
     public static boolean tailCall = false;
     private Map<String, Sexp> env = new HashMap<String, Sexp>();
 
@@ -119,7 +118,6 @@ public class MyLisp {
         Sexp ret;
         if (sexp instanceof Cell) {
             Cell cell = (Cell) sexp;
-            //Sexp car = apply(cell.getCar(), env);
             Sexp car = cell.getCar();
             Sexp[] cdr = cell.getCdr();
 
