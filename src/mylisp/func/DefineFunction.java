@@ -20,7 +20,7 @@ public class DefineFunction implements IFunction{
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException{        
         Sexp[] cdrs = cell.getCdr();
         if(cdrs.length == 2){
-            env.put(cdrs[0].toString(), MyLisp.apply((Cell)cdrs[1], env));
+            env.put(cdrs[0].toString(), MyLisp.apply(cdrs[1], env));
         }else if(cdrs.length == 3){
             //構文糖衣 Function の Lambda化
             env.put(cdrs[0].toString(), new Lambda(Atom.newAtom("lambda"), cdrs[1], cdrs[2]));

@@ -17,10 +17,10 @@ import mylisp.core.Sexp;
  * @author moremagic
  */
 public class MyLispPerser {
-    
+
     public static void main(String[] argv) {
         try {
-            Sexp[] ss = parses("(null? (quote ()))");
+            Sexp[] ss = parses("(null? (quote ()));asdf()\n();asdfasd");
             //Sexp[] ss = parses("(lambda (n) (+ n 1))");
             for (Sexp s : ss) {
                 System.out.println(s);
@@ -29,35 +29,46 @@ public class MyLispPerser {
             Logger.getLogger(MyLispPerser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static Sexp[] parses(String sExps) throws ParseException {
+        //改行とコメント行の削除
+        StringBuilder sb = new StringBuilder();
+        for (String line : sExps.split("\n")) {
+            if (line.indexOf(";") == -1) {
+                sb.append(line);
+            } else {
+                sb.append(line.substring(0, line.indexOf(";")));
+            }
+        }
+
+        String ss = sb.toString();
         List<Sexp> ret = new ArrayList<Sexp>();
-        
+
         int kakkoCnt = 0;
         int startIdx = 0;
-        for (int i = 0; i < sExps.length(); i++) {
-            String s = sExps.substring(i, i + 1);
+        for (int i = 0; i < ss.length(); i++) {
+            String s = ss.substring(i, i + 1);
             if (s.equals("(")) {
                 kakkoCnt++;
             }
             if (s.equals(")")) {
                 kakkoCnt--;
             }
-            
+
             if (i != 0 && kakkoCnt == 0 && !s.equals(" ")) {
-                ret.add(parse(sExps.substring(startIdx, i + 1)));
+                ret.add(parse(ss.substring(startIdx, i + 1)));
                 startIdx = i + 1;
             }
         }
-        
+
         return ret.toArray(new Sexp[0]);
     }
-    
+
     public static Sexp parse(String sExps) throws ParseException {
         sExps = sExps.trim();
         return parseCell(sExps);
     }
-    
+
     private static Cell parseCell(String sCell) throws ParseException {
         // ( .... ) の中をパースします
         List<Sexp> sexpList = new ArrayList<Sexp>();
@@ -74,10 +85,10 @@ public class MyLispPerser {
             } else if (s.equals("(")) {
                 String cellStr = getCellStr(sCell.substring(i));
                 sexpList.add(parseCell(cellStr));
-                
+
                 i += cellStr.length() - 1;
             }
-            
+
             if (s.equals(")") || i == sCell.length() - 2) {
                 if (atom.length() != 0) {
                     sexpList.add(Atom.newAtom(atom.toString()));
@@ -92,28 +103,33 @@ public class MyLispPerser {
             throw new ParseException("Parse Error!");
         }
     }
-    
-    private static String getCellStr(String sexpStr) {
+
+    public static String getCellStr(String sexpStr) {
         int kakkoCnt = 0;
-        
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < sexpStr.length(); i++) {
             String s = sexpStr.substring(i, i + 1);
             sb.append(s);
-            
+
             if (s.equals("(")) {
                 kakkoCnt++;
             } else if (s.equals(")")) {
                 kakkoCnt--;
             }
-            
+
             if (i != 0 && kakkoCnt == 0) {
                 break;
             }
         }
+
+        if (!(sb.toString().startsWith("(") && sb.toString().endsWith(")"))) {
+            sb.setLength(0);
+        }
+
         return sb.toString();
     }
-    
+
     public static class ParseException extends Exception {
 
         public ParseException(String message) {

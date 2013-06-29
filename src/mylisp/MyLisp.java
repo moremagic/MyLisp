@@ -4,8 +4,15 @@
  */
 package mylisp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mylisp.core.Cell;
 import mylisp.core.Lambda;
 import mylisp.core.Sexp;
@@ -17,7 +24,9 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class MyLisp {
-    /** 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする **/
+    /**
+     * 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする *
+     */
     public static boolean tailCall = false;
     private Map<String, Sexp> env = new HashMap<String, Sexp>();
 
@@ -25,50 +34,75 @@ public class MyLisp {
     }
 
     public static void main(String[] args) {
-        String[] code = {
-            //"(1 2)",;err
-            "(+ 1 2.012)",
-            "(cons dog (cat tree))",
-            //"(cons dog cat tree)",//err
-            "(quote (+ 1 2))",
-            "(+ 1 2 3 4.10)",
-            "(+ 1 2 3 4 (+ 1 2) (+ 1 1))",
-            //"(+ (quote (+ 1 2)) (+ 1 1))",//err
-            "(+ 1 2 3 4 (+ 1 2 (+ 1 1)))",
-            "(number? 1)",
-            //"(number? aaa)",err
-            //"(number? aaa bbb)",//err
-            "(define a (+ 100 20)) (+ a 200)",
-            "(define sub1 (lambda (n) (+ n 1))) (sub1 200)",
-            "(define sub1 (n) (+ n 1)) (sub1 200)",
-            "(null? (quote ()))",
-            "(null? (quote aaa))",
-            "(null? 0)",
-            "(and #f #t (null? ()))",
-            "(or #t (+ a b))",
-            "(not (+ 1 2))",
-            "(pair? (quote (1 2 3)))",
-            "(> 2.12 2.1)",
-            "(- 10 0.0001)",
-            "(define < (lambda (a m) (> m a)))",
-            "(define factorial (lambda (n m) (if (< n 1) m (factorial (- n 1) (* n m)))))",
-            "(factorial 2800 1)",
-//            "(define factorial2 (lambda (n) (if (< n 1) 1 (* n (factorial2 (- n 1))))))",
-//            "(factorial2 2000)", //            "(* 10 20)",
-//            "((lambda (n) (+ 1 n)) 1)",
-//            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
-//            "(define (lat? n) (cond ((atom? n) true)  ((null? n) true)  (else (and (atom? (car n))  (lat? (cdr n))))))",
-//            "(lat? (quote (1 (3 4))))"
-        };
+        if(args.length == 0){
+            callREPL();
+        }else{
+            File f = new File(args[0]);
+            if(f.exists()){
+                callEvalFile(f);
+            }else{
+                printUsage();
+            }
+        }
+    }
 
+    public static void printUsage(){
+        System.out.println("usage: file");
+    }
+    
+    public static void callEvalFile(File file) {
         MyLisp lisp = new MyLisp();
         try {
-            for (String s : code) {
-                System.out.println(s);
-                lisp.evals(s);
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                lisp.evals(sb.toString());
+            } finally {
+                if (br != null) {
+                    br.close();
+                }
             }
-        } catch (Exception err) {
-            err.printStackTrace();
+        } catch (FunctionException ex) {
+            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MyLispPerser.ParseException ex) {
+            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void callREPL() {
+        MyLisp lisp = new MyLisp();
+        try {
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new InputStreamReader(System.in));
+
+                String line;
+                System.out.print("MyLisp > ");
+                while ((line = br.readLine()) != null) {
+                    try {
+                        lisp.evals(line);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    System.out.print("MyLisp > ");
+                }
+            } finally {
+                if (br != null) {
+                    br.close();
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

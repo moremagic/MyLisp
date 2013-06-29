@@ -27,6 +27,8 @@ public class FunctionController {
 
     private FunctionController() {
         IFunction[] funcs = {
+            new CarFunction(),
+            new CdrFunction(),
             new AndFunction(),
             new OrFunction(),
             new NotFunction(),
