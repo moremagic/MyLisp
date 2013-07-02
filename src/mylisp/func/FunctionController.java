@@ -27,6 +27,7 @@ public class FunctionController {
 
     private FunctionController() {
         IFunction[] funcs = {
+            new EnvPrintFunction(),//debug-function
             new CarFunction(),
             new CdrFunction(),
             new AndFunction(),
@@ -42,6 +43,7 @@ public class FunctionController {
             new PairFunction(),
             new GThanFunction(),
             new IFFunction(),
+            new CondFunction(),
             new MultiFunction()
         };
 

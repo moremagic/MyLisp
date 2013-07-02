@@ -33,13 +33,15 @@ public class MyLisp {
     public MyLisp() {
     }
 
-    public static void main(String[] args) {   
+    public static void main(String[] args) {
+        MyLisp lisp = new MyLisp();
         if(args.length == 0){
-            callREPL();
+            lisp.callREPL();
         }else{
             File f = new File(args[0]);
             if(f.exists()){
-                callEvalFile(f);
+                lisp.callEvalFile(f);
+                lisp.callREPL();
             }else{
                 printUsage();
             }
@@ -50,8 +52,7 @@ public class MyLisp {
         System.out.println("usage: file");
     }
     
-    public static void callEvalFile(File file) {
-        MyLisp lisp = new MyLisp();
+    public void callEvalFile(File file) {
         try {
             BufferedReader br = null;
             try {
@@ -60,10 +61,10 @@ public class MyLisp {
 
                 String line;
                 while ((line = br.readLine()) != null) {
-                    sb.append(line);
+                    sb.append(line).append("\n");
                 }
 
-                lisp.evals(sb.toString());
+                evals(sb.toString());
             } finally {
                 if (br != null) {
                     br.close();
@@ -78,8 +79,7 @@ public class MyLisp {
         }
     }
 
-    public static void callREPL() {
-        MyLisp lisp = new MyLisp();
+    public void callREPL() {
         try {
             BufferedReader br = null;
             try {
@@ -89,7 +89,7 @@ public class MyLisp {
                 System.out.print("MyLisp > ");
                 while ((line = br.readLine()) != null) {
                     try {
-                        lisp.evals(line);
+                        evals(line);
                     } catch (Exception ex) {
                         Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -113,7 +113,11 @@ public class MyLisp {
      */
     public void evals(String sexps) throws FunctionException, MyLispPerser.ParseException {
         for (Sexp sexp : MyLispPerser.parses(sexps)) {
-            System.out.println(">> " + eval(sexp));
+            try{
+                System.out.println(">> " + eval(sexp));
+            }catch(Exception err){
+                err.printStackTrace();
+            }
         }
     }
 
