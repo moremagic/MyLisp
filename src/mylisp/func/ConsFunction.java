@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.util.Map;
+import mylisp.MyLisp;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -19,14 +20,15 @@ public class ConsFunction implements IFunction{
             throw new FunctionException("cons: expects 2 arguments");
         }
         
-        Sexp[] cdr;
-        if(cell.getCdr()[1] instanceof Cell){
-            cdr = ((Cell)cell.getCdr()[1]).getSexps();
+        Sexp cdr = MyLisp.apply(cell.getCdr()[1], env);
+        Sexp[] cdrs;
+        if(cdr instanceof Cell){
+            cdrs = ((Cell)cdr).getSexps();
         }else{
-            cdr = new Sexp[]{cell.getCdr()[1]};
+            cdrs = new Sexp[]{cdr};
         }
-        
-        return new Cell(cell.getCdr()[0], cdr);
+
+        return new Cell(MyLisp.apply(cell.getCdr()[0], env), cdrs);
     }
     
     
