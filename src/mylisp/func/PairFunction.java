@@ -23,7 +23,7 @@ public class PairFunction implements IFunction{
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return (sexp instanceof Cell)?Atom.newAtom("#t"):Atom.newAtom("#f");
+        return Atom.newAtom(sexp instanceof Cell);
     }
     
     @Override

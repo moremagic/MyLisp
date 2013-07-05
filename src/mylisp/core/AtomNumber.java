@@ -30,4 +30,13 @@ public class AtomNumber extends Atom{
             return value.toString();
         }
     }
+
+    @Override
+    public boolean equalAtom(Atom atom) {
+        if(atom instanceof AtomNumber){
+            return ((AtomNumber)atom).value == value;
+        }else{
+            return false;
+        }
+    }
 }

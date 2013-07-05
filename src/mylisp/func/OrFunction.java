@@ -7,6 +7,7 @@ package mylisp.func;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
+import mylisp.core.AtomBoolean;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -20,11 +21,11 @@ public class OrFunction implements IFunction{
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
         for(Sexp sexp: cell.getCdr()){
             Sexp sexp_apply = MyLisp.apply(sexp, env);
-            if(sexp_apply.toString().equals("#t")){
-                return Atom.newAtom("#t");
+            if(sexp_apply.toString().equals(AtomBoolean.T)){
+                return Atom.newAtom(AtomBoolean.T);
             }
         }
-        return Atom.newAtom("#f");
+        return Atom.newAtom(AtomBoolean.F);
     }
     
     @Override

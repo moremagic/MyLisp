@@ -9,18 +9,37 @@ package mylisp.core;
  * @author moremagic
  */
 public class AtomBoolean extends Atom{
-    private boolean value;
+    public static String T = "#t";
+    public static String F = "#f";
+    public static AtomBoolean AtomTrue = new AtomBoolean(T);
+    public static AtomBoolean AtomFalse = new AtomBoolean(F);
+
     
-    AtomBoolean(String value){
-        this.value = value.equals("#t")?true:false;
+    private boolean value;
+    private AtomBoolean(String value){
+        this.value = value.equals(T)?true:false;
+    }
+ 
+    public static AtomBoolean createAtomBoolean(boolean b){
+        return b?AtomTrue:AtomFalse;
     }
     
     @Override
     public Object getValue() {
-        return value?"#t":"#f";
+        return value?T:F;
     }
     
     public String toString(){
-        return value?"#t":"#f";
+        return value?T:F;
     }    
+
+    @Override
+    public boolean equalAtom(Atom atom) {
+        if(atom instanceof AtomBoolean){
+            return ((AtomBoolean)atom).value == value;
+        }else{
+            return false;
+        }
+    }
+
 }

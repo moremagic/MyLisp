@@ -25,4 +25,12 @@ public class AtomSymbol extends Atom{
         return value;
     }
     
+    @Override
+    public boolean equalAtom(Atom atom) {
+        if(atom instanceof AtomSymbol){
+            return ((AtomSymbol)atom).value.equals(value);
+        }else{
+            return false;
+        }
+    }
 }

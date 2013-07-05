@@ -7,6 +7,7 @@ package mylisp.func;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
+import mylisp.core.AtomBoolean;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -23,7 +24,7 @@ public class NotFunction implements IFunction{
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return (sexp.toString().equals("#f"))?Atom.newAtom("#t"):Atom.newAtom("#f");
+        return Atom.newAtom(sexp.toString().equals(AtomBoolean.F));
     }
     
     @Override

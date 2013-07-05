@@ -25,9 +25,9 @@ public class IsNull implements IFunction{
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
         if(sexp instanceof Cell){
             Cell cc = (Cell)sexp;
-            return Atom.newAtom(cc.getSexps().length == 0?"#t":"#f");
+            return Atom.newAtom(cc.getSexps().length == 0);
         }else{
-            return Atom.newAtom(sexp.toString().isEmpty()?"#t":"#f");
+            return Atom.newAtom(sexp.toString().isEmpty());
         }
     }
     

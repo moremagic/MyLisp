@@ -23,7 +23,7 @@ public class IFFunction implements IFunction{
         } 
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        if(sexp instanceof AtomBoolean && sexp.toString().equals("#f")){
+        if(sexp instanceof AtomBoolean && sexp.toString().equals(AtomBoolean.F)){
             MyLisp.tailCall = true;
             return cell.getCdr()[2];
         }else{

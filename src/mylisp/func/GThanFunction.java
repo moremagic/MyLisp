@@ -28,7 +28,7 @@ public class GThanFunction implements IFunction {
         Sexp sexp_apply1 = MyLisp.apply(cell.getCdr()[0], env);
         Sexp sexp_apply2 = MyLisp.apply(cell.getCdr()[1], env);
         if (sexp_apply1 instanceof AtomNumber && sexp_apply2 instanceof AtomNumber) {
-            return Atom.newAtom((greaterThanNumber(((AtomNumber) sexp_apply1).getValue(), ((AtomNumber) sexp_apply2).getValue())) ? "#t" : "#f");
+            return Atom.newAtom(greaterThanNumber(((AtomNumber) sexp_apply1).getValue(), ((AtomNumber) sexp_apply2).getValue()));
         } else {
             throw new FunctionException("reference to undefined identifier:");
         }

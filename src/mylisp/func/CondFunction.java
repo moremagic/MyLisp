@@ -26,11 +26,11 @@ public class CondFunction implements IFunction {
             if (cdr instanceof Cell) {
                 Cell ccc = (Cell) cdr;
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
-                if (cccCar instanceof AtomBoolean && !cccCar.toString().equals("#f")) {
-                    if (ccc.getCdr().length == 0) {
+                if (!cccCar.toString().equals(AtomBoolean.F)) {
+                    if (ccc.getCdr().length == 1) {
                         ret = MyLisp.apply(cccCar, env);
                         break;
-                    } else if (ccc.getCdr().length == 1) {
+                    } else if (ccc.getCdr().length == 2) {
                         ret = MyLisp.apply(ccc.getCdr()[0], env);
                         break;
                     } else {
@@ -39,8 +39,8 @@ public class CondFunction implements IFunction {
                 } else if (i == cell.getCdr().length - 1) {
                     if (ccc.getCar().toString().equals("else")) {
                         ret = MyLisp.apply(ccc.getCdr()[0], env);
-                    } else if (!cccCar.toString().equals("#f")) {
-                        if (ccc.getCdr().length != 0 && !cccCar.toString().equals("#f")) {
+                    } else if (!cccCar.toString().equals(AtomBoolean.F)) {
+                        if (ccc.getCdr().length != 0 && !cccCar.toString().equals(AtomBoolean.F)) {
                             ret = MyLisp.apply(ccc.getCdr()[0], env);
                         } else {
                             ret = MyLisp.apply(cccCar, env);

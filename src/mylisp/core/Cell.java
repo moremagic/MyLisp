@@ -10,7 +10,6 @@ package mylisp.core;
  * @author moremagic
  */
 public class Cell implements Sexp {
-
     Sexp[] sexps = null;
 
     public Cell(Sexp car, Sexp[] cdr) {

@@ -20,8 +20,10 @@ public abstract class Atom implements Sexp {
     public abstract Object getValue();
 
     public static Atom newAtom(Object value) {
-        if (value.toString().equals("#t") || value.toString().equals("#f")) {
-            return new AtomBoolean(value.toString());
+        if (value instanceof Boolean){
+            return AtomBoolean.createAtomBoolean(((Boolean)value).booleanValue());
+        }else if (value.toString().equals(AtomBoolean.T) || value.toString().equals(AtomBoolean.F)) {
+            return AtomBoolean.createAtomBoolean(value.toString().equals(AtomBoolean.T));
         } else if (value instanceof Number) {
             return new AtomNumber((Number) value);
         } else {
@@ -44,13 +46,17 @@ public abstract class Atom implements Sexp {
                     return new Integer(s);
                 }
             } catch (NumberFormatException err) {
-            }
-            try {
                 return new BigDecimal(new Double(s));
-            } catch (NumberFormatException err) {
             }
         }
 
         return null;
     }
+    
+    /**
+     * Atom Equrls
+     * @param atom
+     * @return
+     */
+    abstract public boolean equalAtom(Atom atom);
 }

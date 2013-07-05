@@ -21,7 +21,7 @@ public class IsNumber implements IFunction{
         if(cell.getCdr().length != 1){
             throw new FunctionException("number?: expects " + cell.getCdr().length + " argument");
         }
-        return Atom.newAtom((cell.getCdr()[0] instanceof AtomNumber)?"#t":"#f");
+        return Atom.newAtom(cell.getCdr()[0] instanceof AtomNumber);
     }
     
     @Override
