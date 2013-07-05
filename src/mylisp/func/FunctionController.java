@@ -44,7 +44,8 @@ public class FunctionController {
             new GThanFunction(),
             new IFFunction(),
             new CondFunction(),
-            new MultiFunction()
+            new MultiFunction(),
+            new EqurlFunction()
         };
 
         for (IFunction f : funcs) {
@@ -59,8 +60,13 @@ public class FunctionController {
             Sexp[] keys = ((Cell) lambda.getCdr()[0]).getSexps();
             Sexp[] value = cell.getCdr();
 
+            if(keys.length != value.length){
+                System.out.println("Err?");
+            }
+            
             Map<String, Sexp> cpEnv = new HashMap<String, Sexp>(env);
             for (int i = 0; i < keys.length; i++) {
+                System.out.println(keys[i].toString() + " ; " + MyLisp.apply(value[i], env));
                 cpEnv.put(keys[i].toString(), MyLisp.apply(value[i], env));
             }
 

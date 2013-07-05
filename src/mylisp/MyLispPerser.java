@@ -20,8 +20,11 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         try {
+
+            Sexp[] ss = parses("(('()) c)");
+
             //Sexp[] ss = parses("(lat? '(1 (3 4)))");
-            Sexp[] ss = parses("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
+            //Sexp[] ss = parses("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
             for (Sexp s : ss) {
                 System.out.println(s);
             }
@@ -31,7 +34,7 @@ public class MyLispPerser {
     }
 
     /**
-     * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う
+     * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う 不要な二文字以上の空白を削除する
      *
      * @param sExps
      * @return
@@ -48,7 +51,9 @@ public class MyLispPerser {
             }
         }
 
-        String ss = sb.toString();
+        //不要な二文字以上の空白を削除する
+        String ss = sb.toString().replaceAll("\\s\\s+", " ");
+
         List<Sexp> ret = new ArrayList<Sexp>();
         if (ss.startsWith("(")) {
             //Cellだった場合、1つのCellを取り出してパースを行う
@@ -121,22 +126,24 @@ public class MyLispPerser {
      * @throws mylisp.MyLispPerser.ParseException
      */
     private static Cell parseCell(String sCell) {
-        // ( .... ) の中をパースします
+        // ( .... ) の中をパースします    
         List<Sexp> sexpList = new ArrayList<Sexp>();
         for (int i = 1; i < sCell.length() - 1; i++) {
             String s = sCell.substring(i, i + 1);
-            if (s.equals(" ") ){
+            if (s.equals(" ")) {
                 continue;
-            }else if(s.equals(")")) {
+            } else if (s.equals(")")) {
                 break;
             } else if (s.equals("'")) {
                 Sexp atom = parseAtom(sCell.substring(i + 1));
                 i += atom.toString().length();
+                //i += getAtomLength(sCell.substring(i + 1));
 
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
             } else {
                 Sexp atom = parseAtom(sCell.substring(i));
                 i += atom.toString().length()-1;
+                //i += getAtomLength(sCell.substring(i));
 
                 sexpList.add(atom);
             }
@@ -145,31 +152,27 @@ public class MyLispPerser {
         return new Cell(sexpList.toArray(new Sexp[0]));
     }
 
-//    public static String getCellStr(String sexpStr) {
-//        int kakkoCnt = 0;
-//
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < sexpStr.length(); i++) {
-//            String s = sexpStr.substring(i, i + 1);
-//            sb.append(s);
-//
-//            if (s.equals("(")) {
-//                kakkoCnt++;
-//            } else if (s.equals(")")) {
-//                kakkoCnt--;
-//            }
-//
-//            if (i != 0 && kakkoCnt == 0) {
-//                break;
-//            }
-//        }
-//
-//        if (!(sb.toString().startsWith("(") && sb.toString().endsWith(")"))) {
-//            sb.setLength(0);
-//        }
-//
-//        return sb.toString();
-//    }
+    public static int getAtomLength(String sexpStr) {
+        int kakkoCnt = 0;
+        int i;
+        for (i = 0; i < sexpStr.length(); i++) {
+            String s = sexpStr.substring(i, i + 1);
+            if (s.equals("(")) {
+                kakkoCnt++;
+            } else if (s.equals(")")) {
+                kakkoCnt--;
+            }
+
+            if (kakkoCnt == 0 && s.equals(" ") || s.equals(")")) {
+                break;
+            } else if (i != 0 && kakkoCnt == 0) {
+                break;
+            }
+        }
+
+        return i;
+    }
+
     public static class ParseException extends Exception {
 
         public ParseException(String message) {
