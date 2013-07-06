@@ -21,9 +21,10 @@ public class MyLispPerser {
     public static void main(String[] argv) {
         try {
 
-            Sexp[] ss = parses("(('()) c)");
-
-            //Sexp[] ss = parses("(lat? '(1 (3 4)))");
+            //Sexp[] ss = parses("(('()) 123456789012345)");
+            Sexp[] ss = parses("(lat? '(1 (3 4)))");
+            //Sexp[] ss = parses("((x) (1 2))");
+            //Sexp[] ss = parses("(lambda (x) (and (not (pair? x))))");
             //Sexp[] ss = parses("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
             for (Sexp s : ss) {
                 System.out.println(s);
@@ -136,14 +137,15 @@ public class MyLispPerser {
                 break;
             } else if (s.equals("'")) {
                 Sexp atom = parseAtom(sCell.substring(i + 1));
-                i += atom.toString().length();
-                //i += getAtomLength(sCell.substring(i + 1));
+                //i += atom.toString().length();
+                i += getAtomLength(sCell.substring(i + 1));
 
+                
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
             } else {
                 Sexp atom = parseAtom(sCell.substring(i));
-                i += atom.toString().length()-1;
-                //i += getAtomLength(sCell.substring(i));
+                //i += atom.toString().length()-1;
+                i += getAtomLength(sCell.substring(i));
 
                 sexpList.add(atom);
             }
@@ -163,13 +165,13 @@ public class MyLispPerser {
                 kakkoCnt--;
             }
 
-            if (kakkoCnt == 0 && s.equals(" ") || s.equals(")")) {
+            if (kakkoCnt == 0 && (s.equals(")") || s.equals(" "))) {
                 break;
-            } else if (i != 0 && kakkoCnt == 0) {
+            } else if (kakkoCnt < 0) {
+                i-=1;
                 break;
             }
         }
-
         return i;
     }
 

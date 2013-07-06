@@ -9,7 +9,7 @@ import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- * '(quote) Function
+ * quote Function
  * @author moremagic
  */
 public class QuoteFunction implements IFunction{

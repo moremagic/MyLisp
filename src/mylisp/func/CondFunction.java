@@ -27,10 +27,10 @@ public class CondFunction implements IFunction {
                 Cell ccc = (Cell) cdr;
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
                 if (!cccCar.toString().equals(AtomBoolean.F)) {
-                    if (ccc.getCdr().length == 1) {
+                    if (ccc.getSexps().length == 1) {
                         ret = MyLisp.apply(cccCar, env);
                         break;
-                    } else if (ccc.getCdr().length == 2) {
+                    } else if (ccc.getSexps().length == 2) {
                         ret = MyLisp.apply(ccc.getCdr()[0], env);
                         break;
                     } else {
