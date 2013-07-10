@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.util.Map;
+import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomNumber;
 import mylisp.core.Cell;
@@ -21,7 +22,7 @@ public class IsNumber implements IFunction{
         if(cell.getCdr().length != 1){
             throw new FunctionException("number?: expects " + cell.getCdr().length + " argument");
         }
-        return Atom.newAtom(cell.getCdr()[0] instanceof AtomNumber);
+        return Atom.newAtom(MyLisp.apply(cell.getCdr()[0], env) instanceof AtomNumber);
     }
     
     @Override
