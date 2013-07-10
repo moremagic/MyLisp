@@ -20,9 +20,10 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         try {
+            Sexp[] ss = parses("('a 'b 'c ('d 'e))");
 
             //Sexp[] ss = parses("(('()) 123456789012345)");
-            Sexp[] ss = parses("(lat? '(1 (3 4)))");
+            //Sexp[] ss = parses("(lat? '(1 (3 4)))");
             //Sexp[] ss = parses("((x) (1 2))");
             //Sexp[] ss = parses("(lambda (x) (and (not (pair? x))))");
             //Sexp[] ss = parses("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
@@ -137,14 +138,11 @@ public class MyLispPerser {
                 break;
             } else if (s.equals("'")) {
                 Sexp atom = parseAtom(sCell.substring(i + 1));
-                //i += atom.toString().length();
-                i += getAtomLength(sCell.substring(i + 1));
-
+                i += getAtomLength(sCell.substring(i + 1)) + 1;
                 
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
             } else {
                 Sexp atom = parseAtom(sCell.substring(i));
-                //i += atom.toString().length()-1;
                 i += getAtomLength(sCell.substring(i));
 
                 sexpList.add(atom);
