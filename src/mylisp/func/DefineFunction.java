@@ -8,7 +8,6 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
-import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 
 /**
@@ -23,7 +22,7 @@ public class DefineFunction implements IFunction{
             env.put(cdrs[0].toString(), MyLisp.apply(cdrs[1], env));
         }else if(cdrs.length == 3){
             //構文糖衣 Function の Lambda化
-            env.put(cdrs[0].toString(), new Lambda(Atom.newAtom("lambda"), cdrs[1], cdrs[2]));
+            env.put(cdrs[0].toString(), new Cell(Atom.newAtom("lambda"), cdrs[1], cdrs[2]));
         }else{
             throw new FunctionException("define: expects arguments");
         }

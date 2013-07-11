@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.core.Cell;
-import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 import mylisp.func.FunctionController;
 import mylisp.func.FunctionException;
@@ -155,15 +154,7 @@ public class MyLisp {
     public static Sexp apply(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof Cell) {
-            Cell cell = (Cell) sexp;
-            Sexp car = cell.getCar();
-            Sexp[] cdr = cell.getCdr();
-
-            if (car.toString().equals("lambda")) {
-                ret = eval(new Lambda(car, cdr), env);
-            } else {
-                ret = eval(new Cell(car, cdr), env);
-            }
+            ret = eval((Cell)sexp, env);
         } else {
             if (env.containsKey(sexp.toString())) {
                 ret = env.get(sexp.toString());
@@ -171,7 +162,29 @@ public class MyLisp {
                 ret = sexp;
             }
         }
-
         return ret;
+    }
+    
+    /**
+     * Lambda Apply
+     * @param sexp
+     * @param env
+     * @return 
+     */
+    public static Sexp lambdaApplys(Sexp sexp, Map<String, Sexp> env){
+        if(sexp instanceof Cell){
+            Sexp[] sexps = ((Cell)sexp).getSexps();
+            Sexp[] bufs = new Sexp[sexps.length];
+            for(int i = 0 ; i < sexps.length ; i++){
+                bufs[i] = lambdaApplys(sexps[i], env);
+            }
+            return new Cell(bufs);
+        }else{
+            if( env.containsKey(sexp.toString()) ){
+                return env.get(sexp.toString());
+            }else{
+                return sexp;
+            }
+        }
     }
 }
