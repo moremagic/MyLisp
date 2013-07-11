@@ -19,10 +19,14 @@ public class DefineFunction implements IFunction{
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException{        
         Sexp[] cdrs = cell.getCdr();
         if(cdrs.length == 2){
-            env.put(cdrs[0].toString(), MyLisp.apply(cdrs[1], env));
-        }else if(cdrs.length == 3){
-            //構文糖衣 Function の Lambda化
-            env.put(cdrs[0].toString(), new Cell(Atom.newAtom("lambda"), cdrs[1], cdrs[2]));
+            if(cdrs[0] instanceof Cell){
+                Sexp car = ((Cell)cdrs[0]).getCar();
+                Sexp[] cdr = ((Cell)cdrs[0]).getCdr();
+                                
+                env.put(car.toString(), new Cell(Atom.newAtom("lambda"), new Sexp[]{new Cell(cdr), cdrs[1]}));
+            }else{
+                env.put(cdrs[0].toString(), MyLisp.apply(cdrs[1], env));
+            }
         }else{
             throw new FunctionException("define: expects arguments");
         }

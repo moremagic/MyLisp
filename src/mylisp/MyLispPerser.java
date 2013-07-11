@@ -88,7 +88,6 @@ public class MyLispPerser {
      *
      * @param sExps
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
      */
     public static Sexp parse(String sExps) {
         sExps = sExps.trim();
@@ -100,10 +99,8 @@ public class MyLispPerser {
     }
 
     /**
-     *
      * @param sAtom
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
      */
     private static Sexp parseAtom(String sAtom) {
         StringBuilder atom = new StringBuilder();

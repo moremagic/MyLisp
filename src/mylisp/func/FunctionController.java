@@ -73,9 +73,4 @@ public class FunctionController {
             throw new FunctionException("reference to undefined identifier:" + cell.getCar());
         }
     }
-    
-    
-
-    
-    
 }
