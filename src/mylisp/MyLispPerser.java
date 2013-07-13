@@ -20,8 +20,8 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         try {
-            Sexp[] ss = parses("('a 'b 'c ('d 'e))");
-
+            Sexp[] ss = parses("(\"aa aa\" aaa)");
+            //[] ss = parses("('a 'b 'c ('d 'e))");
             //Sexp[] ss = parses("(('()) 123456789012345)");
             //Sexp[] ss = parses("(lat? '(1 (3 4)))");
             //Sexp[] ss = parses("((x) (1 2))");
