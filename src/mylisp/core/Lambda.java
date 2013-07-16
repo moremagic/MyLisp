@@ -1,8 +1,6 @@
 package mylisp.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.func.FunctionException;
