@@ -7,6 +7,7 @@ package mylisp.func;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -22,8 +23,8 @@ public class ConsFunction implements IFunction{
         
         Sexp cdr = MyLisp.apply(cell.getCdr()[1], env);
         Sexp[] cdrs;
-        if(cdr instanceof Cell){
-            cdrs = ((Cell)cdr).getSexps();
+        if(cdr instanceof IPair){
+            cdrs = ((IPair)cdr).getSexps();
         }else{
             cdrs = new Sexp[]{cdr};
         }

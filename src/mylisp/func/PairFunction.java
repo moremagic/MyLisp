@@ -8,6 +8,7 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -23,7 +24,7 @@ public class PairFunction implements IFunction{
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return Atom.newAtom(sexp instanceof Cell);
+        return Atom.newAtom(sexp instanceof IPair);
     }
     
     @Override

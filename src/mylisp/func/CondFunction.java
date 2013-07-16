@@ -9,6 +9,7 @@ import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -23,8 +24,8 @@ public class CondFunction implements IFunction {
         Sexp ret = Atom.newAtom("");
         for (int i = 0; i < cell.getCdr().length; i++) {
             Sexp cdr = cell.getCdr()[i];
-            if (cdr instanceof Cell) {
-                Cell ccc = (Cell) cdr;
+            if (cdr instanceof IPair) {
+                IPair ccc = (IPair) cdr;
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
                 if (!cccCar.toString().equals(AtomBoolean.F)) {
                     if (ccc.getSexps().length == 1) {

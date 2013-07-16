@@ -36,6 +36,7 @@ public class FunctionController {
             new NotFunction(),
             new AddFunction(),
             new SubFunction(),
+            new MultiFunction(),
             new QuoteFunction(),
             new ConsFunction(),
             new DefineFunction(),
@@ -45,7 +46,6 @@ public class FunctionController {
             new GThanFunction(),
             new IFFunction(),
             new CondFunction(),
-            new MultiFunction(),
             new EqualFunction(),
             new SetFunction()
         };
@@ -58,12 +58,12 @@ public class FunctionController {
     public Sexp exec(Sexp func, IPair pair, Map<String, Sexp> env) throws FunctionException {
         //各ファンクション内でApplyすることで、遅延評価を実現します        
         if (func instanceof Lambda) {
-            return ((Lambda)func).lambdaEvals(env, pair.getCdr());
-        }else if (pair instanceof Lambda) {
-            ((Lambda)pair).lambdaApply(env);
+            return ((Lambda) func).lambdaEvals(env, pair.getCdr());
+        } else if (pair instanceof Lambda) {
+            ((Lambda) pair).lambdaApply(env);
             return pair;
         } else if (funcMap.containsKey(func.toString()) && pair instanceof Cell) {
-            return funcMap.get(func.toString()).eval((Cell)pair, env);
+            return funcMap.get(func.toString()).eval((Cell) pair, env);
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }

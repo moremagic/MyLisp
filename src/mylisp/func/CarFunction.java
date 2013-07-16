@@ -7,6 +7,7 @@ package mylisp.func;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -23,8 +24,8 @@ public class CarFunction implements IFunction {
         }
 
         Sexp cdr = MyLisp.apply(cell.getCdr()[0], env);
-        if(cdr instanceof Cell){
-            return ((Cell)cdr).getCar();
+        if(cdr instanceof IPair){
+            return ((IPair)cdr).getCar();
         }else{
             throw new FunctionException("car: expects argument of type <pair>; given " + cdr);
         }

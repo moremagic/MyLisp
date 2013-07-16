@@ -8,6 +8,7 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -23,8 +24,8 @@ public class IsNull implements IFunction{
         } 
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        if(sexp instanceof Cell){
-            Cell cc = (Cell)sexp;
+        if(sexp instanceof IPair){
+            IPair cc = (IPair)sexp;
             return Atom.newAtom(cc.getSexps().length == 0);
         }else{
             return Atom.newAtom(sexp.toString().isEmpty());
