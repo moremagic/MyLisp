@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.core.Atom;
 import mylisp.core.Cell;
+import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 
 /**
@@ -124,7 +125,7 @@ public class MyLispPerser {
      * @return
      * @throws mylisp.MyLispPerser.ParseException
      */
-    private static Cell parseCell(String sCell) {
+    private static Sexp parseCell(String sCell) {
         // ( .... ) の中をパースします    
         List<Sexp> sexpList = new ArrayList<Sexp>();
         for (int i = 1; i < sCell.length() - 1; i++) {
@@ -146,7 +147,11 @@ public class MyLispPerser {
             }
         }
 
-        return new Cell(sexpList.toArray(new Sexp[0]));
+        if(!sexpList.isEmpty() && sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)){
+            return new Lambda(sexpList.toArray(new Sexp[0]));
+        }else{
+            return new Cell(sexpList.toArray(new Sexp[0]));
+        }
     }
 
     public static int getAtomLength(String sexpStr) {

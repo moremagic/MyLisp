@@ -6,8 +6,9 @@ package mylisp.func;
 
 import java.util.HashMap;
 import java.util.Map;
-import mylisp.MyLisp;
 import mylisp.core.Cell;
+import mylisp.core.IPair;
+import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 
 /**
@@ -45,7 +46,7 @@ public class FunctionController {
             new IFFunction(),
             new CondFunction(),
             new MultiFunction(),
-            new EqurlFunction(),
+            new EqualFunction(),
             new SetFunction()
         };
 
@@ -54,25 +55,17 @@ public class FunctionController {
         }
     }
 
-    public Sexp exec(Sexp func, Cell cell, Map<String, Sexp> env) throws FunctionException {
-        //各ファンクション内でApplyすることで、遅延評価を実現します
-        if (func instanceof Cell && ((Cell)func).getCar().toString().equals("lambda")) {
-            Cell lambda = (Cell) func;
-            Sexp[] keys = ((Cell) lambda.getCdr()[0]).getSexps();
-            Sexp[] value = cell.getCdr();
-            
-            Map<String, Sexp> cpEnv = new HashMap<String, Sexp>(env);
-            for (int i = 0; i < keys.length; i++) {
-                cpEnv.put(keys[i].toString(), MyLisp.apply(value[i], env));
-            }
-
-            return MyLisp.eval(lambda.getCdr()[1], cpEnv);
-        } else if (cell.getCar().toString().equals("lambda")) {
-            return MyLisp.lambdaApplys(cell, env);
-        } else if (funcMap.containsKey(func.toString())) {
-            return funcMap.get(func.toString()).eval(cell, env);
+    public Sexp exec(Sexp func, IPair pair, Map<String, Sexp> env) throws FunctionException {
+        //各ファンクション内でApplyすることで、遅延評価を実現します        
+        if (func instanceof Lambda) {
+            return ((Lambda)func).lambdaEvals(env, pair.getCdr());
+        }else if (pair instanceof Lambda) {
+            ((Lambda)pair).lambdaApply(env);
+            return pair;
+        } else if (funcMap.containsKey(func.toString()) && pair instanceof Cell) {
+            return funcMap.get(func.toString()).eval((Cell)pair, env);
         } else {
-            throw new FunctionException("reference to undefined identifier:" + cell.getCar());
+            throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }
     }
 }

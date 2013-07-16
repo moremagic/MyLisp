@@ -11,11 +11,11 @@ import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- * eq?(equrl) Function
+ * eq?(Equal) Function
  *
  * @author moremagic
  */
-public class EqurlFunction implements IFunction {
+public class EqualFunction implements IFunction {
 
     @Override
     public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {

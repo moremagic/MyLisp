@@ -30,7 +30,7 @@ public class GThanFunction implements IFunction {
         if (sexp_apply1 instanceof AtomNumber && sexp_apply2 instanceof AtomNumber) {
             return Atom.newAtom(greaterThanNumber(((AtomNumber) sexp_apply1).getValue(), ((AtomNumber) sexp_apply2).getValue()));
         } else {
-            throw new FunctionException("reference to undefined identifier:");
+            throw new FunctionException("reference to undefined identifier: " + cell.toString());
         }
     }
 

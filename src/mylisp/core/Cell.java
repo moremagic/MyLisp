@@ -10,7 +10,7 @@ package mylisp.core;
  *
  * @author moremagic
  */
-public class Cell implements Sexp {
+public class Cell implements IPair {
     Sexp[] sexps = null;
 
     public Cell(Sexp car, Sexp[] cdr) {
@@ -29,16 +29,19 @@ public class Cell implements Sexp {
         this.sexps = sexps;
     }
 
+    @Override
     public Sexp getCar() {
         return this.sexps[0];
     }
 
+    @Override
     public Sexp[] getCdr() {
         Sexp[] ret = new Sexp[this.sexps.length - 1];
         System.arraycopy(sexps, 1, ret, 0, ret.length);
         return ret;
     }
 
+    @Override
     public Sexp[] getSexps() {
         return this.sexps;
     }
@@ -57,12 +60,4 @@ public class Cell implements Sexp {
             return sb.toString();
         }
     }
-    
-//    @Override
-//    public String toString(){
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("<#function ").append(getClass().getName()).append("@").append(Integer.toHexString(hashCode()));
-//        sb.append(">");
-//        return sb.toString();
-//    }
 }
