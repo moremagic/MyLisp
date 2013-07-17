@@ -46,7 +46,7 @@ public class Lambda implements IPair {
 
     public Sexp lambdaEvals(Map<String, Sexp> env, Sexp[] value) throws FunctionException {
         Sexp[] keys = ((Cell) getCdr()[0]).getSexps();
-
+        
         //全てコピー
         HashMap<String, Sexp> mapp = new HashMap<String, Sexp>(env);
         mapp.putAll(localEnv);
@@ -70,7 +70,7 @@ public class Lambda implements IPair {
     public String toString() {
         return cell.toString() + "[" + localEnv.getClass().getName() + "@" + Integer.toHexString(localEnv.hashCode()) +"]";
     }
-    
+
 //    @Override
 //    public String toString() {
 //        StringBuilder sb = new StringBuilder();

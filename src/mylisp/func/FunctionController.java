@@ -60,8 +60,9 @@ public class FunctionController {
         if (func instanceof Lambda) {
             return ((Lambda) func).lambdaEvals(env, pair.getCdr());
         } else if (pair instanceof Lambda) {
-            ((Lambda) pair).lambdaApply(env);
-            return pair;
+            Lambda ll = new Lambda(pair.getSexps());
+            ll.lambdaApply(env);
+            return ll;
         } else if (funcMap.containsKey(func.toString()) && pair instanceof Cell) {
             return funcMap.get(func.toString()).eval((Cell) pair, env);
         } else {
