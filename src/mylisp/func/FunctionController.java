@@ -47,7 +47,9 @@ public class FunctionController {
             new IFFunction(),
             new CondFunction(),
             new EqualFunction(),
-            new SetFunction()
+            new SetFunction(),
+            new DisplayFunction(),
+            new LetFunction(),
         };
 
         for (IFunction f : funcs) {

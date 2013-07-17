@@ -29,22 +29,24 @@ public class CondFunction implements IFunction {
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
                 if (!cccCar.toString().equals(AtomBoolean.F)) {
                     if (ccc.getSexps().length == 1) {
-                        ret = MyLisp.apply(cccCar, env);
+                        ret = MyLisp.eval(cccCar, env);
                         break;
                     } else if (ccc.getSexps().length == 2) {
-                        ret = MyLisp.apply(ccc.getCdr()[0], env);
+                        ret = MyLisp.eval(ccc.getCdr()[0], env);
                         break;
                     } else {
                         throw new FunctionException("procedure application: expected procedure");
                     }
                 } else if (i == cell.getCdr().length - 1) {
+                    //末尾再帰Flag ON
+                    MyLisp.tailCall = true;
                     if (ccc.getCar().toString().equals("else")) {
-                        ret = MyLisp.apply(ccc.getCdr()[0], env);
+                        ret = ccc.getCdr()[2];
                     } else if (!cccCar.toString().equals(AtomBoolean.F)) {
                         if (ccc.getCdr().length != 0 && !cccCar.toString().equals(AtomBoolean.F)) {
-                            ret = MyLisp.apply(ccc.getCdr()[0], env);
+                            ret = ccc.getCdr()[0];
                         } else {
-                            ret = MyLisp.apply(cccCar, env);
+                            ret = cccCar;
                         }
                     }
                 }
