@@ -21,10 +21,13 @@ public class IsPair implements IFunction{
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if(cell.getCdr().length != 1){
-            throw new FunctionException("pair?: expects 1 argument, given " + cell.getCdr().length );
+            throw new FunctionException(functionSymbol() + ": expects 1 argument, given " + cell.getCdr().length );
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
+        if(sexp instanceof AtomSymbol){
+            throw new FunctionException("reference to undefined identifier: " + sexp);
+        }
         return Atom.newAtom(sexp instanceof IPair);
     }
     

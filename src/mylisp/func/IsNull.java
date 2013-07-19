@@ -21,7 +21,7 @@ public class IsNull implements IFunction{
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if(cell.getCdr().length != 1){
-            throw new FunctionException("null?: expects " + cell.getCdr().length + " argument");
+            throw new FunctionException(functionSymbol() + ": expects " + cell.getCdr().length + " argument");
         } 
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);

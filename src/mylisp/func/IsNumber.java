@@ -14,21 +14,23 @@ import mylisp.core.Sexp;
 
 /**
  * number? class
+ *
  * @author moremagic
  */
-public class IsNumber implements IFunction{
+public class IsNumber implements IFunction {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException("number?: expects " + cell.getCdr().length + " argument");
+        if (cell.getCdr().length != 1) {
+            throw new FunctionException(functionSymbol() + ": expects " + cell.getCdr().length + " argument");
         }
-        return Atom.newAtom(MyLisp.apply(cell.getCdr()[0], env) instanceof AtomNumber);
+
+        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
+        return Atom.newAtom(sexp instanceof AtomNumber);
     }
-    
+
     @Override
     public String functionSymbol() {
         return "number?";
     }
-
 }
