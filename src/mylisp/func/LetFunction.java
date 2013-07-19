@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Lambda;
@@ -21,7 +22,7 @@ import mylisp.core.Sexp;
 public class LetFunction implements IFunction {
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp env_list = null;
         Sexp lambda_body = null;
         
@@ -54,7 +55,7 @@ public class LetFunction implements IFunction {
             if(cell.getCdr().length == 2){
                 return MyLisp.eval(new Cell(new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body), values), env);
             }else{
-                Map<String, Sexp> localEnv = new HashMap<String, Sexp>(env);
+                Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>(env);
                 MyLisp.eval(new Cell(Atom.newAtom("define"), cell.getCdr()[0], new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body)), localEnv);
                 return MyLisp.eval(new Cell(cell.getCdr()[0], values), localEnv);
             }

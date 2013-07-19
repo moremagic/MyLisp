@@ -7,6 +7,7 @@ package mylisp.func;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -17,14 +18,14 @@ import mylisp.core.Sexp;
 public class SetFunction implements IFunction{
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if(cell.getSexps().length != 3){
             throw new FunctionException("set!: bad syntax in: " + cell.toString());
         }
         
         Sexp[] cdrs = cell.getCdr();
-        if(env.containsKey(cdrs[0].toString())){
-            env.put(cdrs[0].toString(), MyLisp.apply(cdrs[1], env));
+        if(env.containsKey((AtomSymbol)cdrs[0])){
+            env.put((AtomSymbol) cdrs[0], MyLisp.apply(cdrs[1], env));
         }else{
             throw new FunctionException("set!: cannot set undefined identifier: " + cdrs[0].toString());
         }
@@ -35,5 +36,4 @@ public class SetFunction implements IFunction{
     public String functionSymbol() {
         return "set!";
     }
-
 }

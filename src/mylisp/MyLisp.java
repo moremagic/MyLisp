@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mylisp.core.AtomSymbol;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.func.FunctionController;
@@ -28,7 +29,7 @@ public class MyLisp {
      * 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする *
      */
     public static boolean tailCall = false;
-    private Map<String, Sexp> env = new HashMap<String, Sexp>();
+    private Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
     public MyLisp() {
     }
@@ -133,12 +134,13 @@ public class MyLisp {
 
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
+     *
      * @param sexp
      * @param env
      * @return
-     * @throws FunctionException 
+     * @throws FunctionException
      */
-    public static Sexp eval(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
+    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof IPair) {
             IPair pair = (IPair) sexp;
@@ -158,17 +160,16 @@ public class MyLisp {
         return ret;
     }
 
-    public static Sexp apply(Sexp sexp, Map<String, Sexp> env) throws FunctionException {
+    public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof IPair) {
             ret = eval((IPair) sexp, env);
+        } else if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
+            ret = env.get((AtomSymbol) sexp);
         } else {
-            if (env.containsKey(sexp.toString())) {
-                ret = env.get(sexp.toString());
-            } else {
-                ret = sexp;
-            }
+            ret = sexp;
         }
+
         return ret;
     }
 }

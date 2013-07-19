@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.util.Map;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -15,5 +16,5 @@ import mylisp.core.Sexp;
  */
 public interface IFunction {
     public String functionSymbol();
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException;
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException;
 }

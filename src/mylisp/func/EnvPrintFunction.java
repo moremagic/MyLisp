@@ -5,6 +5,7 @@
 package mylisp.func;
 
 import java.util.Map;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
@@ -16,9 +17,9 @@ import mylisp.core.Sexp;
 public class EnvPrintFunction implements IFunction {
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         System.out.println("<<env-list>>");  
-        for(Map.Entry<String, Sexp> item: env.entrySet()){
+        for(Map.Entry<AtomSymbol, Sexp> item: env.entrySet()){
           System.out.println("[" + item.getKey() + " : " + item.getValue() + "] , ");  
         }
         return cell;

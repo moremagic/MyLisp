@@ -8,6 +8,7 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
@@ -20,7 +21,7 @@ import mylisp.core.Sexp;
 public class CondFunction implements IFunction {
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = Atom.newAtom("");
         for (int i = 0; i < cell.getCdr().length; i++) {
             Sexp cdr = cell.getCdr()[i];

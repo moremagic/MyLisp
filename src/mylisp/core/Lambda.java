@@ -18,7 +18,7 @@ public class Lambda implements IPair {
 
     public static final String LAMBDA_SYMBOL = "lambda";
     private Cell cell;
-    private Map<String, Sexp> localEnv = new HashMap<String, Sexp>();
+    private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();
 
     public Lambda(Sexp car, Sexp[] cdr) {
         assert !car.toString().equals(LAMBDA_SYMBOL) : "not lambda";
@@ -44,15 +44,15 @@ public class Lambda implements IPair {
         return cell.getSexps();
     }
 
-    public Sexp lambdaEvals(Map<String, Sexp> env, Sexp[] value) throws FunctionException {
+    public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
         Sexp[] keys = ((Cell) getCdr()[0]).getSexps();
         
         //全てコピー
-        HashMap<String, Sexp> mapp = new HashMap<String, Sexp>(env);
+        HashMap<AtomSymbol, Sexp> mapp = new HashMap<AtomSymbol, Sexp>(env);
         mapp.putAll(localEnv);
         localEnv = mapp;
         for (int i = 0; i < keys.length; i++) {
-            localEnv.put(keys[i].toString(), MyLisp.apply(value[i], env));
+            localEnv.put((AtomSymbol) keys[i], MyLisp.apply(value[i], env));
         }
 
         Sexp ret = null;
@@ -62,7 +62,7 @@ public class Lambda implements IPair {
         return ret;
     }
 
-    public void lambdaApply(Map<String, Sexp> env) throws FunctionException {
+    public void lambdaApply(Map<AtomSymbol, Sexp> env) throws FunctionException {
         localEnv.putAll(env);
     }
 

@@ -6,6 +6,7 @@ package mylisp.func;
 
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
@@ -18,7 +19,7 @@ import mylisp.core.Sexp;
 public class CarFunction implements IFunction {
 
     @Override
-    public Sexp eval(Cell cell, Map<String, Sexp> env) throws FunctionException {
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if (cell.getCdr().length != 1) {
             throw new FunctionException("car: expects 1 argument, given " + cell.getCdr().length);
         }

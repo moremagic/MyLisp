@@ -6,6 +6,7 @@ package mylisp.func;
 
 import java.util.HashMap;
 import java.util.Map;
+import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Lambda;
@@ -57,7 +58,7 @@ public class FunctionController {
         }
     }
 
-    public Sexp exec(Sexp func, IPair pair, Map<String, Sexp> env) throws FunctionException {
+    public Sexp exec(Sexp func, IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
         //各ファンクション内でApplyすることで、遅延評価を実現します        
         if (func instanceof Lambda) {
             return ((Lambda) func).lambdaEvals(env, pair.getCdr());
