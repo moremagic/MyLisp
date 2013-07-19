@@ -9,28 +9,27 @@ import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
-import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
- * pair? class
+ * symbol? class
+ *
  * @author moremagic
  */
-public class PairFunction implements IFunction{
+public class IsSymbol implements IFunction {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException("pair?: expects 1 argument, given " + cell.getCdr().length );
+        if (cell.getCdr().length != 1) {
+            throw new FunctionException("null?: expects " + cell.getCdr().length + " argument");
         }
-        
+
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return Atom.newAtom(sexp instanceof IPair);
-    }
-    
-    @Override
-    public String functionSymbol() {
-        return "pair?";
+        return Atom.newAtom(sexp instanceof AtomSymbol);
     }
 
+    @Override
+    public String functionSymbol() {
+        return "symbol?";
+    }
 }

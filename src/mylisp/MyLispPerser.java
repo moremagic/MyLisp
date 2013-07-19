@@ -21,7 +21,9 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         try {
-            Sexp[] ss = parses("(\"aa aa\" aaa)");
+            Sexp sssss = parseAtomString("\"aa bb  cc & (asdf) '(asdfasd) \\' \\\" \" aaa)");
+            System.out.println(sssss);
+            Sexp[] ss = parses("(\" a b c '() '(quote) \\\" \" aaa)");
             //[] ss = parses("('a 'b 'c ('d 'e))");
             //Sexp[] ss = parses("(('()) 123456789012345)");
             //Sexp[] ss = parses("(lat? '(1 (3 4)))");
@@ -37,9 +39,7 @@ public class MyLispPerser {
     }
 
     /**
-     * 複数行のパースを行い、S式の配列を返却する。
-     * 改行が含まれるテキストのパースと
-     * コメント文を無視したパースを行う
+     * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う
      *
      * @param sExps
      * @return
@@ -95,6 +95,8 @@ public class MyLispPerser {
         sExps = sExps.trim();
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
+        } else if (sExps.startsWith("\"")) {
+            return parseAtomString(sExps);
         } else {
             return parseAtom(sExps);
         }
@@ -120,6 +122,29 @@ public class MyLispPerser {
         return Atom.newAtom(atom.toString());
     }
 
+    private static Sexp parseAtomString(String sAtom) {
+        boolean bQuote = true;
+
+        StringBuilder atom = new StringBuilder();
+        for (int i = 0; i < sAtom.length(); i++) {
+            String s = sAtom.substring(i, i + 1);
+            atom.append(s);
+
+            if (s.equals("\\")) {
+                i++;
+                atom.append(sAtom.substring(i, i + 1));
+            } else if (s.equals("\"")) {
+                bQuote = !bQuote;
+            }
+
+            if (bQuote) {
+                break;
+            }
+        }
+
+        return Atom.newAtom(atom.toString());
+    }
+
     /**
      *
      * @param sCell
@@ -135,22 +160,28 @@ public class MyLispPerser {
                 continue;
             } else if (s.equals(")")) {
                 break;
+
             } else if (s.equals("'")) {
-                Sexp atom = parseAtom(sCell.substring(i + 1));
+                Sexp atom = parse(sCell.substring(i + 1));
                 i += getAtomLength(sCell.substring(i + 1)) + 1;
-                
+
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
+            } else if (s.equals("\"")) {
+                Sexp atom = parseAtomString(sCell.substring(i));
+                i += atom.toString().length() + 1;
+
+                sexpList.add(atom);
             } else {
-                Sexp atom = parseAtom(sCell.substring(i));
+                Sexp atom = parse(sCell.substring(i));
                 i += getAtomLength(sCell.substring(i));
 
                 sexpList.add(atom);
             }
         }
 
-        if(!sexpList.isEmpty() && sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)){
+        if (!sexpList.isEmpty() && sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
             return new Lambda(sexpList.toArray(new Sexp[0]));
-        }else{
+        } else {
             return new Cell(sexpList.toArray(new Sexp[0]));
         }
     }
@@ -169,7 +200,7 @@ public class MyLispPerser {
             if (kakkoCnt == 0 && (s.equals(")") || s.equals(" "))) {
                 break;
             } else if (kakkoCnt < 0) {
-                i-=1;
+                i -= 1;
                 break;
             }
         }

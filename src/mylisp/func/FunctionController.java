@@ -41,17 +41,19 @@ public class FunctionController {
             new QuoteFunction(),
             new ConsFunction(),
             new DefineFunction(),
-            new IsNumber(),
+            new IsBoolean(),
+            new IsSymbol(),
             new IsNull(),
-            new PairFunction(),
+            new IsPair(),
+            new IsNumber(),
+            new IsString(),
             new GThanFunction(),
             new IFFunction(),
             new CondFunction(),
             new EqualFunction(),
             new SetFunction(),
             new DisplayFunction(),
-            new LetFunction(),
-        };
+            new LetFunction(),};
 
         for (IFunction f : funcs) {
             funcMap.put(f.functionSymbol(), f);
