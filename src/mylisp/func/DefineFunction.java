@@ -15,32 +15,30 @@ import mylisp.core.Sexp;
 
 /**
  * define Function
+ *
  * @author moremagic
  */
-public class DefineFunction implements IFunction{
+public class DefineFunction implements IFunction {
+
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException{        
+    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp[] cdrs = cell.getCdr();
         Sexp ret = null;
-        if(cdrs.length == 2){
-            if(cdrs[0] instanceof IPair){
-                Sexp car = ((IPair)cdrs[0]).getCar();
-                Sexp[] cdr = ((IPair)cdrs[0]).getCdr();
-                
+        if (cdrs.length == 2) {
+            if (cdrs[0] instanceof IPair) {
+                Sexp car = ((IPair) cdrs[0]).getCar();
+                Sexp[] cdr = ((IPair) cdrs[0]).getCdr();
+
                 //Function生成時の構文糖衣          
                 ret = env.put((AtomSymbol) car, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Sexp[]{new Cell(cdr), cdrs[1]}));
-            }else{
+            } else {
                 Sexp ss = MyLisp.apply(cdrs[1], env);
-                if(ss instanceof IPair){
-                    ret = env.put((AtomSymbol) cdrs[0], (Lambda)ss);
-                }else{
-                    ret = env.put((AtomSymbol) cdrs[0], ss);
-                }
+                ret = env.put((AtomSymbol) cdrs[0], ss);
             }
-        }else{
+        } else {
             throw new FunctionException("define: expects arguments");
         }
-        
+
         return ret;
     }
 
