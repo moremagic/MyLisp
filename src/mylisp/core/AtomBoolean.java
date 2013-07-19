@@ -34,12 +34,19 @@ public class AtomBoolean extends Atom{
     }    
 
     @Override
-    public boolean equalAtom(Atom atom) {
-        if(atom instanceof AtomBoolean){
-            return ((AtomBoolean)atom).value == value;
+    public boolean equals(Object object) {
+        if(object instanceof AtomBoolean){
+            return ((AtomBoolean)object).value == value;
         }else{
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + (this.value ? 1 : 0);
+        return hash;
     }
 
 }

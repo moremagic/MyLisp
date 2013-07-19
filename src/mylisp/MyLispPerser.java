@@ -37,7 +37,9 @@ public class MyLispPerser {
     }
 
     /**
-     * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う 不要な二文字以上の空白を削除する
+     * 複数行のパースを行い、S式の配列を返却する。
+     * 改行が含まれるテキストのパースと
+     * コメント文を無視したパースを行う
      *
      * @param sExps
      * @return
@@ -54,8 +56,7 @@ public class MyLispPerser {
             }
         }
 
-        //不要な二文字以上の空白を削除する
-        String ss = sb.toString().replaceAll("\\s\\s+", " ");
+        String ss = sb.toString();
 
         List<Sexp> ret = new ArrayList<Sexp>();
         if (ss.startsWith("(")) {

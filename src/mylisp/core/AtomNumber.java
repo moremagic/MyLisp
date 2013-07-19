@@ -32,11 +32,18 @@ public class AtomNumber extends Atom{
     }
 
     @Override
-    public boolean equalAtom(Atom atom) {
-        if(atom instanceof AtomNumber){
-            return ((AtomNumber)atom).value == value;
+    public boolean equals(Object object) {
+        if(object instanceof AtomNumber){
+            return ((AtomNumber)object).value == value;
         }else{
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + (this.value != null ? this.value.hashCode() : 0);
+        return hash;
     }
 }

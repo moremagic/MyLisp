@@ -52,11 +52,5 @@ public abstract class Atom implements Sexp {
 
         return null;
     }
-    
-    /**
-     * Atom Equrls
-     * @param atom
-     * @return
-     */
-    abstract public boolean equalAtom(Atom atom);
+
 }

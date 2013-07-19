@@ -6,12 +6,12 @@ package mylisp.core;
  */
 
 /**
- * symbol Atom
+ * String Atom
  * @author moremagic
  */
-public class AtomSymbol extends Atom{
+public class AtomString extends Atom{
     private String value;
-    AtomSymbol(String value){
+    AtomString(String value){
         this.value = value;
     }
     
@@ -27,8 +27,8 @@ public class AtomSymbol extends Atom{
     
    @Override
     public boolean equals(Object object) {
-        if(object instanceof AtomSymbol){
-            return ((AtomSymbol)object).value.equals(value);
+        if(object instanceof AtomString){
+            return ((AtomString)object).value.equals(value);
         }else{
             return false;
         }
@@ -37,7 +37,7 @@ public class AtomSymbol extends Atom{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + (this.value != null ? this.value.hashCode() : 0);
+        hash = 79 * hash + (this.value != null ? this.value.hashCode() : 0);
         return hash;
     }
 }
