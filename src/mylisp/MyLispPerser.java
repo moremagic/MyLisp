@@ -20,18 +20,36 @@ import mylisp.core.Sexp;
 public class MyLispPerser {
 
     public static void main(String[] argv) {
+
+        String[] test_codes = {
+            "(let loop((n1 n) (p n)))",
+            "(\"aa bb  cc & (asdf) '(asdfasd) \\' \\\" \" aaa)",
+            "(\" a b c '() '(quote) \\\" \" aaa)",
+            "('a 'b 'c ('d 'e))",
+            "(('()) 123456789012345)",
+            "(lat? '(1 (3 4)))",
+            "((x) (1 2))",
+            "(lambda (x) (and (not (pair? x))))",
+            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",};
+
+        for (String s : test_codes) {
+            testParse(s);
+        }
+    }
+
+    private static void testParse(String test_code) {
         try {
-            Sexp sssss = parseAtomString("\"aa bb  cc & (asdf) '(asdfasd) \\' \\\" \" aaa)");
-            System.out.println(sssss);
-            Sexp[] ss = parses("(\" a b c '() '(quote) \\\" \" aaa)");
-            //[] ss = parses("('a 'b 'c ('d 'e))");
-            //Sexp[] ss = parses("(('()) 123456789012345)");
-            //Sexp[] ss = parses("(lat? '(1 (3 4)))");
-            //Sexp[] ss = parses("((x) (1 2))");
-            //Sexp[] ss = parses("(lambda (x) (and (not (pair? x))))");
-            //Sexp[] ss = parses("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
+            Sexp[] ss = parses(test_code);
+            StringBuilder sb = new StringBuilder();
             for (Sexp s : ss) {
-                System.out.println(s);
+                sb.append(s);
+            }
+
+            if (test_code.equals(sb.toString())) {
+                System.out.println("            [" + test_code + "] complete!");
+            } else {
+                System.out.println("original    [" + test_code + "]\n"
+                        + "ng          [" + sb.toString() + "]");
             }
         } catch (Exception ex) {
             Logger.getLogger(MyLispPerser.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,7 +131,8 @@ public class MyLispPerser {
             if (s.equals(" ") || s.equals(")")) {
                 break;
             } else if (s.equals("(")) {
-                return parse(sAtom.substring(i));
+                //return parse(sAtom.substring(i));
+                break;
             } else {
                 atom.append(s);
             }
@@ -160,7 +179,6 @@ public class MyLispPerser {
                 continue;
             } else if (s.equals(")")) {
                 break;
-
             } else if (s.equals("'")) {
                 Sexp atom = parse(sCell.substring(i + 1));
                 i += getAtomLength(sCell.substring(i + 1)) + 1;
@@ -168,7 +186,7 @@ public class MyLispPerser {
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
             } else if (s.equals("\"")) {
                 Sexp atom = parseAtomString(sCell.substring(i));
-                i += atom.toString().length() + 1;
+                i += atom.toString().length();
 
                 sexpList.add(atom);
             } else {
@@ -186,7 +204,14 @@ public class MyLispPerser {
         }
     }
 
+    /**
+     * パース前文字列から 最初に出現する Atom の文字数を切り出すメソッド
+     *
+     * @param sexpStr パース前文字列
+     * @return 最初に出現する Atom の文字数
+     */
     public static int getAtomLength(String sexpStr) {
+        // 「()」 の数が合致するまでの文字数を返却する
         int kakkoCnt = 0;
         int i;
         for (i = 0; i < sexpStr.length(); i++) {
@@ -197,11 +222,14 @@ public class MyLispPerser {
                 kakkoCnt--;
             }
 
-            if (kakkoCnt == 0 && (s.equals(")") || s.equals(" "))) {
-                break;
-            } else if (kakkoCnt < 0) {
+            if (!sexpStr.startsWith("(") && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+                //最初が 「 ( 」 で始まっていないときは組み合わせ数を無視して「(」「)」「 」 で break; する。
                 i -= 1;
                 break;
+            } else {
+                if (kakkoCnt == 0 && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+                    break;
+                }
             }
         }
         return i;

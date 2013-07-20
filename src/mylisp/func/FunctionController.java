@@ -53,7 +53,8 @@ public class FunctionController {
             new EqualFunction(),
             new SetFunction(),
             new DisplayFunction(),
-            new LetFunction(),};
+            new LetFunction(), // new CallCCFunction,
+        };
 
         for (IFunction f : funcs) {
             funcMap.put(f.functionSymbol(), f);
