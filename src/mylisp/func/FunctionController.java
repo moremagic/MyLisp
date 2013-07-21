@@ -25,6 +25,14 @@ public class FunctionController {
     public static FunctionController getInstance() {
         return instance;
     }
+    
+    /**
+     * 拡張用Function登録
+     * @param func 
+     */
+    public void addFunction(IFunction func){
+        funcMap.put(func.functionSymbol(), func);
+    }
 
     private FunctionController() {
         IFunction[] funcs = {

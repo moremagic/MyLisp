@@ -131,7 +131,6 @@ public class MyLispPerser {
             if (s.equals(" ") || s.equals(")")) {
                 break;
             } else if (s.equals("(")) {
-                //return parse(sAtom.substring(i));
                 break;
             } else {
                 atom.append(s);
