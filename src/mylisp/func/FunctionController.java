@@ -77,7 +77,7 @@ public class FunctionController {
             Lambda ll = new Lambda(pair.getSexps());
             ll.lambdaApply(env);
             return ll;
-        } else if (funcMap.containsKey(func.toString()) && pair instanceof Cell) {
+        } else if (pair instanceof Cell && funcMap.containsKey(func.toString())) {
             return funcMap.get(func.toString()).eval((Cell) pair, env);
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
