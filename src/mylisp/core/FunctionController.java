@@ -23,13 +23,17 @@ import mylisp.func.IsBoolean;
 import mylisp.func.IsNull;
 import mylisp.func.IsNumber;
 import mylisp.func.IsPair;
+import mylisp.func.IsPort;
 import mylisp.func.IsString;
 import mylisp.func.IsSymbol;
 import mylisp.func.LetFunction;
 import mylisp.func.MultiFunction;
 import mylisp.func.NotFunction;
+import mylisp.func.OpenInputFileFunction;
+import mylisp.func.OpenOutputFileFunction;
 import mylisp.func.OrFunction;
 import mylisp.func.QuoteFunction;
+import mylisp.func.ReadCharFunction;
 import mylisp.func.SetFunction;
 import mylisp.func.SubFunction;
 import mylisp.func.TimeFunction;
@@ -80,10 +84,14 @@ public class FunctionController {
             new IsString(),
             new GThanFunction(),
             new IFFunction(),
+            new IsPort(),
             new CondFunction(),
             new EqualFunction(),
             new SetFunction(),
             new DisplayFunction(),
+            new OpenInputFileFunction(),
+            new OpenOutputFileFunction(),
+            new ReadCharFunction(),
             new LetFunction(), // new CallCCFunction,
         };
 

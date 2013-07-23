@@ -22,14 +22,14 @@ public class CarFunction implements Operator {
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if (cell.getCdr().length != 1) {
-            throw new FunctionException("car: expects 1 argument, given " + cell.getCdr().length);
+            throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length);
         }
 
         Sexp cdr = MyLisp.apply(cell.getCdr()[0], env);
         if(cdr instanceof IPair){
             return ((IPair)cdr).getCar();
         }else{
-            throw new FunctionException("car: expects argument of type <pair>; given " + cdr);
+            throw new FunctionException(operatorSymbol() + ": expects argument of type <pair>; given " + cdr);
         }
     }
 

@@ -1,5 +1,7 @@
 package mylisp.core;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.regex.Matcher;
@@ -28,6 +30,10 @@ public abstract class Atom implements Sexp {
             return AtomBoolean.createAtomBoolean(value.toString().equals(AtomBoolean.T));
         } else if (value instanceof Number) {
             return new AtomNumber((Number) value);
+        } else if (value instanceof InputStream) {
+            return new AtomPort((InputStream) value);
+        } else if (value instanceof OutputStream) {
+            return new AtomPort((OutputStream) value);
         } else {
             Number num = getNumber(value.toString());
             if (num == null) {
@@ -35,7 +41,7 @@ public abstract class Atom implements Sexp {
                 if (str == null) {
                     return new AtomSymbol(value.toString());
                 } else {
-                    return new AtomString(value.toString());
+                    return new AtomString(value.toString().substring(1, value.toString().length()-1));
                 }
             } else {
                 return new AtomNumber(num);

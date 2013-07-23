@@ -23,6 +23,7 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
         testMap.put("(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)", "(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)");
         testMap.put("'(1 '2 3)", "(quote (1 (quote 2) 3))");
         testMap.put("(let loop((n1 n) (p n)))", "(let loop ((n1 n) (p n)))");        

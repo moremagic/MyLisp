@@ -22,7 +22,7 @@ public class AtomString extends Atom{
 
     @Override
     public String toString() {
-        return value;
+        return "\"" + value + "\"";
     }
     
    @Override
