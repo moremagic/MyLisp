@@ -1,6 +1,7 @@
 package mylisp.core;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,14 +46,18 @@ public abstract class Atom implements Sexp {
     private static Number getNumber(String s) {
         Matcher matcher = pattern_number.matcher(s);
         if (matcher.matches()) {
-            try {
-                if (s.indexOf(".") != -1) {
+            if (s.indexOf(".") != -1) {
+                try {
                     return new Double(s);
-                } else {
-                    return new Integer(s);
+                } catch (NumberFormatException err) {
+                    return new BigDecimal(new Double(s));
                 }
-            } catch (NumberFormatException err) {
-                return new BigDecimal(new Double(s));
+            } else {
+                try {
+                    return new Integer(s);
+                } catch (NumberFormatException err) {
+                    return new BigInteger(s);
+                }
             }
         }
 
