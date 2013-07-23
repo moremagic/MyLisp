@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
@@ -14,7 +15,7 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class EnvPrintFunction implements IFunction {
+public class EnvPrintFunction implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -26,7 +27,7 @@ public class EnvPrintFunction implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "env-print";
     }
 }

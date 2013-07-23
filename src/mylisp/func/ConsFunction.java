@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.AtomSymbol;
@@ -15,7 +16,7 @@ import mylisp.core.Sexp;
  * cons Function
  * @author moremagic
  */
-public class ConsFunction implements IFunction{
+public class ConsFunction implements Operator{
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException{
         if(cell.getCdr().length > 2){
@@ -35,7 +36,7 @@ public class ConsFunction implements IFunction{
     
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "cons";
     }
 

@@ -68,7 +68,8 @@ public class Lambda implements IPair {
 
     @Override
     public String toString() {
-        return cell.toString() + "[" + localEnv.getClass().getName() + "@" + Integer.toHexString(localEnv.hashCode()) +"]";
+        return cell.toString();
+        //return cell.toString() + "[" + localEnv.getClass().getName() + "@" + Integer.toHexString(localEnv.hashCode()) +"]";
     }
 
 //    @Override

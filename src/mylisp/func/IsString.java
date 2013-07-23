@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -17,12 +18,12 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class IsString implements IFunction {
+public class IsString implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if (cell.getCdr().length != 1) {
-            throw new FunctionException(functionSymbol() + ": expects " + cell.getCdr().length + " argument");
+            throw new FunctionException(operatorSymbol() + ": expects " + cell.getCdr().length + " argument");
         }
 
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
@@ -33,7 +34,7 @@ public class IsString implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "string?";
     }
 }

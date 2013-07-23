@@ -2,19 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mylisp.func;
+package mylisp.core;
 
 import java.util.Map;
-import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
-import mylisp.core.Sexp;
+import mylisp.func.FunctionException;
 
 
 /**
- * Function interface
+ * Operator interface
  * @author moremagic
  */
-public interface IFunction {
-    public String functionSymbol();
+public interface Operator {
+    public String operatorSymbol();
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException;
 }

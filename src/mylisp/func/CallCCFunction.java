@@ -10,6 +10,7 @@ import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * call/cc class
@@ -17,12 +18,12 @@ import mylisp.core.Sexp;
  * 
  * @author moremagic
  */
-public class CallCCFunction implements IFunction{
+public class CallCCFunction implements SpecialOperator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if(cell.getCdr().length != 1){
-            throw new FunctionException(functionSymbol() + ": expects 1 argument, given " + cell.getCdr().length );
+            throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length );
         }
         
         Sexp sexp = MyLisp.eval(cell.getCdr()[cell.getCdr().length-1], env);
@@ -31,7 +32,7 @@ public class CallCCFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "call/cc";
     }
 

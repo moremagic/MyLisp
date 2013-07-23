@@ -5,7 +5,9 @@
 package mylisp;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.core.Atom;
@@ -20,24 +22,24 @@ import mylisp.core.Sexp;
 public class MyLispPerser {
 
     public static void main(String[] argv) {
+        Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)", "(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)");
+        testMap.put("'(1 '2 3)", "(quote (1 (quote 2) 3))");
+        testMap.put("(let loop((n1 n) (p n)))", "(let loop ((n1 n) (p n)))");        
+        testMap.put("(\" a b c '() '(quote) \\\" \" aaa)", "(\" a b c '() '(quote) \\\" \" aaa)");
+        testMap.put("('a 'b 'c ('d 'e))", "((quote a) (quote b) (quote c) ((quote d) (quote e)))");
+        testMap.put("(('()) 123456789012345)", "(((quote ())) 123456789012345)");
+        testMap.put("(lat? '(1 (3 4)))", "(lat? (quote (1 (3 4))))");
+        testMap.put("((x) (1 2))", "((x) (1 2))");
+        testMap.put("(lambda (x) (and (not (pair? x))))", "(lambda (x) (and (not (pair? x))))");
+        testMap.put("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))", "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
 
-        String[] test_codes = {
-            "(let loop((n1 n) (p n)))",
-            "(\"aa bb  cc & (asdf) '(asdfasd) \\' \\\" \" aaa)",
-            "(\" a b c '() '(quote) \\\" \" aaa)",
-            "('a 'b 'c ('d 'e))",
-            "(('()) 123456789012345)",
-            "(lat? '(1 (3 4)))",
-            "((x) (1 2))",
-            "(lambda (x) (and (not (pair? x))))",
-            "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",};
-
-        for (String s : test_codes) {
-            testParse(s);
+        for (Map.Entry<String, String> s : testMap.entrySet()) {
+            testParse(s.getKey(), s.getValue());
         }
     }
 
-    private static void testParse(String test_code) {
+    private static void testParse(String test_code, String expected_code) {
         try {
             Sexp[] ss = parses(test_code);
             StringBuilder sb = new StringBuilder();
@@ -45,10 +47,10 @@ public class MyLispPerser {
                 sb.append(s);
             }
 
-            if (test_code.equals(sb.toString())) {
+            if (expected_code.equals(sb.toString())) {
                 System.out.println("            [" + test_code + "] complete!");
             } else {
-                System.out.println("original    [" + test_code + "]\n"
+                System.out.println("original    [" + expected_code + "]\n"
                         + "ng          [" + sb.toString() + "]");
             }
         } catch (Exception ex) {
@@ -115,6 +117,9 @@ public class MyLispPerser {
             return parseCell(sExps);
         } else if (sExps.startsWith("\"")) {
             return parseAtomString(sExps);
+        } else if (sExps.startsWith("'")) {
+            Sexp atom = parse(sExps.substring(1));
+            return new Cell(Atom.newAtom("quote"), atom);
         } else {
             return parseAtom(sExps);
         }

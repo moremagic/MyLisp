@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -16,7 +17,7 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class EqualFunction implements IFunction {
+public class EqualFunction implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -30,7 +31,7 @@ public class EqualFunction implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "eq?";
     }
 }

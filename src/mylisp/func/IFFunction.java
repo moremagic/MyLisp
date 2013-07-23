@@ -10,12 +10,13 @@ import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * IF class
  * @author moremagic
  */
-public class IFFunction implements IFunction{
+public class IFFunction implements SpecialOperator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -33,7 +34,7 @@ public class IFFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "if";
     }
 }

@@ -8,19 +8,20 @@ import java.util.Map;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * quote Function
  * @author moremagic
  */
-public class QuoteFunction implements IFunction{
+public class QuoteFunction implements SpecialOperator{
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException{
         return cell.getCdr()[0];
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "quote";
     }
 

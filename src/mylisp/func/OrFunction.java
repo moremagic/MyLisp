@@ -11,12 +11,13 @@ import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * or class
  * @author moremagic
  */
-public class OrFunction implements IFunction{
+public class OrFunction implements SpecialOperator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -30,7 +31,7 @@ public class OrFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "or";
     }
 

@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -15,7 +16,7 @@ import mylisp.core.Sexp;
  * set! class
  * @author moremagic
  */
-public class SetFunction implements IFunction{
+public class SetFunction implements Operator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -33,7 +34,7 @@ public class SetFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "set!";
     }
 }

@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.AtomSymbol;
@@ -14,7 +15,7 @@ import mylisp.core.Sexp;
  * time class
  * @author moremagic
  */
-public class TimeFunction implements IFunction{
+public class TimeFunction implements Operator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -25,7 +26,7 @@ public class TimeFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "time";
     }
 

@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.math.BigDecimal;
 import java.util.Map;
 import mylisp.MyLisp;
@@ -18,7 +19,7 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class GThanFunction implements IFunction {
+public class GThanFunction implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -49,7 +50,7 @@ public class GThanFunction implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return ">";
     }
 }

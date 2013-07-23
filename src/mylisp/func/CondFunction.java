@@ -12,13 +12,14 @@ import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * Cond class
  *
  * @author moremagic
  */
-public class CondFunction implements IFunction {
+public class CondFunction implements SpecialOperator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -59,7 +60,7 @@ public class CondFunction implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "cond";
     }
 }

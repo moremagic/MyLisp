@@ -2,15 +2,37 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mylisp.func;
+package mylisp.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
-import mylisp.core.IPair;
-import mylisp.core.Lambda;
-import mylisp.core.Sexp;
+import mylisp.func.AddFunction;
+import mylisp.func.AndFunction;
+import mylisp.func.CarFunction;
+import mylisp.func.CdrFunction;
+import mylisp.func.CondFunction;
+import mylisp.func.ConsFunction;
+import mylisp.func.DefineFunction;
+import mylisp.func.DisplayFunction;
+import mylisp.func.EnvPrintFunction;
+import mylisp.func.EqualFunction;
+import mylisp.func.FunctionException;
+import mylisp.func.GThanFunction;
+import mylisp.func.IFFunction;
+import mylisp.func.IsBoolean;
+import mylisp.func.IsNull;
+import mylisp.func.IsNumber;
+import mylisp.func.IsPair;
+import mylisp.func.IsString;
+import mylisp.func.IsSymbol;
+import mylisp.func.LetFunction;
+import mylisp.func.MultiFunction;
+import mylisp.func.NotFunction;
+import mylisp.func.OrFunction;
+import mylisp.func.QuoteFunction;
+import mylisp.func.SetFunction;
+import mylisp.func.SubFunction;
+import mylisp.func.TimeFunction;
 
 /**
  * function callable class
@@ -20,22 +42,23 @@ import mylisp.core.Sexp;
 public class FunctionController {
 
     private static FunctionController instance = new FunctionController();
-    private Map<String, IFunction> funcMap = new HashMap();
+    private Map<String, Operator> funcMap = new HashMap();
 
     public static FunctionController getInstance() {
         return instance;
     }
-    
+
     /**
      * 拡張用Function登録
-     * @param func 
+     *
+     * @param func
      */
-    public void addFunction(IFunction func){
-        funcMap.put(func.functionSymbol(), func);
+    public void addFunction(Operator func) {
+        funcMap.put(func.operatorSymbol(), func);
     }
 
     private FunctionController() {
-        IFunction[] funcs = {
+        Operator[] funcs = {
             new EnvPrintFunction(),//debug-function
             new TimeFunction(),//debug-function
             new CarFunction(),
@@ -64,8 +87,8 @@ public class FunctionController {
             new LetFunction(), // new CallCCFunction,
         };
 
-        for (IFunction f : funcs) {
-            funcMap.put(f.functionSymbol(), f);
+        for (Operator f : funcs) {
+            funcMap.put(f.operatorSymbol(), f);
         }
     }
 

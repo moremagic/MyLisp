@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import mylisp.core.AtomSymbol;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
-import mylisp.func.FunctionController;
+import mylisp.core.FunctionController;
 import mylisp.func.FunctionException;
 
 /**

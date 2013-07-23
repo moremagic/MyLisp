@@ -13,13 +13,14 @@ import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Lambda;
 import mylisp.core.Sexp;
+import mylisp.core.SpecialOperator;
 
 /**
  * Let class
  *
  * @author moremagic
  */
-public class LetFunction implements IFunction {
+public class LetFunction implements SpecialOperator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -65,7 +66,7 @@ public class LetFunction implements IFunction {
     }
 
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "let";
     }
 }

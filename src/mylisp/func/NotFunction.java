@@ -4,6 +4,7 @@
  */
 package mylisp.func;
 
+import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
@@ -16,7 +17,7 @@ import mylisp.core.Sexp;
  * not class
  * @author moremagic
  */
-public class NotFunction implements IFunction{
+public class NotFunction implements Operator{
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -29,7 +30,7 @@ public class NotFunction implements IFunction{
     }
     
     @Override
-    public String functionSymbol() {
+    public String operatorSymbol() {
         return "not";
     }
 
