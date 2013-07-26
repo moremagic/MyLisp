@@ -33,11 +33,17 @@ public class CondFunction implements SpecialOperator {
                     if (ccc.getSexps().length == 1) {
                         ret = MyLisp.eval(cccCar, env);
                         break;
-                    } else if (ccc.getSexps().length == 2) {
-                        ret = MyLisp.eval(ccc.getCdr()[0], env);
-                        break;
                     } else {
-                        throw new FunctionException("procedure application: expected procedure");
+                        for(int j = 0 ; j < ccc.getCdr().length ; j++){
+                            if(j == ccc.getCdr().length-1){
+                                //末尾再帰Flag ON
+                                MyLisp.tailCall = true;
+                                ret = ccc.getCdr()[j];
+                            }else{
+                                ret = MyLisp.eval(ccc.getCdr()[j], env);
+                            }
+                        }
+                        break;
                     }
                 } else if (i == cell.getCdr().length - 1) {
                     //末尾再帰Flag ON

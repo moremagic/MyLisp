@@ -26,19 +26,17 @@ public class LetFunction implements SpecialOperator {
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp env_list = null;
         Sexp lambda_body = null;
-        
-        if (cell.getCdr().length == 2) {
+
+        if (cell.getCdr()[0] instanceof IPair) {
             //名前なしLet
             env_list = cell.getCdr()[0];
             lambda_body = cell.getCdr()[1];
-        }else if(cell.getCdr().length == 3){
+        } else {
             //名前付きLet
             env_list = cell.getCdr()[1];
             lambda_body = cell.getCdr()[2];
-        }else{
-            throw new FunctionException("let: bad syntax in: " + cell.toString());
         }
-        
+
         if (env_list instanceof IPair && lambda_body instanceof IPair) {
             Sexp[] ll = ((IPair) env_list).getSexps();
             Sexp[] keys = new Sexp[ll.length];
@@ -53,9 +51,11 @@ public class LetFunction implements SpecialOperator {
                 }
             }
 
-            if(cell.getCdr().length == 2){
+            if (cell.getCdr()[0] instanceof IPair) {
+                //名前なしLet
                 return MyLisp.eval(new Cell(new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body), values), env);
-            }else{
+            } else {
+                //名前ありLet
                 Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>(env);
                 MyLisp.eval(new Cell(Atom.newAtom("define"), cell.getCdr()[0], new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body)), localEnv);
                 return MyLisp.eval(new Cell(cell.getCdr()[0], values), localEnv);

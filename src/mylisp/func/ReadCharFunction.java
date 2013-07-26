@@ -10,6 +10,7 @@ import mylisp.core.Operator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomPort;
 import mylisp.core.AtomSymbol;
@@ -31,12 +32,16 @@ public class ReadCharFunction implements Operator {
 
         Sexp ret = null;
         
-        Sexp cdr = cell.getCdr()[0];
+        Sexp cdr = MyLisp.apply(cell.getCdr()[0], env);
         if (cdr instanceof AtomPort && ((AtomPort) cdr).getValue() instanceof InputStream) {
             AtomPort port = (AtomPort) cdr;
             try {
                 char c = (char) ((InputStream) port.getValue()).read();
-                ret = Atom.newAtom(new String(new char[]{c}));
+                if(c == '\uFFFF'){
+                    ret = Atom.newAtom(c);
+                }else{
+                    ret = Atom.newAtom(new String(new char[]{c}));                
+                }
             } catch (IOException ex) {
                 Logger.getLogger(ReadCharFunction.class.getName()).log(Level.SEVERE, null, ex);
             }

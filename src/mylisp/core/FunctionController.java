@@ -20,6 +20,7 @@ import mylisp.func.FunctionException;
 import mylisp.func.GThanFunction;
 import mylisp.func.IFFunction;
 import mylisp.func.IsBoolean;
+import mylisp.func.IsEOF;
 import mylisp.func.IsNull;
 import mylisp.func.IsNumber;
 import mylisp.func.IsPair;
@@ -53,12 +54,12 @@ public class FunctionController {
     }
 
     /**
-     * 拡張用Function登録
+     * 拡張用Operator登録
      *
-     * @param func
+     * @param oper
      */
-    public void addFunction(Operator func) {
-        funcMap.put(func.operatorSymbol(), func);
+    public void addOperator(Operator oper) {
+        funcMap.put(oper.operatorSymbol(), oper);
     }
 
     private FunctionController() {
@@ -85,6 +86,7 @@ public class FunctionController {
             new GThanFunction(),
             new IFFunction(),
             new IsPort(),
+            new IsEOF(),
             new CondFunction(),
             new EqualFunction(),
             new SetFunction(),
@@ -109,14 +111,9 @@ public class FunctionController {
             ll.lambdaApply(env);
             return ll;
         } else if (pair instanceof Cell && funcMap.containsKey(func.toString())) {
-            
-            
-//        if(sexp instanceof AtomSymbol){
-//            throw new FunctionException("reference to undefined identifier: " + sexp);
-//        }            
-            
-            
-            return funcMap.get(func.toString()).eval((Cell) pair, env);
+            //TODO ; 将来的にはスペシャルフォーム以外のcdr applyはここで統一して行いたい。
+            Operator op = funcMap.get(func.toString());
+            return op.eval((Cell) pair, env);
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }
