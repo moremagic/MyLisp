@@ -109,6 +109,13 @@ public class FunctionController {
             ll.lambdaApply(env);
             return ll;
         } else if (pair instanceof Cell && funcMap.containsKey(func.toString())) {
+            
+            
+//        if(sexp instanceof AtomSymbol){
+//            throw new FunctionException("reference to undefined identifier: " + sexp);
+//        }            
+            
+            
             return funcMap.get(func.toString()).eval((Cell) pair, env);
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());

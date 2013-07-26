@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,6 +33,11 @@ public class MyLisp {
     private Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
     public MyLisp() {
+        try {
+            callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String[] args) {
@@ -53,7 +59,7 @@ public class MyLisp {
         System.out.println("usage: file");
     }
 
-    public void callEvalFile(File file) {
+    final public void callEvalFile(File file) {
         try {
             BufferedReader br = null;
             try {
@@ -144,9 +150,12 @@ public class MyLisp {
         Sexp ret;
         if (sexp instanceof IPair) {
             IPair pair = (IPair) sexp;
-            Sexp car = apply(pair.getCar(), env);
-
-            ret = FunctionController.getInstance().exec(car, pair, env);
+            if (pair.getSexps().length != 0) {
+                Sexp car = apply(pair.getCar(), env);
+                ret = FunctionController.getInstance().exec(car, pair, env);
+            } else {
+                ret = pair;
+            }
         } else {
             ret = apply(sexp, env);
         }

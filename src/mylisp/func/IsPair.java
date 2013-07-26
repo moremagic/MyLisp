@@ -26,9 +26,6 @@ public class IsPair implements Operator{
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        if(sexp instanceof AtomSymbol){
-            throw new FunctionException("reference to undefined identifier: " + sexp);
-        }
         return Atom.newAtom(sexp instanceof IPair);
     }
     
