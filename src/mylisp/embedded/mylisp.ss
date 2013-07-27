@@ -15,10 +15,10 @@
 
 (define lat?
   (lambda (n)
-  (cond ((atom? n) #t)
-        ((null? n) #t)
-        (else (and (atom? (car n))
-                   (lat? (cdr n)))))))
+     (cond ((atom? n) #t)
+           ((null? n) #t)
+           (else (and (atom? (car n))
+                      (lat? (cdr n)))))))
 
 (define insertR
   (lambda (new old lat)
@@ -232,5 +232,4 @@
         (close-input-port iport)))
 
 (type1 "C:\Users\mitsu\Desktop\test.txt")
-
 (type1 "C:\Users\mitsu\Desktop\mylisp.lisp.ss")

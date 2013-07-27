@@ -13,6 +13,7 @@ import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
+import mylisp.core.TailCallOperator;
 
 /**
  * Cond class
@@ -34,25 +35,24 @@ public class CondFunction implements SpecialOperator {
                         ret = MyLisp.eval(cccCar, env);
                         break;
                     } else {
-                        for(int j = 0 ; j < ccc.getCdr().length ; j++){
-                            if(j == ccc.getCdr().length-1){
-                                //末尾再帰Flag ON
-                                MyLisp.tailCall = true;
-                                ret = ccc.getCdr()[j];
-                            }else{
+                        for (int j = 0; j < ccc.getCdr().length; j++) {
+                            if (j == ccc.getCdr().length - 1) {
+                                //末尾再帰最適化
+                                ret = TailCallOperator.resurveTailCall(ccc.getCdr()[j], env);
+                            } else {
                                 ret = MyLisp.eval(ccc.getCdr()[j], env);
                             }
                         }
                         break;
                     }
                 } else if (i == cell.getCdr().length - 1) {
-                    //末尾再帰Flag ON
-                    MyLisp.tailCall = true;
                     if (ccc.getCar().toString().equals("else")) {
-                        ret = ccc.getCdr()[2];
-                    } else if (!cccCar.toString().equals(AtomBoolean.F)) {
+                        //末尾再帰最適化
+                        ret = TailCallOperator.resurveTailCall(ccc.getCdr()[2], env);
+                   } else if (!cccCar.toString().equals(AtomBoolean.F)) {
                         if (ccc.getCdr().length != 0 && !cccCar.toString().equals(AtomBoolean.F)) {
-                            ret = ccc.getCdr()[0];
+                            //末尾再帰最適化
+                            ret = TailCallOperator.resurveTailCall(ccc.getCdr()[0], env);
                         } else {
                             ret = cccCar;
                         }

@@ -4,9 +4,7 @@
  */
 package mylisp.func;
 
-import java.util.HashMap;
 import java.util.Map;
-import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
@@ -14,6 +12,7 @@ import mylisp.core.IPair;
 import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
+import mylisp.core.TailCallOperator;
 
 /**
  * Let class
@@ -53,12 +52,17 @@ public class LetFunction implements SpecialOperator {
 
             if (cell.getCdr()[0] instanceof IPair) {
                 //名前なしLet
-                return MyLisp.eval(new Cell(new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body), values), env);
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body);
+
+                //末尾再帰最適化
+                return TailCallOperator.resurveTailCall(new Cell(lambda, values), env);
             } else {
-                //名前ありLet
-                Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>(env);
-                MyLisp.eval(new Cell(Atom.newAtom("define"), cell.getCdr()[0], new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body)), localEnv);
-                return MyLisp.eval(new Cell(cell.getCdr()[0], values), localEnv);
+                //名前ありLet     
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body);
+                env.put((AtomSymbol) cell.getCdr()[0], lambda);
+
+                //末尾再帰最適化
+                return TailCallOperator.resurveTailCall(new Cell(cell.getCdr()[0], values), env);
             }
         } else {
             throw new FunctionException("let: bad syntax in: " + cell.toString());

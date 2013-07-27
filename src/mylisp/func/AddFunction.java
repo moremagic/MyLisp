@@ -14,6 +14,7 @@ import mylisp.core.AtomNumber;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
+import mylisp.core.TailCallOperator;
 
 /**
  * +(Plus) Function
@@ -24,18 +25,17 @@ public class AddFunction implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        Number ret = 0;
+        Sexp ret = Atom.newAtom(0);
         for (Sexp s : cell.getCdr()) {
-            Sexp buf = MyLisp.apply(s, env);
-
+            Sexp buf = MyLisp.apply(s, env);    
             if (buf instanceof AtomNumber) {
-                ret = addNumber(ret, ((AtomNumber) buf).getValue());
+                ret = Atom.newAtom(addNumber(((AtomNumber)ret).getValue(), ((AtomNumber) buf).getValue()));
             } else {
                 throw new FunctionException("reference to undefined identifier: " + buf.toString());
             }
         }
 
-        return Atom.newAtom(ret);
+        return ret;
     }
 
     private Number addNumber(Number a, Number b) {

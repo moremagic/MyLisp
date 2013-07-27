@@ -56,7 +56,11 @@ public class Lambda implements IPair {
 
         Sexp ret = null;
         for(int i = 1 ; i < getCdr().length ; i++){
-            ret = MyLisp.eval(getCdr()[i], localEnv);
+            if(i == getCdr().length-1){
+                ret = TailCallOperator.resurveTailCall(getCdr()[i], localEnv);
+            }else{
+                ret = MyLisp.eval(getCdr()[i], localEnv);
+            }
         }
         
         return ret;

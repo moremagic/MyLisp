@@ -18,22 +18,19 @@ import mylisp.core.AtomSymbol;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.FunctionController;
+import mylisp.core.TailCallOperator;
 import mylisp.func.FunctionException;
 
 /**
  *
  * @author moremagic
  */
-public class MyLisp {
-
-    /**
-     * 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする *
-     */
-    public static boolean tailCall = false;
+public class MyLisp {    
     private Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
     public MyLisp() {
         try {
+            //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
         } catch (URISyntaxException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,7 +132,12 @@ public class MyLisp {
      */
     public Sexp eval(Sexp sexp) throws FunctionException {
         System.out.println("[eval] " + sexp.toString());
-        return MyLisp.eval(sexp, env);
+        
+        //eval実行 ＋ 末尾再帰実行
+        Sexp ret = MyLisp.eval(sexp, env);
+        ret = TailCallOperator.evalTailCall(ret);
+        
+        return ret;
     }
 
     /**
@@ -146,7 +148,18 @@ public class MyLisp {
      * @return
      * @throws FunctionException
      */
+    private static long evalStackCnt = 0;    
     public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        evalStackCnt++;
+        
+//        {//debug-print
+//            StringBuilder sb = new StringBuilder();
+//            for(int i = 0 ; i < evalStackCnt ; i++){
+//                sb.append(" ");
+//            }
+//            System.out.println(sb.append(sexp).toString());
+//        }
+        
         Sexp ret;
         if (sexp instanceof IPair) {
             IPair pair = (IPair) sexp;
@@ -160,15 +173,16 @@ public class MyLisp {
             ret = apply(sexp, env);
         }
 
-        //末尾最適化のための再評価:うまく動いていない。。＞＜；
-        if (tailCall) {
-            tailCall = false;
-            ret = eval(ret, env);
-        }
-
+        evalStackCnt--;
         return ret;
     }
 
+    
+    public static void tranporin(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        System.out.println("\t" + evalStackCnt + "  " + env.toString() + " " + sexp);
+    }
+    
+    
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof IPair) {
