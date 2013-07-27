@@ -39,7 +39,6 @@ public class TailCallOperator {
         }else{
             //末尾再帰しない
             return MyLisp.eval(sexp, tailCallEnv);
-            //return sexp;
         }
     }
     
