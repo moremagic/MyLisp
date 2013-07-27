@@ -61,7 +61,7 @@ public class FunctionController {
     public void addOperator(Operator oper) {
         funcMap.put(oper.operatorSymbol(), oper);
     }
-
+    
     private FunctionController() {
         Operator[] funcs = {
             new EnvPrintFunction(),//debug-function

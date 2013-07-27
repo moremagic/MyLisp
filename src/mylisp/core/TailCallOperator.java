@@ -31,9 +31,8 @@ public class TailCallOperator {
      * @throws FunctionException 
      */
     public static Sexp reserveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws FunctionException{
-        System.out.println("resulve;" + sexp);
         //末尾再帰判定
-        if(false){
+        if(isTailCall(sexp)){
             TailCallOperator.tailCall = true;
             TailCallOperator.tailCallEnv = tailCallEnv;
             return sexp;
@@ -50,6 +49,17 @@ public class TailCallOperator {
             ret = eval(ret, tailCallEnv);
         }
         return ret;
+    }
+    
+    /**
+     * 末尾再帰コードかどうか判定する
+     * TODO: 未完成
+     * 
+     * @param sexp
+     * @return 
+     */
+    private static boolean isTailCall(Sexp sexp){
+        return false;
     }
     
 }
