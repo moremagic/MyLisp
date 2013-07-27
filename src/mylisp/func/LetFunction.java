@@ -55,14 +55,14 @@ public class LetFunction implements SpecialOperator {
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body);
 
                 //末尾再帰最適化
-                return TailCallOperator.resurveTailCall(new Cell(lambda, values), env);
+                return TailCallOperator.reserveTailCall(new Cell(lambda, values), env);
             } else {
                 //名前ありLet     
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new Cell(keys), lambda_body);
                 env.put((AtomSymbol) cell.getCdr()[0], lambda);
 
                 //末尾再帰最適化
-                return TailCallOperator.resurveTailCall(new Cell(cell.getCdr()[0], values), env);
+                return TailCallOperator.reserveTailCall(new Cell(cell.getCdr()[0], values), env);
             }
         } else {
             throw new FunctionException("let: bad syntax in: " + cell.toString());

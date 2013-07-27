@@ -30,7 +30,8 @@ public class TailCallOperator {
      * @return
      * @throws FunctionException 
      */
-    public static Sexp resurveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws FunctionException{
+    public static Sexp reserveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws FunctionException{
+        System.out.println("resulve;" + sexp);
         //末尾再帰判定
         if(false){
             TailCallOperator.tailCall = true;

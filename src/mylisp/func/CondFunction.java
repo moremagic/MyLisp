@@ -38,7 +38,7 @@ public class CondFunction implements SpecialOperator {
                         for (int j = 0; j < ccc.getCdr().length; j++) {
                             if (j == ccc.getCdr().length - 1) {
                                 //末尾再帰最適化
-                                ret = TailCallOperator.resurveTailCall(ccc.getCdr()[j], env);
+                                ret = TailCallOperator.reserveTailCall(ccc.getCdr()[j], env);
                             } else {
                                 ret = MyLisp.eval(ccc.getCdr()[j], env);
                             }
@@ -48,11 +48,11 @@ public class CondFunction implements SpecialOperator {
                 } else if (i == cell.getCdr().length - 1) {
                     if (ccc.getCar().toString().equals("else")) {
                         //末尾再帰最適化
-                        ret = TailCallOperator.resurveTailCall(ccc.getCdr()[2], env);
+                        ret = TailCallOperator.reserveTailCall(ccc.getCdr()[2], env);
                    } else if (!cccCar.toString().equals(AtomBoolean.F)) {
                         if (ccc.getCdr().length != 0 && !cccCar.toString().equals(AtomBoolean.F)) {
                             //末尾再帰最適化
-                            ret = TailCallOperator.resurveTailCall(ccc.getCdr()[0], env);
+                            ret = TailCallOperator.reserveTailCall(ccc.getCdr()[0], env);
                         } else {
                             ret = cccCar;
                         }

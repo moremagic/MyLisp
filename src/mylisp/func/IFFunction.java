@@ -29,7 +29,7 @@ public class IFFunction implements SpecialOperator {
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
         if (sexp instanceof AtomBoolean && sexp.toString().equals(AtomBoolean.F)) {
             //末尾再帰コード
-            return TailCallOperator.resurveTailCall(cell.getCdr()[2], env);
+            return TailCallOperator.reserveTailCall(cell.getCdr()[2], env);
         } else {
             return MyLisp.eval(cell.getCdr()[1], env);
         }
