@@ -23,6 +23,7 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("((eq?-c 'salada) 'salada)", "((eq?-c (quote salada)) (quote salada))");
         testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) \t(let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
         testMap.put("(test '(eq? (atom? '(atom turkey or) or) #f))", "(test (quote (eq? (atom? (quote (atom turkey or)) or) #f)))");
         testMap.put("(if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\"))", "(if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\"))");
