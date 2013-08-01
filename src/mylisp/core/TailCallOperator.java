@@ -34,7 +34,7 @@ public class TailCallOperator {
      */
     public static Sexp reserveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws FunctionException {
         //末尾再帰判定
-        if (isTailCall(sexp, tailCallEnv)) {
+        if (!tailCall && isTailCall(sexp, tailCallEnv)) {
             TailCallOperator.tailCall = true;
             TailCallOperator.m_tailCallEnv = tailCallEnv;
             return sexp;
@@ -72,7 +72,7 @@ public class TailCallOperator {
                 ret = isProcess((IPair) sexp, env);
             } else {
                 String buf = sexp.toString();
-                ret = buf.equals(Lambda.LAMBDA_SYMBOL);
+                ret = (buf.equals(Lambda.LAMBDA_SYMBOL) || buf.equals("if") || buf.equals("cond") ) && pair.getCdr().length == 1;
             }
         } catch (FunctionException ex) {
             ret = false;
