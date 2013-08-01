@@ -10,6 +10,8 @@ import mylisp.func.AddFunction;
 import mylisp.func.AndFunction;
 import mylisp.func.CarFunction;
 import mylisp.func.CdrFunction;
+import mylisp.func.CloseInputFileFunction;
+import mylisp.func.CloseOutputFileFunction;
 import mylisp.func.CondFunction;
 import mylisp.func.ConsFunction;
 import mylisp.func.DefineFunction;
@@ -92,9 +94,11 @@ public class FunctionController {
             new SetFunction(),
             new DisplayFunction(),
             new OpenInputFileFunction(),
+            new CloseInputFileFunction(),
             new OpenOutputFileFunction(),
+            new CloseOutputFileFunction(),
             new ReadCharFunction(),
-            new LetFunction(), // new CallCCFunction,
+            new LetFunction(), // new CallCCFunction(),
         };
 
         for (Operator f : funcs) {

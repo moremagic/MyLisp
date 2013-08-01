@@ -19,15 +19,18 @@ import mylisp.core.SpecialOperator;
  * @author moremagic
  */
 public class CallCCFunction implements SpecialOperator{
-
+    
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
         if(cell.getCdr().length != 1){
             throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length );
         }
         
-        Sexp sexp = MyLisp.eval(cell.getCdr()[cell.getCdr().length-1], env);
-        System.out.println("------------ call/cc eval! ----------");
+
+        //TODO たぶんこんな感じで行ける
+        //Lambda クラスを生成して返す。
+        //評価は停止する。
+        
         return Atom.newAtom(1);
     }
     

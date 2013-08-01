@@ -4,25 +4,28 @@
  */
 package mylisp.func;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import mylisp.core.Operator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
+import mylisp.core.AtomBoolean;
 import mylisp.core.AtomPort;
+import mylisp.core.AtomString;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;
 
 /**
- * read-char Function
+ * close-output-file class
  *
  * @author moremagic
  */
-public class ReadCharFunction implements Operator {
+public class CloseOutputFileFunction implements Operator {
 
     @Override
     public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
@@ -30,26 +33,22 @@ public class ReadCharFunction implements Operator {
             throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length);
         }
 
-        Sexp ret = null;
-        
         Sexp cdr = MyLisp.apply(cell.getCdr()[0], env);
-        if (cdr instanceof AtomPort && ((AtomPort) cdr).getValue() instanceof InputStream) {
-            AtomPort port = (AtomPort) cdr;
+        if(cdr instanceof AtomPort){
             try {
-                char c = (char) ((InputStream) port.getValue()).read();
-                    ret = Atom.newAtom(new String(new char[]{c}));                
+                ((OutputStream)((AtomPort)cdr).getValue()).close();
+                return Atom.newAtom(AtomBoolean.T);
             } catch (IOException ex) {
-                Logger.getLogger(ReadCharFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CloseOutputFileFunction.class.getName()).log(Level.SEVERE, null, ex);
+                throw new FunctionException(operatorSymbol() + ": cannot close input file: " + new File(((AtomString)cdr).getValue()).getAbsolutePath());
             }
-        } else {
-            throw new FunctionException(operatorSymbol() + ": expects argument of type <input-port>; given " + cdr);
+        }else{
+            throw new FunctionException(operatorSymbol() + ": expects argument of type <path or port>; given " + cdr);
         }
-        
-        return ret;
     }
 
     @Override
     public String operatorSymbol() {
-        return "read-char";
+        return "close-output-file";
     }
 }
