@@ -32,6 +32,7 @@ public class MyLisp {
         try {
             //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
+            callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
         } catch (URISyntaxException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }

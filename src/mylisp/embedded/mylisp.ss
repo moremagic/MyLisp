@@ -9,6 +9,20 @@
 
 (define sub1 (lambda (n) (- n 1)))
 
+(define string=?
+    (lambda (s1 s2)
+        (cond ((and (string? s1) (string? s2))
+                (eq? s1 s2))
+                (else #f))))
+
+(define eqv?
+    (lambda (obj1 obj2)
+        (cond ((and (boolean? obj1) (boolean? obj2)) #t)
+            ((and (symbol? obj1) (symbol? obj2))
+                (string=? (symbol->string obj1)
+                    (symbol->string obj2)))
+            (else #f))))
+
 (define atom?
   (lambda (x) 
     (and (not (pair? x)) (not (null? x)))))

@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
  * @author moremagic
  */
 public abstract class Atom implements Sexp {
-
     private static final Pattern pattern_number = java.util.regex.Pattern.compile("^\\-?[0-9]*\\.?[0-9]+$");
     private static final Pattern pattern_string = java.util.regex.Pattern.compile("^\".*\"$");
+    private static final Pattern pattern_char = java.util.regex.Pattern.compile("^#\\\\.*$");
 
     public abstract Object getValue();
 
@@ -36,16 +36,21 @@ public abstract class Atom implements Sexp {
             return new AtomPort((OutputStream) value);
         } else {
             Number num = getNumber(value.toString());
-            if (num == null) {
-                String str = getString(value.toString());
-                if (str == null) {
-                    return new AtomSymbol(value.toString());
-                } else {
-                    return new AtomString(value.toString().substring(1, value.toString().length()-1));
-                }
-            } else {
+            if (num != null) {
                 return new AtomNumber(num);
             }
+            
+            String str = getString(value.toString());
+            if (str != null) {
+                return new AtomString(str);
+            }
+            
+            String cstr = getChar(value.toString());
+            if (cstr != null) {
+                return new AtomChar(cstr);
+            }
+            
+            return new AtomSymbol(value.toString());
         }
     }
 
@@ -72,6 +77,14 @@ public abstract class Atom implements Sexp {
 
     private static String getString(String s) {
         Matcher matcher = pattern_string.matcher(s);
+        if (matcher.matches()) {
+            return s;
+        }
+        return null;
+    }
+    
+    private static String getChar(String s) {
+        Matcher matcher = pattern_char.matcher(s);
         if (matcher.matches()) {
             return s;
         }

@@ -12,7 +12,11 @@ package mylisp.core;
 public class AtomString extends Atom{
     private String value;
     AtomString(String value){
-        this.value = value;
+        if(value.startsWith("\"") && value.endsWith("\"")){
+            this.value = value.substring(1, value.length() -1);
+        }else{
+            this.value = value;
+        }
     }
     
     @Override

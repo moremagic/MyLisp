@@ -8,7 +8,6 @@ import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.Atom;
-import mylisp.core.AtomString;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
 import mylisp.core.Sexp;

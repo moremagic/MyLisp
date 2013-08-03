@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.MyLisp;
-import mylisp.core.Atom;
+import mylisp.core.AtomChar;
 import mylisp.core.AtomPort;
 import mylisp.core.AtomSymbol;
 import mylisp.core.Cell;
@@ -37,7 +37,7 @@ public class ReadCharFunction implements Operator {
             AtomPort port = (AtomPort) cdr;
             try {
                 char c = (char) ((InputStream) port.getValue()).read();
-                    ret = Atom.newAtom(new String(new char[]{c}));                
+                ret = new AtomChar(c);
             } catch (IOException ex) {
                 Logger.getLogger(ReadCharFunction.class.getName()).log(Level.SEVERE, null, ex);
             }
