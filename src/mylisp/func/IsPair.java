@@ -26,7 +26,7 @@ public class IsPair implements Operator{
         }
         
         Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return Atom.newAtom(sexp instanceof IPair);
+        return Atom.newAtom((sexp instanceof IPair) && ((IPair)sexp).getSexps().length >= 1);
     }
     
     @Override

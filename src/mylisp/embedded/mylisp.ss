@@ -1,13 +1,9 @@
-
+;;r5rs
 (define = eq?)
 
 (define < (lambda (n m) (> m n)))
 
 (define zero? (lambda (x) (= x 0)))
-
-(define add1 (lambda (n) (+ n 1)))
-
-(define sub1 (lambda (n) (- n 1)))
 
 (define string=?
     (lambda (s1 s2)
@@ -22,6 +18,19 @@
                 (string=? (symbol->string obj1)
                     (symbol->string obj2)))
             (else #f))))
+
+(define (map f lst)
+  (cond ((pair? lst)
+         (cons (f (car lst)) (map f (cdr lst))))
+        ((null? lst)
+         '())
+        (else
+         (display "Not list"))))
+
+;;scheme 手習い
+(define add1 (lambda (n) (+ n 1)))
+
+(define sub1 (lambda (n) (- n 1)))
 
 (define atom?
   (lambda (x) 
