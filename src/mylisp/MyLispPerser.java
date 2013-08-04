@@ -23,6 +23,9 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("#\\(", "(");
+        testMap.put("#\\)", ")");
+        testMap.put("#\\a", "a");
         testMap.put("((eq?-c 'salada) 'salada)", "((eq?-c (quote salada)) (quote salada))");
         testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) \t(let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
         testMap.put("(test '(eq? (atom? '(atom turkey or) or) #f))", "(test (quote (eq? (atom? (quote (atom turkey or)) or) #f)))");
@@ -30,7 +33,7 @@ public class MyLispPerser {
         testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
         testMap.put("(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)", "(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)");
         testMap.put("'(1 '2 3)", "(quote (1 (quote 2) 3))");
-        testMap.put("(let loop((n1 n) (p n)))", "(let loop ((n1 n) (p n)))");        
+        testMap.put("(let loop((n1 n) (p n)))", "(let loop ((n1 n) (p n)))");
         testMap.put("(\" a b c '() '(quote) \\\" \" aaa)", "(\" a b c '() '(quote) \\\" \" aaa)");
         testMap.put("('a 'b 'c ('d 'e))", "((quote a) (quote b) (quote c) ((quote d) (quote e)))");
         testMap.put("(('()) 123456789012345)", "(((quote ())) 123456789012345)");
@@ -139,9 +142,9 @@ public class MyLispPerser {
         StringBuilder atom = new StringBuilder();
         for (int i = 0; i < sAtom.length(); i++) {
             String s = sAtom.substring(i, i + 1);
-            if (s.equals(" ") || s.equals(")")) {
+            if (s.equals(" ")) {
                 break;
-            } else if (s.equals("(")) {
+            } else if (!atom.toString().equals("#\\") && (s.equals("(") || s.equals(")"))) {
                 break;
             } else {
                 atom.append(s);
@@ -196,7 +199,7 @@ public class MyLispPerser {
                 sexpList.add(new Cell(Atom.newAtom("quote"), atom));
             } else if (s.equals("\"")) {
                 Sexp atom = parseAtomString(sCell.substring(i));
-                i += atom.toString().length()-1;
+                i += atom.toString().length() - 1;
 
                 sexpList.add(atom);
             } else {

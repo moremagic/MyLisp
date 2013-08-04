@@ -45,6 +45,15 @@ public class Cell implements IPair {
     public Sexp[] getSexps() {
         return this.sexps;
     }
+    
+    @Override
+    public IPair cons(Sexp sexp) {
+        Sexp[] bufs = new Sexp[sexps.length + 1];
+        bufs[0] = sexp;
+        System.arraycopy(sexps, 0, bufs, 1, sexps.length);
+        
+        return new Cell(bufs);
+    }
 
     @Override
     public String toString() {

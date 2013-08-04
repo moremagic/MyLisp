@@ -19,6 +19,11 @@
                     (symbol->string obj2)))
             (else #f))))
 
+(define length
+    (lambda (L)
+        (cond ((null? L) 0)
+              (else (+ 1 (length (cdr L)))))))
+
 (define (map f lst)
   (cond ((pair? lst)
          (cons (f (car lst)) (map f (cdr lst))))

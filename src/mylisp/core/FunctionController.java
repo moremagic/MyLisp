@@ -22,6 +22,7 @@ import mylisp.func.FunctionException;
 import mylisp.func.GThanFunction;
 import mylisp.func.IFFunction;
 import mylisp.func.IsBoolean;
+import mylisp.func.IsChar;
 import mylisp.func.IsEOF;
 import mylisp.func.IsNull;
 import mylisp.func.IsNumber;
@@ -85,6 +86,7 @@ public class FunctionController {
             new IsPair(),
             new IsNumber(),
             new IsString(),
+            new IsChar(),
             new GThanFunction(),
             new IFFunction(),
             new IsPort(),

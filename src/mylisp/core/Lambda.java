@@ -15,6 +15,7 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class Lambda implements IPair {
+
     public static final String LAMBDA_SYMBOL = "lambda";
     private Cell cell;
     private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();
@@ -45,7 +46,7 @@ public class Lambda implements IPair {
 
     public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
         Sexp[] keys = ((Cell) getCdr()[0]).getSexps();
-        
+
         //全てコピー
         HashMap<AtomSymbol, Sexp> mapp = new HashMap<AtomSymbol, Sexp>(env);
         mapp.putAll(localEnv);
@@ -55,14 +56,14 @@ public class Lambda implements IPair {
         }
 
         Sexp ret = null;
-        for(int i = 1 ; i < getCdr().length ; i++){
-            if(i == getCdr().length-1){
+        for (int i = 1; i < getCdr().length; i++) {
+            if (i == getCdr().length - 1) {
                 ret = TailCallOperator.reserveTailCall(getCdr()[i], localEnv);
-            }else{
+            } else {
                 ret = MyLisp.eval(getCdr()[i], localEnv);
             }
         }
-        
+
         return ret;
     }
 
@@ -71,11 +72,15 @@ public class Lambda implements IPair {
     }
 
     @Override
-    public String toString() {
-        return cell.toString();
-        //return cell.toString() + "[" + localEnv.getClass().getName() + "@" + Integer.toHexString(localEnv.hashCode()) +"]";
+    public IPair cons(Sexp sexp) {
+        return cell.cons(sexp);
     }
 
+    @Override
+    public String toString() {
+        return cell.toString();
+    }
+    
 //    @Override
 //    public String toString() {
 //        StringBuilder sb = new StringBuilder();

@@ -16,6 +16,8 @@ public interface IPair extends Sexp {
     public Sexp[] getCdr();
 
     public Sexp[] getSexps();
+    
+    public IPair cons(Sexp sexp);
 
     @Override
     public abstract String toString();

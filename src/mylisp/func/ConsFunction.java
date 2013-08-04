@@ -24,14 +24,11 @@ public class ConsFunction implements Operator{
         }
         
         Sexp cdr = MyLisp.apply(cell.getCdr()[1], env);
-        Sexp[] cdrs;
-        if(cdr instanceof IPair){
-            cdrs = ((IPair)cdr).getSexps();
+        if(cdr instanceof IPair){            
+            return ((IPair)cdr).cons(MyLisp.apply(cell.getCdr()[0], env));
         }else{
-            cdrs = new Sexp[]{cdr};
+            return new Cell(cdr, MyLisp.apply(cell.getCdr()[0], env));
         }
-
-        return new Cell(MyLisp.apply(cell.getCdr()[0], env), cdrs);
     }
     
     
