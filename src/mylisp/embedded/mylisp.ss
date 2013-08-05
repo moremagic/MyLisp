@@ -1,9 +1,38 @@
 ;;r5rs
-(define = eq?)
+(define add1 (lambda (n) (+ n 1)))
+
+(define sub1 (lambda (n) (- n 1)))
+
+(define atom?
+  (lambda (x) 
+    (and (not (pair? x)) (not (null? x)))))
 
 (define < (lambda (n m) (> m n)))
 
-(define zero? (lambda (x) (= x 0)))
+(define  /
+    (lambda (n m)
+        (cond ((< n m) 0)
+            (else add1 (/ (- n m) m)))))
+(define =
+    (lambda (n m)
+        (cond ((> n m) #f)
+            ((< n m) #f)
+            (else #t))))
+
+(define zero?
+    (lambda (x)
+        (cond ((number? x) (= x 0))
+            (else (eq? x 0)))))
+
+(define even? 
+    (lambda (n)
+      (if (= n 0) #t
+             (odd? (- n 1)))))
+
+(define odd?
+    (lambda (n)
+      (if (= n 0) #f
+             (even? (- n 1)))))
 
 (define string=?
     (lambda (s1 s2)
@@ -32,21 +61,25 @@
         (else
          (display "Not list"))))
 
-;;scheme 手習い
-(define add1 (lambda (n) (+ n 1)))
-
-(define sub1 (lambda (n) (- n 1)))
-
-(define atom?
-  (lambda (x) 
-    (and (not (pair? x)) (not (null? x)))))
-
 (define lat?
   (lambda (n)
      (cond ((atom? n) #t)
            ((null? n) #t)
            (else (and (atom? (car n))
                       (lat? (cdr n)))))))
+
+(define member?
+  (lambda (a lat)
+    (cond ((null? lat) #f)
+          ((eq? a (car lat)) #t)
+          (else
+           (member? a (cdr lat))))))
+
+
+;;scheme 手習い
+
+
+
 
 (define insertR
   (lambda (new old lat)
@@ -96,13 +129,6 @@
           ((eq? old (car lat)) (cons new (multisubstrX old new (cdr lat))))
           (else 
            (cons (car lat) (multisubstrX old new (cdr lat)))))))
-
-(define member?
-  (lambda (a lat)
-    (cond ((null? lat) #f)
-          ((eq? a (car lat)) #t)
-          (else
-           (member? a (cdr lat))))))
 
 (define pick
   (lambda (n lat)
