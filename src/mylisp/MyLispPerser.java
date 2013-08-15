@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.core.Atom;
-import mylisp.core.Cell;
+import mylisp.core.ConsCell;
+import mylisp.core.IPair;
 import mylisp.core.Lambda;
 import mylisp.core.Sexp;
 
@@ -23,6 +24,9 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("'(eq? a #f)", "(quote (eq? a #f))");
+        testMap.put("()", "()");
+        testMap.put("(1 2 3)", "(1 2 3)");
         testMap.put("#\\(", "(");
         testMap.put("#\\)", ")");
         testMap.put("#\\a", "a");
@@ -128,7 +132,7 @@ public class MyLispPerser {
             return parseAtomString(sExps);
         } else if (sExps.startsWith("'")) {
             Sexp atom = parse(sExps.substring(1));
-            return new Cell(Atom.newAtom("quote"), atom);
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, ConsCell.NIL));
         } else {
             return parseAtom(sExps);
         }
@@ -196,7 +200,7 @@ public class MyLispPerser {
                 Sexp atom = parse(sCell.substring(i + 1));
                 i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                sexpList.add(new Cell(Atom.newAtom("quote"), atom));
+                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, ConsCell.NIL)));
             } else if (s.equals("\"")) {
                 Sexp atom = parseAtomString(sCell.substring(i));
                 i += atom.toString().length() - 1;
@@ -211,9 +215,11 @@ public class MyLispPerser {
         }
 
         if (!sexpList.isEmpty() && sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
-            return new Lambda(sexpList.toArray(new Sexp[0]));
+            IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
+            return new Lambda(cons.getCar(), cons.getCdr());
         } else {
-            return new Cell(sexpList.toArray(new Sexp[0]));
+            IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
+            return cons;
         }
     }
 

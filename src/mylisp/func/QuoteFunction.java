@@ -6,23 +6,24 @@ package mylisp.func;
 
 import java.util.Map;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
 
 /**
  * quote Function
+ *
  * @author moremagic
  */
-public class QuoteFunction implements SpecialOperator{
+public class QuoteFunction implements SpecialOperator {
+
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException{
-        return cell.getCdr()[0];
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        return cons.getCdr();
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "quote";
     }
-
 }

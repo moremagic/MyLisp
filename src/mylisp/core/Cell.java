@@ -1,5 +1,8 @@
 package mylisp.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,7 +10,8 @@ package mylisp.core;
 
 /**
  * Cell
- *
+ * 
+ * @deprecated 
  * @author moremagic
  */
 public class Cell implements IPair {
@@ -35,24 +39,8 @@ public class Cell implements IPair {
     }
 
     @Override
-    public Sexp[] getCdr() {
-        Sexp[] ret = new Sexp[this.sexps.length - 1];
-        System.arraycopy(sexps, 1, ret, 0, ret.length);
-        return ret;
-    }
-
-    @Override
-    public Sexp[] getSexps() {
+    public Sexp[] getList() {
         return this.sexps;
-    }
-    
-    @Override
-    public IPair cons(Sexp sexp) {
-        Sexp[] bufs = new Sexp[sexps.length + 1];
-        bufs[0] = sexp;
-        System.arraycopy(sexps, 0, bufs, 1, sexps.length);
-        
-        return new Cell(bufs);
     }
 
     @Override
@@ -62,11 +50,26 @@ public class Cell implements IPair {
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("(").append(getCar());
-            for (Sexp s : getCdr()) {
+            for (Sexp s : new ArrayList<Sexp>(Arrays.asList(sexps)).subList(1, sexps.length)) {
                 sb.append(" ").append(s.toString());
             }
             sb.append(")");
             return sb.toString();
         }
+    }
+
+    @Override
+    public Sexp getCdr() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setCar(Sexp car) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setCdr(Sexp cdr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

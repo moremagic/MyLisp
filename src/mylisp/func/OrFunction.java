@@ -9,30 +9,30 @@ import mylisp.MyLisp;
 import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
 
 /**
  * or class
+ *
  * @author moremagic
  */
-public class OrFunction implements SpecialOperator{
+public class OrFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        for(Sexp sexp: cell.getCdr()){
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        for (Sexp sexp : cons.getCdr().getList()) {
             Sexp sexp_apply = MyLisp.apply(sexp, env);
-            if(sexp_apply.toString().equals(AtomBoolean.T)){
+            if (sexp_apply.toString().equals(AtomBoolean.T)) {
                 return Atom.newAtom(AtomBoolean.T);
             }
         }
         return Atom.newAtom(AtomBoolean.F);
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "or";
     }
-
 }

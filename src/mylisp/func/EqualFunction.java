@@ -4,12 +4,12 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -17,16 +17,15 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class EqualFunction implements Operator {
+public class EqualFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 2){
-            throw new FunctionException("eq?: expects 2 arguments, given " + cell.getCdr().length);
-        }
-        
-        Sexp sexpA = MyLisp.apply(cell.getCdr()[0], env);
-        Sexp sexpB = MyLisp.apply(cell.getCdr()[1], env);
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cons, 2);
+
+        Sexp[] list = cons.getCdr().getList();
+        Sexp sexpA = MyLisp.apply(list[0], env);
+        Sexp sexpB = MyLisp.apply(list[1], env);
         return Atom.newAtom(sexpA.toString().equals(sexpB.toString()));
     }
 

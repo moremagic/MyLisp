@@ -9,24 +9,24 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomNumber;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
-import mylisp.core.TailCallOperator;
 
 /**
  * +(Plus) Function
  *
  * @author moremagic
  */
-public class AddFunction implements Operator {
+public class AddFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = Atom.newAtom(0);
-        for (Sexp s : cell.getCdr()) {
+        for (Sexp s : ((IPair)cons.getCdr()).getList()) {
             Sexp buf = MyLisp.apply(s, env);    
             if (buf instanceof AtomNumber) {
                 ret = Atom.newAtom(addNumber(((AtomNumber)ret).getValue(), ((AtomNumber) buf).getValue()));

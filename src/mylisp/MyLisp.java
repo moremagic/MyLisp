@@ -14,7 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
+import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.FunctionController;
@@ -25,14 +27,15 @@ import mylisp.func.FunctionException;
  *
  * @author moremagic
  */
-public class MyLisp {    
+public class MyLisp {
+
     private Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
     public MyLisp() {
         try {
             //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
-            callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
+            //callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
         } catch (URISyntaxException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -133,14 +136,13 @@ public class MyLisp {
      */
     public Sexp eval(Sexp sexp) throws FunctionException {
         System.out.println("[eval] " + sexp.toString());
-        
+
         //eval実行 ＋ 末尾再帰実行
         Sexp ret = MyLisp.eval(sexp, env);
         ret = TailCallOperator.evalTailCall(ret);
-        
+
         return ret;
     }
-
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
      *
@@ -149,10 +151,11 @@ public class MyLisp {
      * @return
      * @throws FunctionException
      */
-    private static long evalStackCnt = 0;    
+    private static long evalStackCnt = 0;
+
     public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         evalStackCnt++;
-        
+
 //        {//debug-print
 //            StringBuilder sb = new StringBuilder();
 //            for(int i = 0 ; i < evalStackCnt ; i++){
@@ -160,15 +163,20 @@ public class MyLisp {
 //            }
 //            System.out.println(sb.append(sexp).toString());
 //        }
-        
+
         Sexp ret;
         if (sexp instanceof IPair) {
             IPair pair = (IPair) sexp;
-            if (pair.getSexps().length != 0) {
+            if (pair.getCdr() != ConsCell.NIL) {
                 Sexp car = apply(pair.getCar(), env);
                 ret = FunctionController.getInstance().exec(car, pair, env);
             } else {
-                ret = pair;
+                if (pair.getCar() instanceof Atom) {
+                    ret = pair.getCar();
+                } else {
+                    ret = apply(pair.getCar(), env);
+                }
+//                ret = pair;
             }
         } else {
             ret = apply(sexp, env);
@@ -178,12 +186,10 @@ public class MyLisp {
         return ret;
     }
 
-    
     public static void tranporin(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         System.out.println("\t" + evalStackCnt + "  " + env.toString() + " " + sexp);
     }
-    
-    
+
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret;
         if (sexp instanceof IPair) {

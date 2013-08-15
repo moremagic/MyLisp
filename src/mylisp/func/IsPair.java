@@ -4,34 +4,32 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
  * pair? class
+ *
  * @author moremagic
  */
-public class IsPair implements Operator{
+public class IsPair extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length );
-        }
-        
-        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        return Atom.newAtom((sexp instanceof IPair) && ((IPair)sexp).getSexps().length >= 1);
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cons, 1);
+
+        Sexp sexp = MyLisp.apply(cons.getCdr(), env);
+        return Atom.newAtom((sexp instanceof IPair) && ((IPair)sexp).getCar() != ConsCell.NIL && ((IPair)sexp).getCar() instanceof ConsCell);
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "pair?";
     }
-
 }

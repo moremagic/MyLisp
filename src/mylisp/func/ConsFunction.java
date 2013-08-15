@@ -4,11 +4,11 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
@@ -16,18 +16,19 @@ import mylisp.core.Sexp;
  * cons Function
  * @author moremagic
  */
-public class ConsFunction implements Operator{
+public class ConsFunction extends AbstractOperator{
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException{
-        if(cell.getCdr().length > 2){
-            throw new FunctionException("cons: expects 2 arguments");
-        }
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException{
+        super.checkArgmunet(cons, 2);
         
-        Sexp cdr = MyLisp.apply(cell.getCdr()[1], env);
-        if(cdr instanceof IPair){            
-            return ((IPair)cdr).cons(MyLisp.apply(cell.getCdr()[0], env));
+        Sexp[] list = cons.getCdr().getList();
+        
+        Sexp car = MyLisp.apply(list[0], env);
+        if(car instanceof IPair){            
+            ((IPair)car).setCdr(MyLisp.apply(list[1], env));
+            return car;
         }else{
-            return new Cell(cdr, MyLisp.apply(cell.getCdr()[0], env));
+            return new ConsCell(car, MyLisp.apply(list[1], env));
         }
     }
     

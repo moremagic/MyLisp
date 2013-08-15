@@ -4,10 +4,10 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
+import mylisp.core.AbstractOperator;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -15,15 +15,15 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class EnvPrintFunction implements Operator {
+public class EnvPrintFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         System.out.println("<<env-list>>");  
         for(Map.Entry<AtomSymbol, Sexp> item: env.entrySet()){
           System.out.println("[" + item.getKey() + " : " + item.getValue() + "] , ");  
         }
-        return cell;
+        return cons;
     }
 
     @Override

@@ -109,17 +109,20 @@ public class FunctionController {
     }
 
     public Sexp exec(Sexp func, IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        //各ファンクション内でApplyすることで、遅延評価を実現します        
+        //各ファンクション内でApplyすることで、遅延評価を実現します
+        if(pair == ConsCell.NIL){
+            return pair;
+        }
         if (func instanceof Lambda) {
-            return ((Lambda) func).lambdaEvals(env, pair.getCdr());
+            return ((Lambda) func).lambdaEvals(env, pair.getCdr().getList());
         } else if (pair instanceof Lambda) {
-            Lambda ll = new Lambda(pair.getSexps());
+            Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
             ll.lambdaApply(env);
             return ll;
-        } else if (pair instanceof Cell && funcMap.containsKey(func.toString())) {
+        } else if (pair instanceof ConsCell && funcMap.containsKey(func.toString())) {
             //TODO ; 将来的にはスペシャルフォーム以外のcdr applyはここで統一して行いたい。
             Operator op = funcMap.get(func.toString());
-            return op.eval((Cell) pair, env);
+            return op.eval((ConsCell) pair, env);
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }

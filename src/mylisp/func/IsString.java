@@ -4,13 +4,13 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomString;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
@@ -18,16 +18,14 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class IsString implements Operator {
+public class IsString extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if (cell.getCdr().length != 1) {
-            throw new FunctionException(operatorSymbol() + ": expects " + cell.getCdr().length + " argument");
-        }
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cons, 1);
 
-        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        if(sexp instanceof AtomSymbol){
+        Sexp sexp = MyLisp.apply(cons.getCdr(), env);
+        if (sexp instanceof AtomSymbol) {
             throw new FunctionException("reference to undefined identifier: " + sexp);
         }
         return Atom.newAtom(sexp instanceof AtomString);

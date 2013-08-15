@@ -8,7 +8,7 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
 import mylisp.core.TailCallOperator;
@@ -21,17 +21,18 @@ import mylisp.core.TailCallOperator;
 public class IFFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if (cell.getCdr().length < 3) {
-            throw new FunctionException("if: bad syntax (has 1 part after keyword) in: " + cell.toString());
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        if (cons.getCdr().getList().length < 3) {
+            throw new FunctionException("if: bad syntax (has 1 part after keyword) in: " + cons.toString());
         }
 
-        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
+        Sexp[] list = cons.getCdr().getList();
+        Sexp sexp = MyLisp.apply(list[0], env);
         if (sexp instanceof AtomBoolean && sexp.toString().equals(AtomBoolean.F)) {
             //末尾再帰コード
-            return TailCallOperator.reserveTailCall(cell.getCdr()[2], env);
+            return TailCallOperator.reserveTailCall(list[2], env);
         } else {
-            return MyLisp.eval(cell.getCdr()[1], env);
+            return MyLisp.eval(list[1], env);
         }
     }
 

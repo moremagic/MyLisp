@@ -4,39 +4,32 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
  * null? class
+ *
  * @author moremagic
  */
-public class IsNull implements Operator{
+public class IsNull extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException(operatorSymbol() + ": expects " + cell.getCdr().length + " argument");
-        } 
-        
-        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
-        if(sexp instanceof IPair){
-            IPair cc = (IPair)sexp;
-            return Atom.newAtom(cc.getSexps().length == 0);
-        }else{
-            return Atom.newAtom(sexp.toString().isEmpty());
-        }
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cons, 1);
+
+        Sexp sexp = MyLisp.apply(cons.getCdr(), env);
+        return Atom.newAtom(sexp instanceof IPair && (((IPair)sexp).getCar() == null || ((IPair)sexp).getCar() == ConsCell.NIL));
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "null?";
     }
-
 }

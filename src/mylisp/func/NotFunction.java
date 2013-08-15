@@ -4,34 +4,32 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
  * not class
+ *
  * @author moremagic
  */
-public class NotFunction implements Operator{
+public class NotFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if(cell.getCdr().length != 1){
-            throw new FunctionException("not: expects 1 argument, given " + cell.getCdr().length );
-        }
-        
-        Sexp sexp = MyLisp.apply(cell.getCdr()[0], env);
+    public Sexp eval(IPair cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cell, 1);
+
+        Sexp sexp = MyLisp.apply(cell.getCdr(), env);
         return Atom.newAtom(sexp.toString().equals(AtomBoolean.F));
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "not";
     }
-
 }

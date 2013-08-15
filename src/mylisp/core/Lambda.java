@@ -17,35 +17,17 @@ import mylisp.func.FunctionException;
 public class Lambda implements IPair {
 
     public static final String LAMBDA_SYMBOL = "lambda";
-    private Cell cell;
+    private ConsCell consCell;
     private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();
 
-    public Lambda(Sexp car, Sexp[] cdr) {
+    public Lambda(Sexp car, Sexp cdr) {
         assert !car.toString().equals(LAMBDA_SYMBOL) : "not lambda";
-        cell = new Cell(car, cdr);
-    }
-
-    public Lambda(Sexp... sexps) {
-        cell = new Cell(sexps);
-    }
-
-    @Override
-    public Sexp getCar() {
-        return cell.getCar();
-    }
-
-    @Override
-    public Sexp[] getCdr() {
-        return cell.getCdr();
-    }
-
-    @Override
-    public Sexp[] getSexps() {
-        return cell.getSexps();
+        consCell = new ConsCell(car, cdr);
     }
 
     public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
-        Sexp[] keys = ((Cell) getCdr()[0]).getSexps();
+        Sexp[] keys = ((IPair)((IPair)getCdr()).getCar()).getList();//cdar
+        Sexp[] cddr = ((IPair)((IPair)getCdr()).getCdr()).getList();
 
         //全てコピー
         HashMap<AtomSymbol, Sexp> mapp = new HashMap<AtomSymbol, Sexp>(env);
@@ -56,11 +38,11 @@ public class Lambda implements IPair {
         }
 
         Sexp ret = null;
-        for (int i = 1; i < getCdr().length; i++) {
-            if (i == getCdr().length - 1) {
-                ret = TailCallOperator.reserveTailCall(getCdr()[i], localEnv);
+        for (int i = 0; i < cddr.length; i++) {
+            if (i == cddr.length - 1) {
+                ret = TailCallOperator.reserveTailCall(cddr[i], localEnv);
             } else {
-                ret = MyLisp.eval(getCdr()[i], localEnv);
+                ret = MyLisp.eval(cddr[i], localEnv);
             }
         }
 
@@ -72,13 +54,33 @@ public class Lambda implements IPair {
     }
 
     @Override
-    public IPair cons(Sexp sexp) {
-        return cell.cons(sexp);
+    public void setCar(Sexp car) {
+        consCell.setCar(car);
     }
 
     @Override
-    public String toString() {
-        return cell.toString();
+    public Sexp getCar() {
+        return consCell.getCar();
+    }
+
+    @Override
+    public Sexp getCdr() {
+        return consCell.getCdr();
+    }
+
+    @Override
+    public void setCdr(Sexp cdr) {
+        consCell.setCdr(cdr);
+    }
+
+    @Override
+    public Sexp[] getList() {
+        return consCell.getList();
+    }
+    
+    @Override
+    public String toString(){
+        return consCell.toString();
     }
     
 //    @Override

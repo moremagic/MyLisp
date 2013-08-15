@@ -4,11 +4,10 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
@@ -17,18 +16,16 @@ import mylisp.core.Sexp;
  *
  * @author moremagic
  */
-public class CarFunction implements Operator {
+public class CarFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        if (cell.getCdr().length != 1) {
-            throw new FunctionException(operatorSymbol() + ": expects 1 argument, given " + cell.getCdr().length);
-        }
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        super.checkArgmunet(cons, 1);
 
-        Sexp cdr = MyLisp.apply(cell.getCdr()[0], env);
-        if(cdr instanceof IPair){
-            return ((IPair)cdr).getCar();
-        }else{
+        Sexp cdr = MyLisp.apply(cons.getCdr(), env);
+        if (cdr instanceof IPair) {
+            return ((IPair) cdr).getCar();
+        } else {
             throw new FunctionException(operatorSymbol() + ": expects argument of type <pair>; given " + cdr);
         }
     }

@@ -10,6 +10,8 @@ package mylisp.core;
  * @author moremagic
  */
 public interface Sexp{
+    public Sexp[] getList();  
+    
     @Override
     public abstract String toString();
 }

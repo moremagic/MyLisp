@@ -65,14 +65,14 @@ public class TailCallOperator {
     }
 
     private static boolean isProcess(IPair pair, Map<AtomSymbol, Sexp> env) {
-        boolean ret = false;
+        boolean ret;
         try {
             Sexp sexp = MyLisp.apply(pair.getCar(), env);
             if (sexp instanceof IPair) {
                 ret = isProcess((IPair) sexp, env);
             } else {
                 String buf = sexp.toString();
-                ret = (buf.equals(Lambda.LAMBDA_SYMBOL) || buf.equals("if") || buf.equals("cond") ) && pair.getCdr().length == 1;
+                ret = (buf.equals(Lambda.LAMBDA_SYMBOL) || buf.equals("if") || buf.equals("cond") ) && pair.getCdr().getList().length == 1;
             }
         } catch (FunctionException ex) {
             ret = false;

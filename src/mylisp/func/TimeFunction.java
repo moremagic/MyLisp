@@ -4,23 +4,23 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.AbstractOperator;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
 /**
  * time class
  * @author moremagic
  */
-public class TimeFunction implements Operator{
+public class TimeFunction extends AbstractOperator{
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         long start_time = System.currentTimeMillis();
-        Sexp ret = MyLisp.eval(cell.getCdr()[0], env);
+        Sexp ret = MyLisp.eval(cons.getCdr(), env);
         System.out.println((System.currentTimeMillis() - start_time) + "[ms]");
         return ret;
     }

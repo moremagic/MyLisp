@@ -13,11 +13,11 @@ public interface IPair extends Sexp {
 
     public Sexp getCar();
 
-    public Sexp[] getCdr();
+    public Sexp getCdr();
 
-    public Sexp[] getSexps();
-    
-    public IPair cons(Sexp sexp);
+    public void setCar(Sexp car);
+
+    public void setCdr(Sexp cdr);
 
     @Override
     public abstract String toString();

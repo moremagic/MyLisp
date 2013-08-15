@@ -8,30 +8,30 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
+import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
 
 /**
  * and class
+ *
  * @author moremagic
  */
-public class AndFunction implements SpecialOperator{
+public class AndFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        for(Sexp sexp: cell.getCdr()){
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        for (Sexp sexp : ((IPair) cons.getCdr()).getList()) {
             Sexp sexp_apply = MyLisp.apply(sexp, env);
-            if(sexp_apply.toString().equals(AtomBoolean.F)){
+            if (sexp_apply.toString().equals(AtomBoolean.F)) {
                 return AtomBoolean.AtomFalse;
             }
         }
         return AtomBoolean.AtomTrue;
     }
-    
+
     @Override
     public String operatorSymbol() {
         return "and";
     }
-
 }

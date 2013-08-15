@@ -13,6 +13,6 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public interface Operator {
-    public String operatorSymbol();
-    public Sexp eval(Cell cell, Map<AtomSymbol, Sexp> env) throws FunctionException;
+    abstract public String operatorSymbol();
+    abstract public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException;
 }
