@@ -4,7 +4,6 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;

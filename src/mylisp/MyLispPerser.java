@@ -24,6 +24,7 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
+        testMap.put("()", ConsCell.NIL.toString());
         testMap.put("'(eq? a #f)", "(quote (eq? a #f))");
         testMap.put("()", "()");
         testMap.put("(1 2 3)", "(1 2 3)");
@@ -45,6 +46,7 @@ public class MyLispPerser {
         testMap.put("((x) (1 2))", "((x) (1 2))");
         testMap.put("(lambda (x) (and (not (pair? x))))", "(lambda (x) (and (not (pair? x))))");
         testMap.put("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))", "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
+        testMap.put("(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))", "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))");
 
         for (Map.Entry<String, String> s : testMap.entrySet()) {
             testParse(s.getKey(), s.getValue());

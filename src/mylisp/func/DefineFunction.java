@@ -25,21 +25,37 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         super.checkArgmunet(cons, 2);
-
-        Sexp[] cdrs = cons.getCdr().getList();
         Sexp ret;
-        if (cdrs[0] instanceof IPair) {
-            Sexp car = ((IPair) cdrs[0]).getCar();
-            Sexp cdr = ((IPair) cdrs[0]).getCdr();
 
-            //Function生成時の構文糖衣          
-            ret = env.put((AtomSymbol) car, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(cdr, cdrs[1])));
-        } else {
-            Sexp ss = MyLisp.apply(cdrs[1], env);
-            ret = env.put((AtomSymbol) cdrs[0], ss);
+        Sexp cadr = ((IPair)cons.getCdr()).getCar(); // 2
+        Sexp cddr = ((IPair)cons.getCdr()).getCdr(); // 3-
+        
+        if(cadr.getList().length == 1){
+            cddr = (cddr instanceof IPair)?((IPair)cddr).getCar():cddr;
+            ret = env.put((AtomSymbol) cadr, MyLisp.apply(cddr, env));
+        }else{
+            //Function生成時の構文糖衣
+            Sexp caadr = ((IPair)cadr).getCar();
+            Sexp cdadr = ((IPair)cadr).getCdr();
+            ret = env.put((AtomSymbol) caadr, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(cdadr, cddr)));
         }
-
+        
         return ret;
+        
+//        Sexp[] cdrs = cons.getCdr().getList();
+//        Sexp ret;
+//        if (cdrs[0] instanceof IPair) {
+//            Sexp car = ((IPair) cdrs[0]).getCar();
+//            Sexp cdr = ((IPair) cdrs[0]).getCdr();
+//
+//            //Function生成時の構文糖衣          
+//            ret = env.put((AtomSymbol) car, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(cdr, cdrs[1])));
+//        } else {
+//            Sexp ss = MyLisp.apply(cdrs[1], env);
+//            ret = env.put((AtomSymbol) cdrs[0], ss);
+//        }
+//
+//        return ret;
     }
 
     @Override

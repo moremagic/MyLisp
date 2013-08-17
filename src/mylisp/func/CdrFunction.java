@@ -4,12 +4,10 @@
  */
 package mylisp.func;
 
-import mylisp.core.Operator;
 import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.core.AbstractOperator;
 import mylisp.core.AtomSymbol;
-import mylisp.core.Cell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
@@ -26,7 +24,7 @@ public class CdrFunction extends AbstractOperator {
 
         Sexp cdr = MyLisp.apply(cons.getCdr(), env);
         if(cdr instanceof IPair){
-            return new Cell(((IPair)cdr).getCdr());
+            return ((IPair)cdr).getCdr();
         }else{
             throw new FunctionException("cdr: expects argument of type <pair>; given " + cdr);
         }

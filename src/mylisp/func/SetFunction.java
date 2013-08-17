@@ -20,7 +20,7 @@ public class SetFunction extends AbstractOperator{
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 3);
+        super.checkArgmunet(cons, 2);
         
         Sexp[] cdrs = cons.getCdr().getList();
         if(env.containsKey((AtomSymbol)cdrs[0])){

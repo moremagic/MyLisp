@@ -63,10 +63,9 @@
 
 (define lat?
   (lambda (n)
-     (cond ((atom? n) #t)
-           ((null? n) #t)
-           (else (and (atom? (car n))
-                      (lat? (cdr n)))))))
+     (cond ((null? n) #t)
+           ((atom? (car n)) (lat? (cdr n)))
+           (else #f))))
 
 (define member?
   (lambda (a lat)

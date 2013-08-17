@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.FunctionController;
@@ -35,7 +33,7 @@ public class MyLisp {
         try {
             //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
-            //callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
+            callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
         } catch (URISyntaxException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -158,7 +156,7 @@ public class MyLisp {
 
 //        {//debug-print
 //            StringBuilder sb = new StringBuilder();
-//            for(int i = 0 ; i < evalStackCnt ; i++){
+//            for (int i = 0; i < evalStackCnt; i++) {
 //                sb.append(" ");
 //            }
 //            System.out.println(sb.append(sexp).toString());
@@ -167,17 +165,7 @@ public class MyLisp {
         Sexp ret;
         if (sexp instanceof IPair) {
             IPair pair = (IPair) sexp;
-            if (pair.getCdr() != ConsCell.NIL) {
-                Sexp car = apply(pair.getCar(), env);
-                ret = FunctionController.getInstance().exec(car, pair, env);
-            } else {
-                if (pair.getCar() instanceof Atom) {
-                    ret = pair.getCar();
-                } else {
-                    ret = apply(pair.getCar(), env);
-                }
-//                ret = pair;
-            }
+            ret = FunctionController.getInstance().exec(pair, env);
         } else {
             ret = apply(sexp, env);
         }
@@ -192,6 +180,7 @@ public class MyLisp {
 
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret;
+        
         if (sexp instanceof IPair) {
             ret = eval((IPair) sexp, env);
         } else if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {

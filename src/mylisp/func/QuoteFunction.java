@@ -19,7 +19,8 @@ public class QuoteFunction implements SpecialOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        return cons.getCdr();
+        Sexp ret = cons.getCdr();
+        return (ret instanceof IPair)?((IPair)ret).getCar():ret;
     }
 
     @Override

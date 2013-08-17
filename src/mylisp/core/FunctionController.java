@@ -6,6 +6,7 @@ package mylisp.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import mylisp.MyLisp;
 import mylisp.func.AddFunction;
 import mylisp.func.AndFunction;
 import mylisp.func.CarFunction;
@@ -64,7 +65,7 @@ public class FunctionController {
     public void addOperator(Operator oper) {
         funcMap.put(oper.operatorSymbol(), oper);
     }
-    
+
     private FunctionController() {
         Operator[] funcs = {
             new EnvPrintFunction(),//debug-function
@@ -108,21 +109,23 @@ public class FunctionController {
         }
     }
 
-    public Sexp exec(Sexp func, IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
         //各ファンクション内でApplyすることで、遅延評価を実現します
-        if(pair == ConsCell.NIL){
-            return pair;
-        }
-        if (func instanceof Lambda) {
-            return ((Lambda) func).lambdaEvals(env, pair.getCdr().getList());
+        Sexp car = MyLisp.apply(pair.getCar(), env);
+        if (car == null || car == ConsCell.NIL) {
+            return ConsCell.NIL;
+        } else if (car instanceof Lambda) {
+            return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (pair instanceof Lambda) {
             Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
             ll.lambdaApply(env);
             return ll;
-        } else if (pair instanceof ConsCell && funcMap.containsKey(func.toString())) {
+        } else if (funcMap.containsKey(car.toString())) {
             //TODO ; 将来的にはスペシャルフォーム以外のcdr applyはここで統一して行いたい。
-            Operator op = funcMap.get(func.toString());
+            Operator op = funcMap.get(car.toString());
             return op.eval((ConsCell) pair, env);
+        } else if (pair.getCdr() == ConsCell.NIL) {
+            return car;
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }
