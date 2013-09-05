@@ -61,8 +61,8 @@ public class TailCallOperator {
      * @return
      */
     private static boolean isTailCall(Sexp sexp, Map<AtomSymbol, Sexp> env) {
-        return false;
-        //return (sexp instanceof IPair && isProcess((IPair) sexp, env));
+        //return false;
+        return (sexp instanceof IPair && isProcess((IPair) sexp, env));
     }
 
     private static boolean isProcess(IPair pair, Map<AtomSymbol, Sexp> env) {

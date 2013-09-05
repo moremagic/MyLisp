@@ -30,9 +30,10 @@ public class Lambda implements IPair {
         Sexp[] cddr = ((IPair)((IPair)getCdr()).getCdr()).getList();
 
         //全てコピー
-        HashMap<AtomSymbol, Sexp> mapp = new HashMap<AtomSymbol, Sexp>(env);
+        Map<AtomSymbol, Sexp> mapp = new HashMap<AtomSymbol, Sexp>(env);
         mapp.putAll(localEnv);
         localEnv = mapp;
+        
         for (int i = 0; i < keys.length; i++) {
             localEnv.put((AtomSymbol) keys[i], MyLisp.apply(value[i], env));
         }

@@ -59,7 +59,7 @@ public class ConsCell implements IPair {
     public void setCdr(Sexp cdr) {
         this.cdr = cdr;
     }
-
+    
     @Override
     public Sexp[] getList() {
         List<Sexp> ret = new ArrayList<Sexp>();

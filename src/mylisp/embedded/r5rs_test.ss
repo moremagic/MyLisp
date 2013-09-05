@@ -144,9 +144,9 @@
 (test (eq? (tanaka-bank-account 100) 1100))
 
 ; let テスト ;=> 5
-;(test (eq? (let ((x 2))
-;  (let ((y 3))
-;        (+ x y))) 5))
+(test (eq? (let ((x 2))
+  (let ((y 3))
+        (+ x y))) 5))
 
 ;ファイル読み込みテスト
 (define (type1 filename)

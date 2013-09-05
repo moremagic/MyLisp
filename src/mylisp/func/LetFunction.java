@@ -53,13 +53,14 @@ public class LetFunction implements SpecialOperator {
 
             if (list[0] instanceof IPair) {
                 //名前なしLet
-                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), lambda_body));
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, ConsCell.NIL)));
 
                 //末尾再帰最適化
                 return TailCallOperator.reserveTailCall(new ConsCell(lambda, ConsCell.list2Cons(values)), env);
             } else {
                 //名前ありLet     
-                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), lambda_body));
+//                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), lambda_body));
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, ConsCell.NIL)));
                 env.put((AtomSymbol) list[0], lambda);
 
                 //末尾再帰最適化
