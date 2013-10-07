@@ -179,14 +179,13 @@ public class MyLisp {
     }
 
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        Sexp ret;
+        Sexp ret = sexp;
         
-        if (sexp instanceof IPair) {
-            ret = eval((IPair) sexp, env);
-        } else if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
+        if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
             ret = env.get((AtomSymbol) sexp);
-        } else {
-            ret = sexp;
+        }
+        else if (sexp instanceof IPair) {
+            ret = eval((IPair) sexp, env);
         }
         return ret;
     }

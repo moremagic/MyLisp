@@ -76,10 +76,6 @@
 
 
 ;;scheme 手習い
-
-
-
-
 (define insertR
   (lambda (new old lat)
     (cond ((null? lat) '())
@@ -167,3 +163,7 @@
         p
         (let ((m (- n1 1)))
           (loop m (* p m))))))
+;eof
+;(define *eof*
+;  (let ((port (open-input-string "")))
+;  (read port)))

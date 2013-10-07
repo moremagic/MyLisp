@@ -9,6 +9,7 @@ import java.util.Map;
 import mylisp.MyLisp;
 import mylisp.func.AddFunction;
 import mylisp.func.AndFunction;
+import mylisp.func.AshFunction;
 import mylisp.func.CarFunction;
 import mylisp.func.CdrFunction;
 import mylisp.func.CloseInputFileFunction;
@@ -73,6 +74,7 @@ public class FunctionController {
             new CarFunction(),
             new CdrFunction(),
             new AndFunction(),
+            new AshFunction(),
             new OrFunction(),
             new NotFunction(),
             new AddFunction(),
