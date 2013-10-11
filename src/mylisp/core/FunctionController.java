@@ -126,6 +126,8 @@ public class FunctionController {
             //TODO ; 将来的にはスペシャルフォーム以外のcdr applyはここで統一して行いたい。
             Operator op = funcMap.get(car.toString());
             return op.eval((ConsCell) pair, env);
+        } else if (car instanceof ConsCell && funcMap.containsKey( ((ConsCell)car).getCar().toString() )) {
+            return MyLisp.eval((IPair) car, env);
         } else if (pair.getCdr() == ConsCell.NIL) {
             return car;
         } else {
