@@ -3,10 +3,6 @@
 
 (define sub1 (lambda (n) (- n 1)))
 
-(define atom?
-  (lambda (x) 
-    (and (not (pair? x)) (not (null? x)))))
-
 (define < (lambda (n m) (> m n)))
 
 (define  /
@@ -61,12 +57,19 @@
         (else
          (display "Not list"))))
 
+;;scheme 手習い(the Little Scheme) ---> #1 
+;;#1 p10
+(define atom?
+  (lambda (x) 
+    (and (not (pair? x)) (not (null? x)))))
+
+;;#1 p16, p19, 
 (define lat?
   (lambda (n)
      (cond ((null? n) #t)
            ((atom? (car n)) (lat? (cdr n)))
            (else #f))))
-
+;;#1 p23
 (define member?
   (lambda (a lat)
     (cond ((null? lat) #f)
@@ -74,8 +77,15 @@
           (else
            (member? a (cdr lat))))))
 
+;;#1 p35
+(define rember
+  (lambda (a lat)
+    (cond
+      ((null? lat) '())
+      ((eq? (car lat) a) (cdr lat))
+      (else (cons (car lat)
+            (rember a (cdr lat)))))))
 
-;;scheme 手習い
 (define insertR
   (lambda (new old lat)
     (cond ((null? lat) '())
