@@ -34,6 +34,8 @@ public class MyLisp {
             //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
             callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
+
+            //callEvalFile(new File(getClass().getResource("/mylisp/embedded/newfile").toURI()));
         } catch (URISyntaxException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,13 +182,18 @@ public class MyLisp {
 
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = sexp;
-        
+
         if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
             ret = env.get((AtomSymbol) sexp);
-        }
-        else if (sexp instanceof IPair) {
+        } else if (sexp instanceof IPair && ((IPair) sexp).getList().length == 1 && ((IPair) sexp).getList()[0] instanceof AtomSymbol) {
+            AtomSymbol buf = (AtomSymbol) ((IPair) sexp).getList()[0];
+            if(env.containsKey(buf)){
+                ret = env.get(buf);
+            }
+        } else if (sexp instanceof IPair) {
             ret = eval((IPair) sexp, env);
         }
+
         return ret;
     }
 }
