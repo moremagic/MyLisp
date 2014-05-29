@@ -24,7 +24,7 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        //super.checkArgmunet(cons, 2);
+        super.checkArgmunet(cons, 2);
         Sexp ret;
 
         Sexp cadr = ((IPair)cons.getCdr()).getCar(); // 2

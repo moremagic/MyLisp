@@ -66,7 +66,7 @@ public class TailCallOperator {
     }
 
     private static boolean isProcess(IPair pair, Map<AtomSymbol, Sexp> env) {
-        boolean ret = false;
+        boolean ret;
         try {
             Sexp sexp = MyLisp.apply(pair.getCar(), env);
             if (sexp instanceof IPair) {

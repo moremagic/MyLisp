@@ -15,6 +15,7 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class Lambda implements IPair {
+
     public static final String LAMBDA_SYMBOL = "lambda";
     private ConsCell consCell;
     private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();

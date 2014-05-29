@@ -85,9 +85,6 @@
 (test (eq? (insertR 'ddd 'ccc '(aaa bbb ccc eee fff)) '(aaa bbb ccc ddd eee fff)))
 (test (eq? (insertL 'ddd 'eee '(aaa bbb ccc eee fff)) '(aaa bbb ccc ddd eee fff)))
 
-;;rember
-(test (eq? (rember and '(bacon lettuce and tomato)) '(bacon lettuce tomato)))
-
 ; multirember テスト
 (test (eq? (multirember 'aaa '(bbb aaa vvv ccc aaa bbb)) '(bbb vvv ccc bbb)))
 
