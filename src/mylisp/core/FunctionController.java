@@ -112,22 +112,23 @@ public class FunctionController {
     }
 
     public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        if (pair instanceof Lambda) {
+            Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
+            ll.lambdaApply(env);
+            return ll;
+        }
+
+
         //各ファンクション内でApplyすることで、遅延評価を実現します
         Sexp car = MyLisp.apply(pair.getCar(), env);
         if (car == null || car == ConsCell.NIL) {
             return ConsCell.NIL;
         } else if (car instanceof Lambda) {
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
-        } else if (pair instanceof Lambda) {
-            Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
-            ll.lambdaApply(env);
-            return ll;
         } else if (funcMap.containsKey(car.toString())) {
-            //TODO ; 将来的にはスペシャルフォーム以外のcdr applyはここで統一して行いたい。
+            //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
             return op.eval((ConsCell) pair, env);
-        } else if (car instanceof ConsCell && funcMap.containsKey( ((ConsCell)car).getCar().toString() )) {
-            return MyLisp.eval((IPair) car, env);
         } else if (pair.getCdr() == ConsCell.NIL) {
             return car;
         } else {

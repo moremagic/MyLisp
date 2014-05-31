@@ -4,7 +4,7 @@
         (if fun (display "OK") (display "NG"))))
 
 ;; 4.1.2 p8
-(test (eq? (quote a)  a))
+(test (eq? (quote a)  'a))
 ;;(test (eq? (quote #(a b c))  #(a b c)))
 (test (eq? (quote (+ 1 2))  '(+ 1 2)))
 
