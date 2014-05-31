@@ -26,7 +26,7 @@ public class EqualFunction extends AbstractOperator {
         Sexp[] list = cons.getCdr().getList();
         Sexp sexpA = MyLisp.apply(list[0], env);
         Sexp sexpB = MyLisp.apply(list[1], env);
-        return Atom.newAtom(sexpA.toString().equals(sexpB.toString()));
+        return Atom.newAtom(sexpA == sexpB);
     }
 
     @Override
