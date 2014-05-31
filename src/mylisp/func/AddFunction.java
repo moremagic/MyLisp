@@ -42,8 +42,8 @@ public class AddFunction extends AbstractOperator {
         if (a instanceof Integer && b instanceof Integer) {
             ret = new BigInteger(((Integer) a).toString()).add(new BigInteger(((Integer) b).toString()));
         } else {
-            BigDecimal ab = (a instanceof BigDecimal) ? (BigDecimal) a : new BigDecimal((double) a.doubleValue());
-            BigDecimal bb = (b instanceof BigDecimal) ? (BigDecimal) b : new BigDecimal((double) b.doubleValue());
+            BigDecimal ab = (a instanceof BigDecimal) ? (BigDecimal) a : new BigDecimal(a.toString());
+            BigDecimal bb = (b instanceof BigDecimal) ? (BigDecimal) b : new BigDecimal(b.toString());
             ret = ab.add(bb);
         }
 

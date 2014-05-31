@@ -32,7 +32,7 @@ public class AtomString extends Atom{
    @Override
     public boolean equals(Object object) {
         if(object instanceof AtomString){
-            return ((AtomString)object).value.equals(value);
+            return ((AtomString)object).value == value;
         }else{
             return false;
         }

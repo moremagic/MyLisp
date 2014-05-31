@@ -62,7 +62,7 @@ public abstract class Atom implements Sexp {
                 try {
                     return new Double(s);
                 } catch (NumberFormatException err) {
-                    return new BigDecimal(new Double(s));
+                    return new BigDecimal(s);
                 }
             } else {
                 try {

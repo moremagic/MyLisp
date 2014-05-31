@@ -32,6 +32,7 @@ import mylisp.func.IsPair;
 import mylisp.func.IsPort;
 import mylisp.func.IsString;
 import mylisp.func.IsSymbol;
+import mylisp.func.IsZero;
 import mylisp.func.LetFunction;
 import mylisp.func.MultiFunction;
 import mylisp.func.NotFunction;
@@ -91,6 +92,7 @@ public class FunctionController {
             new IsString(),
             new IsChar(),
             new GThanFunction(),
+            new IsZero(),
             new IFFunction(),
             new IsPort(),
             new IsEOF(),

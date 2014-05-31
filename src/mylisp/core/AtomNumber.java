@@ -34,7 +34,15 @@ public class AtomNumber extends Atom{
     @Override
     public boolean equals(Object object) {
         if(object instanceof AtomNumber){
-            return ((AtomNumber)object).value == value;
+            Number buf = ((AtomNumber)object).value;
+            if (value instanceof Integer && buf instanceof Integer) {
+                return ((Integer)value).intValue() == buf.intValue();
+            } else {
+                BigDecimal vb = (value instanceof BigDecimal) ? (BigDecimal) value : new BigDecimal(value.toString());
+                BigDecimal bb = (buf instanceof BigDecimal)   ? (BigDecimal) buf   : new BigDecimal(buf.toString());
+                return vb.equals(bb);
+//                return false;
+            }            
         }else{
             return false;
         }

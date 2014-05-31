@@ -1,24 +1,93 @@
-;;r5rs
+;;scheme 手習い(the Little Scheme) ---> #1 
+
+;;#1 p61
 (define add1 (lambda (n) (+ n 1)))
 
+;;#1 p61
 (define sub1 (lambda (n) (- n 1)))
 
+;;自作
 (define < (lambda (n m) (> m n)))
 
-(define  /
-    (lambda (n m)
-        (cond ((< n m) 0)
-            (else (add1 (/ (- n m) m))))))
+;;StackOverFlow 末尾再帰最適化ミス
+;;そのため GTanfunction.class + (define <) で代用してます
+;;#1 p75
+;;(define >
+;;  (lambda (n m)
+;;    (cond
+;;      ((zero? n) #f)
+;;      ((zero? m) #t)
+;;      (else (> (sub1 n) (sub1 m))))))
+
+;;#1 p75
+;;(define <
+;;  (lambda (n m)
+;;    (cond
+;;      ((zero? m) #f)
+;;      ((zero? n) #t)
+;;      (else (< (sub1 n) (sub1 m))))))
+
+;;#1 p76
 (define =
     (lambda (n m)
         (cond ((> n m) #f)
             ((< n m) #f)
             (else #t))))
 
-(define zero?
+;;#1 p76
+(define expt
+  (lambda (n m)
+    (cond
+      ((zero? m) 1)
+      (else (* n (expt n (sub1 m)))))))
+
+;;#1 p77
+(define  /
+    (lambda (n m)
+        (cond ((< n m) 0)
+            (else (add1 (/ (- n m) m))))))
+
+;;#1 p78 (不具合有；add1を使うとカウントアップできない)
+(define length
+    (lambda (lat)
+        (cond ((null? lat) 0)
+              (else (+ 1 (length (cdr lat)))))))
+
+
+;;#1 p10
+(define atom?
+  (lambda (x) 
+    (and (not (pair? x)) (not (null? x)))))
+
+;;#1 p16, p19, 
+(define lat?
+  (lambda (n)
+     (cond ((null? n) #t)
+           ((atom? (car n)) (lat? (cdr n)))
+           (else #f))))
+;;#1 p23
+(define member?
+  (lambda (a lat)
+    (cond ((null? lat) #f)
+          ((eq? a (car lat)) #t)
+          (else
+           (member? a (cdr lat))))))
+
+;;#1 p35, p38, p41
+(define rember
+  (lambda (a lat)
+    (cond
+      ((null? lat) '())
+      ((eq? (car lat) a) (cdr lat))
+      (else (cons (car lat)
+            (rember a (cdr lat)))))))
+
+;;#1 p129(教科書の不具合！ eq?で比較しているためオブジェクトのアドレス比較になってます)
+(define eq?-c
+  (lambda (a)
     (lambda (x)
-        (cond ((number? x) (= x 0))
-            (else (eq? x 0)))))
+      (eq? x a))))
+
 
 (define even? 
     (lambda (n)
@@ -44,11 +113,6 @@
                     (symbol->string obj2)))
             (else #f))))
 
-(define length
-    (lambda (L)
-        (cond ((null? L) 0)
-              (else (+ 1 (length (cdr L)))))))
-
 (define (map f lst)
   (cond ((pair? lst)
          (cons (f (car lst)) (map f (cdr lst))))
@@ -56,35 +120,6 @@
          '())
         (else
          (display "Not list"))))
-
-;;scheme 手習い(the Little Scheme) ---> #1 
-;;#1 p10
-(define atom?
-  (lambda (x) 
-    (and (not (pair? x)) (not (null? x)))))
-
-;;#1 p16, p19, 
-(define lat?
-  (lambda (n)
-     (cond ((null? n) #t)
-           ((atom? (car n)) (lat? (cdr n)))
-           (else #f))))
-;;#1 p23
-(define member?
-  (lambda (a lat)
-    (cond ((null? lat) #f)
-          ((eq? a (car lat)) #t)
-          (else
-           (member? a (cdr lat))))))
-
-;;#1 p35
-(define rember
-  (lambda (a lat)
-    (cond
-      ((null? lat) '())
-      ((eq? (car lat) a) (cdr lat))
-      (else (cons (car lat)
-            (rember a (cdr lat)))))))
 
 (define insertR
   (lambda (new old lat)
