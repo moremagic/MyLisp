@@ -9,7 +9,7 @@
 ;;自作
 (define < (lambda (n m) (> m n)))
 
-;;StackOverFlow 末尾再帰最適化ミス
+;;StackOverFlow
 ;;そのため GTanfunction.class + (define <) で代用してます
 ;;#1 p75
 ;;(define >
@@ -47,12 +47,11 @@
         (cond ((< n m) 0)
             (else (add1 (/ (- n m) m))))))
 
-;;#1 p78 (不具合有；add1を使うとカウントアップできない)
+;;#1 p78
 (define length
     (lambda (lat)
         (cond ((null? lat) 0)
-              (else (+ 1 (length (cdr lat)))))))
-
+              (else (add1 (length (cdr lat)))))))
 
 ;;#1 p10
 (define atom?
@@ -82,7 +81,7 @@
       (else (cons (car lat)
             (rember a (cdr lat)))))))
 
-;;#1 p129(教科書の不具合！ eq?で比較しているためオブジェクトのアドレス比較になってます)
+;;#1 p129
 (define eq?-c
   (lambda (a)
     (lambda (x)

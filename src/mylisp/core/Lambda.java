@@ -34,7 +34,8 @@ public class Lambda implements IPair {
         localEnv = mapp;
         
         for (int i = 0; i < keys.length; i++) {
-            localEnv.put((AtomSymbol) keys[i], MyLisp.apply(value[i], env));
+            Sexp buf = MyLisp.eval(value[i], env);
+            localEnv.put((AtomSymbol) keys[i], buf);
         }
 
         Sexp ret = null;
@@ -45,7 +46,6 @@ public class Lambda implements IPair {
                 ret = MyLisp.eval(cddr[i], localEnv);
             }
         }
-
         return ret;
     }
 
