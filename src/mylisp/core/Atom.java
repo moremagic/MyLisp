@@ -54,7 +54,7 @@ public abstract class Atom implements Sexp {
             return new AtomSymbol(value.toString());
         }
     }
-
+    
     private static Number getNumber(String s) {
         Matcher matcher = pattern_number.matcher(s);
         if (matcher.matches()) {

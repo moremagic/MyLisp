@@ -81,12 +81,53 @@
       (else (cons (car lat)
             (rember a (cdr lat)))))))
 
+;;#1 p80
+(define all-nums
+  (lambda (lat)
+    (cond
+      ((null? lat) '())
+      ((number? (car lat)) (cons (car lat) (all-nums (cdr lat))))
+      (else (all-nums (cdr lat))))))
+
+;;#1 p80
+(define eqan?
+  (lambda (a1 a2)
+    (cond
+      ((and (number? a1) (number? a2))
+        (= a1 a2))
+      ((or (number? a1) (number? a2))
+        #f)
+      (else (eq? a1 a2)))))
+
+;;#1 p95
+(define equal?
+  (lambda (s1 s2)
+    (cond
+      ((and (atom? s1) (atom? s2)) (eqan? s1 s2))
+      ((or (atom? s1) (atom? s2)) #f)
+      (else (eqlist? s1 s2)))))
+
+;;#1 p96
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+      ((and (null? l1) (null? l2)) #t)
+      ((or (null? l1) (null? l2)) #f)
+      (else
+        (and (equal? (car l1) (car l2))
+          (eqlist? (cdr l1) (cdr l2)))))))
+
 ;;#1 p129
 (define eq?-c
   (lambda (a)
     (lambda (x)
       (eq? x a))))
 
+;;#1 p129
+(define eq?-c
+  (lambda (a)
+    (lambda (x)
+      (eq? x a))))
 
 (define even? 
     (lambda (n)

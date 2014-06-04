@@ -42,7 +42,7 @@ public class GThanFunction extends AbstractOperator {
         } else if (a instanceof Integer && b instanceof Integer) {
             ret = (Integer) a > (Integer) b;
         } else {
-            ret = (new BigDecimal((double) a.doubleValue()).compareTo(new BigDecimal((double) b.doubleValue())) > 0);
+            ret = (new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) > 0);
         }
 
         return ret;

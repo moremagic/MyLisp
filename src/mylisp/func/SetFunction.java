@@ -24,7 +24,8 @@ public class SetFunction extends AbstractOperator{
         
         Sexp[] cdrs = cons.getCdr().getList();
         if(env.containsKey((AtomSymbol)cdrs[0])){
-            env.put((AtomSymbol) cdrs[0], MyLisp.apply(cdrs[1], env));
+            Sexp buf = MyLisp.apply(cdrs[1], env);
+            env.put((AtomSymbol) cdrs[0], buf);
         }else{
             throw new FunctionException("set!: cannot set undefined identifier: " + cdrs[0].toString());
         }

@@ -25,7 +25,7 @@ public class SubFunction extends AbstractOperator {
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Number ret = null;
         for (Sexp s : cons.getCdr().getList()) {
-            Sexp buf = MyLisp.apply(s, env);
+            Sexp buf = MyLisp.eval(s, env);
 
             if (buf instanceof AtomNumber) {
                 if (ret == null) {

@@ -26,7 +26,7 @@ public class AddFunction extends AbstractOperator {
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = Atom.newAtom(0);
         for (Sexp s : ((IPair)cons.getCdr()).getList()) {
-            Sexp buf = MyLisp.apply(s, env);    
+            Sexp buf = MyLisp.eval(s, env);    
             if (buf instanceof AtomNumber) {
                 ret = Atom.newAtom(addNumber(((AtomNumber)ret).getValue(), ((AtomNumber) buf).getValue()));
             } else {
