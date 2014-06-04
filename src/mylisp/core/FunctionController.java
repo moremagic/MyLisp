@@ -120,7 +120,6 @@ public class FunctionController {
             return ll;
         }
 
-
         //各ファンクション内でApplyすることで、遅延評価を実現します
         Sexp car = MyLisp.apply(pair.getCar(), env);
         if (car == null || car == ConsCell.NIL) {

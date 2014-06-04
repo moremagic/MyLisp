@@ -22,6 +22,25 @@ import mylisp.core.SpecialOperator;
  */
 public class DefineFunction extends AbstractOperator implements SpecialOperator {
 
+    /**
+     * TODO:
+     * (define aaa シンボル)のとき
+     * シンボルの評価が行われていない。
+     * そのため eq?-c 周りの評価が違うものになってしまっている。
+     * 
+     * 正解だけど うまく動かず
+     * (define test (eq?-c 'salad))
+     * (define aaa 'salad)
+     * (test aaa) -> #f
+     * 
+     * 間違いだけどうまく動く
+     * (define test (eq?-c 'salad))
+     * (define aaa salad) ← そもそも評価しないで登録できてしまうのがおかしい
+     * (test aaa) -> #t
+     * 
+     * ※ 束縛 aaa が (define aaa (quote salad))  で salad になるようにしないとおかしい。
+     */
+    
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         //super.checkArgmunet(cons, 2);
@@ -33,7 +52,7 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
         if(cadr.getList().length == 1){
             cddr = (cddr instanceof IPair)?((IPair)cddr).getCar():cddr;
             if( cddr.getList()[0] instanceof AtomSymbol && env.containsKey((AtomSymbol)cddr.getList()[0]) ){
-                cddr = MyLisp.apply(cddr, env);
+                cddr = MyLisp.eval(cddr, env);
             }
             env.put((AtomSymbol) cadr.getList()[0], cddr);
             ret = Atom.newAtom(cadr.toString().toUpperCase());

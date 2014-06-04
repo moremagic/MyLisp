@@ -25,8 +25,7 @@ public class CondFunction implements SpecialOperator {
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = Atom.newAtom("");
         for (int i = 0; i < cons.getCdr().getList().length; i++) {
-            Sexp cdr = cons.getCdr().getList()[i];
-//System.out.println("     >> " + cdr);            
+            Sexp cdr = cons.getCdr().getList()[i];   
             if (cdr instanceof IPair) {
                 IPair ccc = (IPair) cdr;
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
