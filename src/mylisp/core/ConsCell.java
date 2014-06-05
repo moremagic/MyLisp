@@ -14,7 +14,6 @@ import java.util.List;
  * @author moremagic
  */
 public class ConsCell implements IPair {
-
     public static final ConsCell NIL = new ConsCell();
     private Sexp car = NIL;
     private Sexp cdr = NIL;
@@ -92,25 +91,6 @@ public class ConsCell implements IPair {
         
         return sb.toString();
     }
-
-//    @Override
-//    public String toString() {
-//        if (this == NIL) {
-//            return "()";
-//        }
-//        
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("(").append(car.toString());
-//
-//        if (this.cdr != NIL) {
-//            sb.append(" ").append(cdr.toString());
-//        } else {
-//            sb.append(" . ").append(cdr.toString()).append(")");
-//        }
-//
-//        
-//        return sb.toString();
-//    }
 
     public static Sexp list2Cons(Sexp[] list) {
         if (list.length == 0) {

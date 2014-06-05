@@ -24,38 +24,27 @@ public class CondFunction implements SpecialOperator {
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = Atom.newAtom("");
-        for (int i = 0; i < cons.getCdr().getList().length; i++) {
-            Sexp cdr = cons.getCdr().getList()[i];   
+        
+        Sexp[] buf = cons.getCdr().getList();
+        for (int i = 0; i < buf.length; i++) {
+            Sexp cdr = buf[i];   
             if (cdr instanceof IPair) {
                 IPair ccc = (IPair) cdr;
                 Sexp cccCar = MyLisp.eval(ccc.getCar(), env);
                 if (!cccCar.toString().equals(AtomBoolean.F)) {
-                    if (ccc.getList().length == 1) {
-                        ret = MyLisp.eval(cccCar, env);
-                        break;
-                    } else {
-                        for (int j = 0; j < ccc.getCdr().getList().length; j++) {
-                            if (j == ccc.getCdr().getList().length - 1) {
-                                //末尾再帰最適化
-                                ret = TailCallOperator.reserveTailCall(ccc.getCdr().getList()[j], env);
-                            } else {
-                                ret = MyLisp.eval(ccc.getCdr().getList()[j], env);
-                            }
-                        }
-                        break;
-                    }
-                } else if (i == cons.getCdr().getList().length - 1) {
-                    if (ccc.getCar().toString().equals("else")) {
-                        //末尾再帰最適化
-                        ret = TailCallOperator.reserveTailCall(ccc.getCdr().getList()[2], env);
-                   } else if (!cccCar.toString().equals(AtomBoolean.F)) {
-                        if (ccc.getCdr().getList().length != 0 && !cccCar.toString().equals(AtomBoolean.F)) {
+                    Sexp[] cccBuf = ccc.getCdr().getList();
+                    for (int j = 0; j < cccBuf.length; j++) {
+                        if (j == cccBuf.length - 1) {
                             //末尾再帰最適化
-                            ret = TailCallOperator.reserveTailCall(ccc.getCdr().getList()[0], env);
+                            ret = TailCallOperator.reserveTailCall(cccBuf[j], env);
                         } else {
-                            ret = cccCar;
+                            ret = MyLisp.eval(cccBuf[j], env);
                         }
                     }
+                    break;
+                } else if (i == buf.length - 1) {
+                    //末尾再帰最適化
+                    ret = TailCallOperator.reserveTailCall(ccc.getCdr().getList()[0], env);
                 }
             } else {
                 throw new FunctionException("cond: bad syntax (clause is not a test-value pair) in: " + cdr.toString());

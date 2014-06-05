@@ -49,7 +49,7 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
         Sexp cadr = ((IPair)cons.getCdr()).getCar(); // 2
         Sexp cddr = ((IPair)cons.getCdr()).getCdr(); // 3-
         
-        if(cadr.getList().length == 1){
+        if(cadr.getList().length == 1 && cddr.getList().length == 1){
             cddr = (cddr instanceof IPair)?((IPair)cddr).getCar():cddr;
             if( cddr.getList()[0] instanceof AtomSymbol && env.containsKey((AtomSymbol)cddr.getList()[0]) ){
                 cddr = MyLisp.eval(cddr, env);
@@ -58,8 +58,8 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
             ret = Atom.newAtom(cadr.toString().toUpperCase());
         }else{
             //Function生成時の構文糖衣
-            Sexp caadr = ((IPair)cadr).getCar();
-            Sexp cdadr = ((IPair)cadr).getCdr();
+            Sexp caadr = (cadr instanceof IPair)?((IPair)cadr).getCar():cadr;
+            Sexp cdadr = (cadr instanceof IPair)?((IPair)cadr).getCdr():ConsCell.NIL;
             env.put((AtomSymbol) caadr, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(cdadr, cddr)));
             ret = Atom.newAtom(caadr.toString().toUpperCase());
         }
