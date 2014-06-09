@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.core.AtomSymbol;
+import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.FunctionController;
@@ -139,10 +140,27 @@ public class MyLisp {
 
         //eval実行 ＋ 末尾再帰実行
         Sexp ret = MyLisp.eval(sexp, env);
-        ret = TailCallOperator.evalTailCall(ret);
-
+        ret = TailCallOperator.evalTailCall(ret, env);
+        
         return ret;
     }
+    
+    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException{
+        Sexp ret;
+        if(sexp instanceof IPair){
+            IPair pair = (IPair)sexp;
+
+            ret = MyLisp.eval(pair.getCar(), env);
+            if( pair.getCdr() != null && pair.getCdr() != ConsCell.NIL ){
+                MyLisp.eval(pair.getCar(), env);
+                ret = MyLisp.evals(pair.getCdr(), env);
+            }
+        }else{
+            ret = MyLisp.apply(sexp, env);
+        }
+        return ret;
+    }
+    
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
      *
@@ -152,7 +170,6 @@ public class MyLisp {
      * @throws FunctionException
      */
     private static long evalStackCnt = 0;
-
     public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         evalStackCnt++;
 

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.MyLisp;
-import static mylisp.MyLisp.eval;
 import mylisp.func.FunctionException;
 
 /**
@@ -17,12 +16,10 @@ import mylisp.func.FunctionException;
  * @author moremagic
  */
 public class TailCallOperator {
-
     /**
-     * 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする *
+     * 末尾最適化フラグ 末尾最適化が可能なFunctionでは再評価のためtailCallフラグをTrueにする
      */
     private static boolean tailCall = false;
-    private static Map<AtomSymbol, Sexp> m_tailCallEnv = null;
 
     /**
      * 末尾再帰が必要かどうかを判断し、 末尾再帰が必要な場合、遅延評価を行うようにする
@@ -36,7 +33,6 @@ public class TailCallOperator {
         //末尾再帰判定
         if (!tailCall && isTailCall(sexp, tailCallEnv)) {
             TailCallOperator.tailCall = true;
-            TailCallOperator.m_tailCallEnv = tailCallEnv;
             return sexp;
         } else {
             //末尾再帰しない
@@ -44,11 +40,11 @@ public class TailCallOperator {
         }
     }
 
-    public static Sexp evalTailCall(Sexp sexp) throws FunctionException {
+    public static Sexp evalTailCall(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = sexp;
         while (TailCallOperator.tailCall) {
             TailCallOperator.tailCall = false;
-            ret = eval(ret, m_tailCallEnv);
+            ret = MyLisp.eval(ret, env);
         }
         return ret;
     }
@@ -66,7 +62,7 @@ public class TailCallOperator {
     }
 
     private static boolean isProcess(IPair pair, Map<AtomSymbol, Sexp> env) {
-        boolean ret = false;
+        boolean ret;
         try {
             Sexp sexp = MyLisp.apply(pair.getCar(), env);
             if (sexp instanceof IPair) {

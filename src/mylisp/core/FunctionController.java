@@ -128,6 +128,8 @@ public class FunctionController {
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair)car).getCar().toString())) {
             return  exec((IPair)car, env);
+//        } else if (car instanceof IPair) {
+//            return  exec((IPair)car, env);
         } else if (funcMap.containsKey(car.toString())) {
             //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
@@ -138,4 +140,5 @@ public class FunctionController {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());
         }
     }
+    
 }

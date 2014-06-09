@@ -152,3 +152,18 @@
 
 (type1 "C:\Users\mitsu\Desktop\mylisp\test.txt")
 (type1 "C:\Users\mitsu\Desktop\mylisp\mylisp.lisp.ss")
+
+
+;;let set! の 変数スコープの確認
+;;バグのため未稼働
+(define (test)
+    (let ((*big* 100))
+        (define (set-sample) (set! *big* (+ *big* 1)))
+        (define (let-sample) (let ((*big* *big*)) (set! *big* (+ *big* 1))))
+        (set-sample)
+        (display *big*)
+        (let-sample)
+        (let-sample)
+        (display *big*)
+        ))
+(test)
