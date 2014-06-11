@@ -23,7 +23,7 @@ import mylisp.core.SpecialOperator;
 public class DefineFunction extends AbstractOperator implements SpecialOperator {
 
     /**
-     * TODO:
+     * TODO: シンボルの評価が行われていない
      * (define aaa シンボル)のとき
      * シンボルの評価が行われていない。
      * そのため eq?-c 周りの評価が違うものになってしまっている。

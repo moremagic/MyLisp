@@ -9,8 +9,9 @@
 ;;自作
 (define < (lambda (n m) (> m n)))
 
-;;StackOverFlow
-;;そのため GTanfunction.class + (define <) で代用してます
+;;整数のみ対応版。
+;;小数を含むとStackOverFlow
+;;そのため 小数を含む数値でも対応できる GTanfunction.class + (define <) を通常は使用します。
 ;;#1 p75
 ;;(define >
 ;;  (lambda (n m)
@@ -128,6 +129,20 @@
   (lambda (a)
     (lambda (x)
       (eq? x a))))
+
+;;#1 p139
+(define multirember&co
+  (lambda (a lat col)
+    (cond
+      ((null? lat) (col '() '()))
+      ((eq? (car lat) a)
+       (multirember&co a (cdr lat)
+                        (lambda (newlat seen)
+                          (col newlat (cons (car lat) seen)))))
+      (else
+       (multirember&co a (cdr lat)
+                        (lambda (newlat seen)
+                          (col (cons (car lat) newlat) seen)))))))
 
 (define even? 
     (lambda (n)
