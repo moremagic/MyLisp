@@ -128,13 +128,11 @@ public class FunctionController {
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair)car).getCar().toString())) {
             return  exec((IPair)car, env);
-//        } else if (car instanceof IPair) {
-//            return  exec((IPair)car, env);
         } else if (funcMap.containsKey(car.toString())) {
             //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
             return op.eval((ConsCell) pair, env);
-        } else if (pair.getCdr() == ConsCell.NIL) {
+        } else if (car instanceof Atom) {
             return car;
         } else {
             throw new FunctionException("reference to undefined identifier:" + pair.toString());

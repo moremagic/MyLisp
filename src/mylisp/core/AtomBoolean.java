@@ -9,11 +9,10 @@ package mylisp.core;
  * @author moremagic
  */
 public class AtomBoolean extends Atom{
-    public static String T = "#t";
-    public static String F = "#f";
-    public static AtomBoolean AtomTrue = new AtomBoolean(T);
-    public static AtomBoolean AtomFalse = new AtomBoolean(F);
-
+    static final String T = "#t";
+    static final String F = "#f";
+    public static final AtomBoolean AtomTrue = new AtomBoolean(T);
+    public static final AtomBoolean AtomFalse = new AtomBoolean(F);
     
     private boolean value;
     private AtomBoolean(String value){
@@ -29,6 +28,7 @@ public class AtomBoolean extends Atom{
         return value?T:F;
     }
     
+    @Override
     public String toString(){
         return value?T:F;
     }    

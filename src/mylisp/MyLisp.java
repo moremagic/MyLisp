@@ -61,7 +61,11 @@ public class MyLisp {
         System.out.println("usage: file");
     }
 
-    final public void callEvalFile(File file) {
+    /**
+     * TODO:  最終的に import的なLispFunction化したい
+     * @param file 
+     */
+    final private void callEvalFile(File file) {
         try {
             BufferedReader br = null;
             try {
@@ -88,7 +92,7 @@ public class MyLisp {
         }
     }
 
-    public void callREPL() {
+    private void callREPL() {
         try {
             BufferedReader br = null;
             try {
@@ -120,7 +124,7 @@ public class MyLisp {
      * @return
      * @throws FunctionException
      */
-    public void evals(String sexps) throws FunctionException, MyLispPerser.ParseException {
+    private void evals(String sexps) throws FunctionException, MyLispPerser.ParseException {
         for (Sexp sexp : MyLispPerser.parses(sexps)) {
             try {
                 System.out.println(">> " + eval(sexp));
@@ -135,7 +139,7 @@ public class MyLisp {
      * @return
      * @throws FunctionException
      */
-    public Sexp eval(Sexp sexp) throws FunctionException {
+    private Sexp eval(Sexp sexp) throws FunctionException {
         System.out.println("[eval] " + sexp.toString());
 
         //eval実行 ＋ 末尾再帰実行
@@ -150,8 +154,12 @@ public class MyLisp {
         if(sexp instanceof IPair){
             IPair pair = (IPair)sexp;
 
-            ret = MyLisp.eval(pair.getCar(), env);
-            if( pair.getCdr() != null && pair.getCdr() != ConsCell.NIL ){
+            if( pair.getCdr() == ConsCell.NIL ){
+                //TODO;　末尾再帰最適化対象
+                //末尾再帰最適化 sample
+                //ret = TailCallOperator.reserveTailCall(cdr.getCdr().getList()[0], env);
+                ret = MyLisp.eval(pair.getCar(), env);
+            }else{
                 MyLisp.eval(pair.getCar(), env);
                 ret = MyLisp.evals(pair.getCdr(), env);
             }
@@ -170,9 +178,8 @@ public class MyLisp {
      * @throws FunctionException
      */
     private static long evalStackCnt = 0;
-    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {    
         evalStackCnt++;
-
 //        {//debug-print
 //            StringBuilder sb = new StringBuilder();
 //            for (int i = 0; i < evalStackCnt; i++) {

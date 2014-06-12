@@ -23,7 +23,7 @@ public class AndFunction implements SpecialOperator {
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         for (Sexp sexp : ((IPair) cons.getCdr()).getList()) {
             Sexp sexp_apply = MyLisp.apply(sexp, env);
-            if (sexp_apply.toString().equals(AtomBoolean.F)) {
+            if (sexp_apply == AtomBoolean.AtomFalse) {
                 return AtomBoolean.AtomFalse;
             }
         }

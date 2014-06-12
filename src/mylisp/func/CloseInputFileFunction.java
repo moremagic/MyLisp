@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import mylisp.MyLisp;
 import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
-import mylisp.core.AtomBoolean;
 import mylisp.core.AtomPort;
 import mylisp.core.AtomString;
 import mylisp.core.AtomSymbol;
@@ -35,7 +34,7 @@ public class CloseInputFileFunction extends AbstractOperator{
         if(cdr instanceof AtomPort){
             try {
                 ((InputStream)((AtomPort)cdr).getValue()).close();
-                return Atom.newAtom(AtomBoolean.T);
+                return Atom.newAtom(true);
             } catch (IOException ex) {
                 Logger.getLogger(CloseInputFileFunction.class.getName()).log(Level.SEVERE, null, ex);
                 throw new FunctionException(operatorSymbol() + ": cannot close input file: " + new File(((AtomString)cdr).getValue()).getAbsolutePath());

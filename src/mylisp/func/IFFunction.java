@@ -28,7 +28,7 @@ public class IFFunction implements SpecialOperator {
 
         Sexp[] list = cons.getCdr().getList();
         Sexp sexp = MyLisp.apply(list[0], env);
-        if (sexp instanceof AtomBoolean && sexp.toString().equals(AtomBoolean.F)) {
+        if (sexp == AtomBoolean.AtomFalse) {
             //末尾再帰コード
             return TailCallOperator.reserveTailCall(list[2], env);
         } else {

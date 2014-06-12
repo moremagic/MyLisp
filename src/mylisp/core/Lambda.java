@@ -30,7 +30,7 @@ public class Lambda implements IPair {
 
     public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
         Sexp[] keys = ((IPair) ((IPair) getCdr()).getCar()).getList();//cdar
-        Sexp[] cddr = ((IPair) ((IPair) getCdr()).getCdr()).getList();
+        Sexp cddr = ((IPair) getCdr()).getCdr();
 
         //全てコピー
         LambdaEnv<AtomSymbol, Sexp> mapp = new LambdaEnv<AtomSymbol, Sexp>(env);
@@ -43,15 +43,7 @@ public class Lambda implements IPair {
             ((LambdaEnv)localEnv).lambdaMap.put((AtomSymbol) keys[i], buf);
         }
 
-        Sexp ret = null;
-        for (int i = 0; i < cddr.length; i++) {
-            if (i == cddr.length - 1) {
-                ret = TailCallOperator.reserveTailCall(cddr[i], localEnv);
-            } else {
-                ret = MyLisp.eval(cddr[i], localEnv);
-            }
-        }
-
+        Sexp ret = MyLisp.evals(cddr, localEnv);
         return ret;
     }
 

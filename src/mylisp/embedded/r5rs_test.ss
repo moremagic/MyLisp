@@ -92,9 +92,6 @@
 ; multiinsertR, multiinsertL テスト
 (test (multisubstr '*** 'aaa '(*** bbb ccc (*** bbb ccc))) '(aaa bbb ccc (*** bbb ccc)))
 
-; multisubstrX テスト
-(test (multisubstrX '*** 'aaa '(*** bbb ccc (*** bbb ccc))) '(aaa bbb ccc (aaa bbb ccc)))
-
 ; member? テスト
 (test (member? 'ccc '(bbaab ccc (aaa bbb rrr) bbb)) #t)
 (test (member? 'aaa '(bbaab ccc (aaa bbb rrr) bbb)) #f)
@@ -153,8 +150,9 @@
         (+ x y))) 5)
 
 ;ファイル読み込みテスト
+;http://www.geocities.jp/m_hiroi/func/abcscm07.html
 (define (type1 filename)
-    (let ( (iport (open-input-file filename)))
+    (let ((iport (open-input-file filename)))
         (let loop ((c (read-char iport)))
 	    (cond ((not (eof-object? c))
 	           (display c)
@@ -162,20 +160,20 @@
         (close-input-port iport)))
 
 (type1 "C:\Users\mitsu\Desktop\mylisp\test.txt")
-(type1 "C:\Users\mitsu\Desktop\mylisp\mylisp.lisp.ss")
-
+;;(type1 "C:\Users\mitsu\Desktop\mylisp\mylisp.lisp.ss")
+;;(time (fib 30));;34641ms
 
 ;;let set! の 変数スコープの確認
 ;;バグのため未稼働
-(define (test)
-    (let ((*big* 100))
-        (define (set-sample) (set! *big* (+ *big* 1)))
-        (define (let-sample) (let ((*big* *big*)) (set! *big* (+ *big* 1))))
-        (set-sample)
-        (display *big*)
-        (let-sample)
-        (let-sample)
-        (display *big*)
-        ))
-(test)
+;;(define (test)
+;;    (let ((*big* 100))
+;;        (define (set-sample) (set! *big* (+ *big* 1)))
+;;        (define (let-sample) (let ((*big* *big*)) (set! *big* (+ *big* 1))))
+;;        (set-sample)
+;;        (display *big*)
+;;        (let-sample)
+;;        (let-sample)
+;;        (display *big*)
+;;        ))
+;;(test)
 

@@ -216,15 +216,6 @@
           (else 
            (cons (car lat) (multisubstr old new (cdr lat)))))))
 
-;m.itou added
-(define multisubstrX
-  (lambda (old new lat)
-    (cond ((null? lat) '())
-          ((not (atom? (car lat))) (cons (multisubstrX old new (car lat)) (multisubstrX old new (cdr lat))))
-          ((eq? old (car lat)) (cons new (multisubstrX old new (cdr lat))))
-          (else 
-           (cons (car lat) (multisubstrX old new (cdr lat)))))))
-
 (define pick
   (lambda (n lat)
     (cond ((null? lat) '()) 

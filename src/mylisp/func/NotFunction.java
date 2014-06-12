@@ -25,7 +25,7 @@ public class NotFunction extends AbstractOperator {
         super.checkArgmunet(cell, 1);
 
         Sexp sexp = MyLisp.apply(cell.getCdr(), env);
-        return Atom.newAtom(sexp.toString().equals(AtomBoolean.F));
+        return Atom.newAtom(sexp == AtomBoolean.AtomFalse);
     }
 
     @Override

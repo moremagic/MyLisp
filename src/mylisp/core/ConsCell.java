@@ -48,6 +48,7 @@ public class ConsCell implements IPair {
      */
     @Override
     public Sexp getCdr() {
+        assert cdr == null:"exception format!";
         return cdr;
     }
 

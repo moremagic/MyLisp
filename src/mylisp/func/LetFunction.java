@@ -53,7 +53,7 @@ public class LetFunction implements SpecialOperator {
                 }
             }
 
-            if (cdr instanceof IPair) {
+            if (cdr.getCar() instanceof IPair) {
                 //名前なしLet
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, ConsCell.NIL)));
 
@@ -62,10 +62,11 @@ public class LetFunction implements SpecialOperator {
             } else {
                 //名前ありLet     
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, ConsCell.NIL)));
-                env.put((AtomSymbol) cdr, lambda);
+                env.put((AtomSymbol) cdr.getCar(), lambda);
+                lambda.lambdaApply(env);
 
                 //末尾再帰最適化
-                return TailCallOperator.reserveTailCall(new ConsCell(cdr, ConsCell.list2Cons(values)), env);
+                return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.list2Cons(values)), env);
             }
         } else {
             throw new FunctionException("let: bad syntax in: " + cons.toString());

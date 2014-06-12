@@ -24,11 +24,11 @@ public class OrFunction implements SpecialOperator {
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
         for (Sexp sexp : cons.getCdr().getList()) {
             Sexp sexp_apply = MyLisp.apply(sexp, env);
-            if (sexp_apply.toString().equals(AtomBoolean.T)) {
-                return Atom.newAtom(AtomBoolean.T);
+            if (sexp_apply == AtomBoolean.AtomTrue) {
+                return Atom.newAtom(true);
             }
         }
-        return Atom.newAtom(AtomBoolean.F);
+        return Atom.newAtom(false);
     }
 
     @Override
