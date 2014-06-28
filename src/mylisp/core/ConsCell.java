@@ -14,9 +14,8 @@ import java.util.List;
  * @author moremagic
  */
 public class ConsCell implements IPair {
-    public static final ConsCell NIL = new ConsCell();
-    private Sexp car = NIL;
-    private Sexp cdr = NIL;
+    private Sexp car = Atom.NIL;
+    private Sexp cdr = Atom.NIL;
 
     private ConsCell() {
         //NIL Object
@@ -65,7 +64,7 @@ public class ConsCell implements IPair {
         List<Sexp> ret = new ArrayList<Sexp>();
 
         ret.add(this.car);
-        if (this.cdr != null && this.cdr != NIL) {
+        if (this.cdr != null && this.cdr != Atom.NIL) {
             ret.addAll(Arrays.asList(this.cdr.getList()));
         }
 
@@ -73,19 +72,19 @@ public class ConsCell implements IPair {
     }
 
     @Override
-    public String toString() {
-        if (this == NIL) {
-            return "()";
-        }
-        
+    public String toString() {      
         return "(" + createConsString(this) + ")";
     }
 
     
     private static String createConsString(IPair cons){
+        if(cons.getCar() == Atom.NIL){
+            return "";
+        }
+        
         StringBuffer sb = new StringBuffer();
         sb.append(cons.getCar());
-        if(cons.getCdr() == ConsCell.NIL){
+        if(cons.getCdr() == Atom.NIL){
             //NOP
         }else if(cons.getCdr() instanceof Atom){
             sb.append(" . ").append(cons.getCdr());
@@ -98,7 +97,7 @@ public class ConsCell implements IPair {
     
     public static Sexp list2Cons(Sexp[] list) {
         if (list.length == 0) {
-            return NIL;
+            return Atom.NIL;
         } else {
             Sexp ret = new ConsCell(list[0], list2Cons(Arrays.asList(list).subList(1, list.length).toArray(new Sexp[0])));
             return ret;

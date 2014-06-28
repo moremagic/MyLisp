@@ -34,6 +34,13 @@ public class TailCallOperator {
         if (!tailCall && isTailCall(sexp, tailCallEnv)) {
             TailCallOperator.tailCall = true;
             return sexp;
+            
+            
+//System.out.println("[tail-call!]" + sexp.toString());
+//            Lambda tailCallLambda = new Lambda(((IPair)sexp).getCar(), ((IPair)sexp).getCdr());
+//            tailCallLambda.lambdaApply(tailCallEnv);
+//            return tailCallLambda;
+
         } else {
             //末尾再帰しない
             return MyLisp.eval(sexp, tailCallEnv);
@@ -51,26 +58,28 @@ public class TailCallOperator {
 
     /**
      * 末尾再帰コードかどうか判定する
-     * TODO: 未完成
+     * TODO: 未完成のため常にFalseを返却するようにしています
      *
      * @param sexp
      * @return
      */
     private static boolean isTailCall(Sexp sexp, Map<AtomSymbol, Sexp> env) {
-        //return false;
-        return (sexp instanceof IPair && isProcess((IPair) sexp, env));
+        return false;
+//        return (sexp instanceof IPair && isProcess((IPair) sexp, env));
     }
 
     private static boolean isProcess(IPair pair, Map<AtomSymbol, Sexp> env) {
-        boolean ret;
-        try {
+        boolean ret = false;
+        try { 
             Sexp sexp = MyLisp.apply(pair.getCar(), env);
             if (sexp instanceof IPair) {
                 ret = isProcess((IPair) sexp, env);
             } else {
                 String buf = sexp.toString();
                 ret = (buf.equals(Lambda.LAMBDA_SYMBOL) || buf.equals("if") || buf.equals("cond") ) && pair.getCdr().getList().length == 1;
+//                ret = (sexp instanceof Lambda) && pair.getCdr().getList().length == 1;
             }
+if(ret)System.err.println("[ " + pair.toString() + "  car: " + sexp + " ] " + ret);
         } catch (FunctionException ex) {
             ret = false;
             Logger.getLogger(TailCallOperator.class.getName()).log(Level.SEVERE, null, ex);

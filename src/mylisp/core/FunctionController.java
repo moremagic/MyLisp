@@ -122,8 +122,8 @@ public class FunctionController {
 
         //各ファンクション内でApplyすることで、遅延評価を実現します
         Sexp car = MyLisp.apply(pair.getCar(), env);
-        if (car == null || car == ConsCell.NIL) {
-            return ConsCell.NIL;
+        if (car == null || car == Atom.NIL) {
+            return Atom.NIL;
         } else if (car instanceof Lambda) {
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair)car).getCar().toString())) {

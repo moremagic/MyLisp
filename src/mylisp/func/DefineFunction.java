@@ -59,7 +59,7 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
         }else{
             //Function生成時の構文糖衣
             Sexp caadr = (cadr instanceof IPair)?((IPair)cadr).getCar():cadr;
-            Sexp cdadr = (cadr instanceof IPair)?((IPair)cadr).getCdr():ConsCell.NIL;
+            Sexp cdadr = (cadr instanceof IPair)?((IPair)cadr).getCdr():Atom.NIL;
             env.put((AtomSymbol) caadr, new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(cdadr, cddr)));
             ret = Atom.newAtom(caadr.toString().toUpperCase());
         }

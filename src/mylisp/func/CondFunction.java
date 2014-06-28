@@ -6,6 +6,7 @@ package mylisp.func;
 
 import java.util.Map;
 import mylisp.MyLisp;
+import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
 import mylisp.core.ConsCell;
@@ -22,7 +23,7 @@ public class CondFunction implements SpecialOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        Sexp ret = ConsCell.NIL;
+        Sexp ret = Atom.NIL;
         
         Sexp[] buf = cons.getCdr().getList();
         for (int i = 0; i < buf.length; i++) {

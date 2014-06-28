@@ -161,6 +161,7 @@
 
 (type1 "C:\Users\mitsu\Desktop\mylisp\test.txt")
 ;;(type1 "C:\Users\mitsu\Desktop\mylisp\mylisp.lisp.ss")
+
 ;;(time (fib 30));;34641ms
 
 ;;let set! の 変数スコープの確認

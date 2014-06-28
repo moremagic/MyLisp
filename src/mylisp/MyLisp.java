@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.FunctionController;
@@ -154,11 +154,9 @@ public class MyLisp {
         if(sexp instanceof IPair){
             IPair pair = (IPair)sexp;
 
-            if( pair.getCdr() == ConsCell.NIL ){
-                //TODO;　末尾再帰最適化対象
-                //末尾再帰最適化 sample
-                //ret = TailCallOperator.reserveTailCall(cdr.getCdr().getList()[0], env);
-                ret = MyLisp.eval(pair.getCar(), env);
+            if( pair.getCdr() == Atom.NIL ){
+                //末尾再帰最適化
+                ret = TailCallOperator.reserveTailCall(pair.getCar(), env);
             }else{
                 MyLisp.eval(pair.getCar(), env);
                 ret = MyLisp.evals(pair.getCdr(), env);

@@ -24,7 +24,7 @@ public class MyLispPerser {
 
     public static void main(String[] argv) {
         Map<String, String> testMap = new LinkedHashMap<String, String>();
-        testMap.put("()", ConsCell.NIL.toString());
+        testMap.put("()", new ConsCell(Atom.NIL, Atom.NIL).toString());
         testMap.put("'(eq? a #f)", "(quote (eq? a #f))");
         testMap.put("()", "()");
         testMap.put("(1 2 3)", "(1 2 3)");
@@ -134,7 +134,7 @@ public class MyLispPerser {
             return parseAtomString(sExps);
         } else if (sExps.startsWith("'")) {
             Sexp atom = parse(sExps.substring(1));
-            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, ConsCell.NIL));
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL));
         } else {
             return parseAtom(sExps);
         }
@@ -202,7 +202,7 @@ public class MyLispPerser {
                 Sexp atom = parse(sCell.substring(i + 1));
                 i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, ConsCell.NIL)));
+                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL)));
             } else if (s.equals("\"")) {
                 Sexp atom = parseAtomString(sCell.substring(i));
                 i += atom.toString().length() - 1;
@@ -216,12 +216,15 @@ public class MyLispPerser {
             }
         }
 
-        if (!sexpList.isEmpty() && sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
+        if(sexpList.isEmpty()){
+            // () の場合
+            return new ConsCell(Atom.NIL, Atom.NIL);
+        }else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
             return new Lambda(cons.getCar(), cons.getCdr());
         } else {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
-            return cons;
+            return cons;            
         }
     }
 

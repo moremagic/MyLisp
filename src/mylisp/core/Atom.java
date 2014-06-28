@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @author moremagic
  */
 public abstract class Atom implements Sexp {
-
+    public static final Atom NIL = new AtomNil();
     private static final Pattern pattern_number = java.util.regex.Pattern.compile("^\\-?[0-9]*\\.?[0-9]+$");
     private static final Pattern pattern_string = java.util.regex.Pattern.compile("^\".*\"$");
     private static final Pattern pattern_char = java.util.regex.Pattern.compile("^#\\\\.*$");

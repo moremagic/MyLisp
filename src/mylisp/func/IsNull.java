@@ -9,7 +9,6 @@ import mylisp.MyLisp;
 import mylisp.core.AbstractOperator;
 import mylisp.core.Atom;
 import mylisp.core.AtomSymbol;
-import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 
@@ -25,7 +24,7 @@ public class IsNull extends AbstractOperator {
         super.checkArgmunet(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
-        return Atom.newAtom(sexp instanceof IPair && (((IPair)sexp).getCar() == null || ((IPair)sexp).getCar() == ConsCell.NIL));
+        return Atom.newAtom(sexp == Atom.NIL || (sexp instanceof IPair && ((IPair)sexp).getCar() == Atom.NIL) );
     }
 
     @Override
