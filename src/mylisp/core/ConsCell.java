@@ -78,21 +78,24 @@ public class ConsCell implements IPair {
             return "()";
         }
         
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        
-        Sexp[] sexps = this.getList();
-        for(int i = 0 ; i < sexps.length ; i++){
-            sb.append(sexps[i].toString());
-            if(sexps.length - 1 != i){
-                sb.append(" ");
-            }
-        }
-        sb.append(")");
-        
-        return sb.toString();
+        return "(" + createConsString(this) + ")";
     }
 
+    
+    private static String createConsString(IPair cons){
+        StringBuffer sb = new StringBuffer();
+        sb.append(cons.getCar());
+        if(cons.getCdr() == ConsCell.NIL){
+            //NOP
+        }else if(cons.getCdr() instanceof Atom){
+            sb.append(" . ").append(cons.getCdr());
+        }else if(cons.getCdr() instanceof IPair){
+            sb.append(" ").append( createConsString((IPair)cons.getCdr()) );
+        }
+        return sb.toString();
+    }
+    
+    
     public static Sexp list2Cons(Sexp[] list) {
         if (list.length == 0) {
             return NIL;
