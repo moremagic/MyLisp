@@ -6,14 +6,12 @@ package mylisp.func;
 
 import java.util.Map;
 import mylisp.MyLisp;
-import mylisp.core.Atom;
 import mylisp.core.AtomBoolean;
 import mylisp.core.AtomSymbol;
 import mylisp.core.ConsCell;
 import mylisp.core.IPair;
 import mylisp.core.Sexp;
 import mylisp.core.SpecialOperator;
-import mylisp.core.TailCallOperator;
 
 /**
  * Cond class
