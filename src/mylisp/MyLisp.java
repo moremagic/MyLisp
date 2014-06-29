@@ -204,7 +204,8 @@ public class MyLisp {
 
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = sexp;
-
+        
+        sexp = (sexp instanceof IPair && ((IPair)sexp).getCdr() == Atom.NIL)?((IPair)sexp).getCar():sexp;
         if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
             ret = env.get((AtomSymbol) sexp);
         } else if (sexp instanceof IPair && ((IPair) sexp).getList().length == 1 && ((IPair) sexp).getList()[0] instanceof AtomSymbol) {
