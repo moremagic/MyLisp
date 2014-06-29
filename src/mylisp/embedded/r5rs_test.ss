@@ -25,7 +25,7 @@
 ;(test (eq? (let ((p (lambda (x) x))) (eqv? p p)) #t))
 
 ;;  6-1 p18
-;(test (eq? (eq? 'a 'a) #t))
+;;(test (eq? (eq? 'a 'a) #t))
 ;(test (eq? (eq? '(a) '(a)) #t));未規定
 ;(test (eq? (eq? (list 'a) (list 'a)) #f))
 ;(test (eq? (eq? "a" "a") #t)) ;未規定
@@ -39,6 +39,11 @@
 ;(test (eq? (let ((x '#())) (eq? x x)) #t))
 ;(test (eq? (let ((p (lambda (x) x))) (eq? p p)) #t))
 
+;;  6-3 p25
+;;(test (pair? '(a . b)) #t)
+;;(test (pair? '(a b c)) #t)
+;;(test (pair? '()) #f)
+;;(test (pair? '#(a b)) #f)
 ;;-----------------------------------------------------------------------
 
 ; null? テスト
@@ -47,6 +52,10 @@
 (test (null? 'a) #f)
 (test (null? 123) #f)
 (test (null? 1.23) #f)
+
+;pair? テスト
+(test (pair? '()) #f)
+(test (pair? ()) #f)
 
 ; < テスト
 (test (< 1 2) #t)
@@ -162,7 +171,7 @@
 (type1 "C:\Users\mitsu\Desktop\mylisp\test.txt")
 ;;(type1 "C:\Users\mitsu\Desktop\mylisp\mylisp.lisp.ss")
 
-;;(time (fib 30));;34641ms
+(time (fib 30));;34641ms
 
 ;;let set! の 変数スコープの確認
 ;;バグのため未稼働
