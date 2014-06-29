@@ -24,7 +24,7 @@ public class IsPair extends AbstractOperator {
         super.checkArgmunet(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
-        return Atom.newAtom((sexp instanceof IPair) && sexp != Atom.NIL);
+        return Atom.newAtom((sexp instanceof IPair) && ((IPair)sexp).getCar() != Atom.NIL);
     }
 
     @Override
