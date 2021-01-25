@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,11 +32,11 @@ public class MyLisp {
     public MyLisp() {
         try {
             //組み込み関数実行部
-            callEvalFile(new File(getClass().getResource("/mylisp/embedded/mylisp.ss").toURI()));
-            callEvalFile(new File(getClass().getResource("/mylisp/embedded/r5rs_test.ss").toURI()));
+            callEvalFile(new File(getClass().getResource("/embedded/mylisp.ss").toURI()));
+            callEvalFile(new File(getClass().getResource("/embedded/r5rs_test.ss").toURI()));
 
-            callEvalFile(new File(getClass().getResource("/mylisp/embedded/newfile").toURI()));
-        } catch (URISyntaxException ex) {
+            callEvalFile(new File(getClass().getResource("/embedded/newfile").toURI()));
+        } catch (Exception ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
