@@ -1,4 +1,4 @@
-;;scheme 手習い(the Little Scheme) ---> #1 
+;;scheme 手習い(the Little Scheme): ISBN-10:4274068269 ---> #1
 
 ;;#1 p61
 (define add1 (lambda (n) (+ n 1)))
@@ -11,7 +11,7 @@
 
 ;;整数のみ対応版。
 ;;小数を含むとStackOverFlow
-;;そのため 小数を含む数値でも対応できる GTanfunction.class + (define <) を通常は使用します。
+;;そのため 小数を含む数値でも対応できる GThanfunction.class + (define <) を通常は使用します。
 ;;#1 p75
 ;;(define >
 ;;  (lambda (n m)
@@ -117,12 +117,6 @@
       (else
         (and (equal? (car l1) (car l2))
           (eqlist? (cdr l1) (cdr l2)))))))
-
-;;#1 p129
-(define eq?-c
-  (lambda (a)
-    (lambda (x)
-      (eq? x a))))
 
 ;;#1 p129
 (define eq?-c
@@ -255,6 +249,6 @@
         (let ((m (- n1 1)))
           (loop m (* p m))))))
 ;eof
-;(define *eof*
-;  (let ((port (open-input-string "")))
-;  (read port)))
+(define *eof*
+  (let ((port (open-input-string "")))
+  (read port)))
