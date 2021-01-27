@@ -1,15 +1,45 @@
 package mylisp;
 
-import mylisp.core.Sexp;
+import mylisp.core.*;
+import mylisp.func.FunctionException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyLispParserTest {
+
+    @Test
+    public void consCellParseTest() throws MyLispPerser.ParseException {
+        Sexp[] ret = MyLispPerser.parses("(+ 3 4)");
+
+        Sexp actual = ret[0];
+        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(3), new ConsCell(Atom.newAtom(4), Atom.NIL)));
+
+        //TODO: Atom, ISexp の Equalsが実装できるまでは Stringでの検証を行う
+        assertEquals(actual.toString(), expect.toString());
+    }
+
+    @Test
+    public void dotPairParseTest() throws MyLispPerser.ParseException {
+        Sexp[] ret = MyLispPerser.parses("(+ 2 . 1)");
+
+        Sexp actual = ret[0];
+        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(2), Atom.newAtom(1)));
+
+        //TODO: Atom, ISexp の Equalsが実装できるまでは Stringでの検証を行う
+        assertEquals(actual.toString(), expect.toString());
+    }
+
+
     @ParameterizedTest
     @CsvSource({
             "(), ()",
+            "(1 . 2), (1 . 2)",
             "(#t), (#t)",
             "(#f), (#f)",
             "(() ()), (() ())",
@@ -44,4 +74,5 @@ public class MyLispParserTest {
 
         assertEquals(expected_code, actual_code);
     }
+
 }
