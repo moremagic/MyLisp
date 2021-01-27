@@ -47,7 +47,7 @@ public class ConsCell implements IPair {
      */
     @Override
     public Sexp getCdr() {
-        assert cdr == null:"exception format!";
+        assert cdr != null:"cdr for cons cell must be not null.";
         return cdr;
     }
 
