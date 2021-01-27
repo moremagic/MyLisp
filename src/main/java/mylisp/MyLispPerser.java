@@ -21,57 +21,6 @@ import mylisp.core.Sexp;
  * @author moremagic
  */
 public class MyLispPerser {
-
-    public static void main(String[] argv) {
-        Map<String, String> testMap = new LinkedHashMap<String, String>();
-        testMap.put("()", new ConsCell(Atom.NIL, Atom.NIL).toString());
-        testMap.put("'(eq? a #f)", "(quote (eq? a #f))");
-        testMap.put("()", "()");
-        testMap.put("(1 2 3)", "(1 2 3)");
-        testMap.put("#\\(", "(");
-        testMap.put("#\\)", ")");
-        testMap.put("#\\a", "a");
-        testMap.put("((eq?-c 'salada) 'salada)", "((eq?-c (quote salada)) (quote salada))");
-        testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) \t(let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
-        testMap.put("(test '(eq? (atom? '(atom turkey or) or) #f))", "(test (quote (eq? (atom? (quote (atom turkey or)) or) #f)))");
-        testMap.put("(if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\"))", "(if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\"))");
-        testMap.put("(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))", "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))");
-        testMap.put("(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)", "(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)");
-        testMap.put("'(1 '2 3)", "(quote (1 (quote 2) 3))");
-        testMap.put("(let loop((n1 n) (p n)))", "(let loop ((n1 n) (p n)))");
-        testMap.put("(\" a b c '() '(quote) \\\" \" aaa)", "(\" a b c '() '(quote) \\\" \" aaa)");
-        testMap.put("('a 'b 'c ('d 'e))", "((quote a) (quote b) (quote c) ((quote d) (quote e)))");
-        testMap.put("(('()) 123456789012345)", "(((quote ())) 123456789012345)");
-        testMap.put("(lat? '(1 (3 4)))", "(lat? (quote (1 (3 4))))");
-        testMap.put("((x) (1 2))", "((x) (1 2))");
-        testMap.put("(lambda (x) (and (not (pair? x))))", "(lambda (x) (and (not (pair? x))))");
-        testMap.put("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))", "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
-        testMap.put("(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))", "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))");
-
-        for (Map.Entry<String, String> s : testMap.entrySet()) {
-            testParse(s.getKey(), s.getValue());
-        }
-    }
-
-    private static void testParse(String test_code, String expected_code) {
-        try {
-            Sexp[] ss = parses(test_code);
-            StringBuilder sb = new StringBuilder();
-            for (Sexp s : ss) {
-                sb.append(s);
-            }
-
-            if (expected_code.equals(sb.toString())) {
-                System.out.println("            [" + test_code + "] complete!");
-            } else {
-                System.out.println("original    [" + expected_code + "]\n"
-                        + "ng          [" + sb.toString() + "]");
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(MyLispPerser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     /**
      * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う
      *
@@ -126,7 +75,7 @@ public class MyLispPerser {
      * @param sExps
      * @return
      */
-    public static Sexp parse(String sExps) {
+    private static Sexp parse(String sExps) {
         sExps = sExps.trim();
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
@@ -234,7 +183,7 @@ public class MyLispPerser {
      * @param sexpStr パース前文字列
      * @return 最初に出現する Atom の文字数
      */
-    public static int getAtomLength(String sexpStr) {
+    private static int getAtomLength(String sexpStr) {
         // 「()」 の数が合致するまでの文字数を返却する
         int kakkoCnt = 0;
         int i;
@@ -259,8 +208,21 @@ public class MyLispPerser {
         return i;
     }
 
-    public static class ParseException extends Exception {
+    /**
+     * 内部オブジェクト表現をコードの形に直す
+     *
+     * @param sexsps 内部オブジェクト配列
+     * @return
+     */
+    public static String sexpToString(Sexp[] sexsps){
+        StringBuilder sb = new StringBuilder();
+        for (Sexp s : sexsps) {
+            sb.append(s.toString());
+        }
+        return sb.toString();
+    }
 
+    public static class ParseException extends Exception {
         public ParseException(String message) {
             super(message);
         }

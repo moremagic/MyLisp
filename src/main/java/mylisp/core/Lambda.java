@@ -24,7 +24,7 @@ public class Lambda implements IPair {
     private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();
 
     public Lambda(Sexp car, Sexp cdr) {
-        assert !car.toString().equals(LAMBDA_SYMBOL) : "not lambda";
+        assert car.toString().equals(LAMBDA_SYMBOL) : "car for lambda pair must be 'lambda'";
         consCell = new ConsCell(car, cdr);
     }
 
