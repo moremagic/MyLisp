@@ -21,7 +21,7 @@ public class IsEOF extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr().getList()[0], env);
         return Atom.newAtom(sexp.toString().equals(new String(new char[]{'\uffff'})));

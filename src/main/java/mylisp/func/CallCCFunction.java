@@ -22,7 +22,7 @@ public class CallCCFunction extends AbstractOperator implements SpecialOperator{
     
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         //TODO たぶんこんな感じで行ける
         //Lambda クラスを生成して返す。

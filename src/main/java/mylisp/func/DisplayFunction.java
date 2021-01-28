@@ -20,7 +20,7 @@ public class DisplayFunction extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         Sexp ret = MyLisp.apply(cons.getCdr().getList()[0], env);
         System.out.print( ret.toString() );

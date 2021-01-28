@@ -7,22 +7,19 @@ import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  * Atom class
  *
  * @author moremagic
  */
 public abstract class Atom implements Sexp {
-    public static final Atom NIL = new AtomNil();
     private static final Pattern pattern_number = java.util.regex.Pattern.compile("^\\-?[0-9]*\\.?[0-9]+$");
     private static final Pattern pattern_string = java.util.regex.Pattern.compile("^\".*\"$");
     private static final Pattern pattern_char = java.util.regex.Pattern.compile("^#\\\\.*$");
 
     public abstract Object getValue();
+
+    public abstract boolean equals(Object object);
 
     public static Atom newAtom(Object value) {
         if (value instanceof Boolean) {
@@ -54,7 +51,12 @@ public abstract class Atom implements Sexp {
             return new AtomSymbol(value.toString());
         }
     }
-    
+
+    /**
+     * TODO: このメソッドはAtomNumberが持つべき
+     * @param s
+     * @return
+     */
     private static Number getNumber(String s) {
         Matcher matcher = pattern_number.matcher(s);
         if (matcher.matches()) {
@@ -76,6 +78,11 @@ public abstract class Atom implements Sexp {
         return null;
     }
 
+    /**
+     * TODO：このメソッドは各具象Atomクラスが持つべき
+     * @param s
+     * @return
+     */
     private static String getString(String s) {
         Matcher matcher = pattern_string.matcher(s);
         if (matcher.matches()) {
@@ -84,6 +91,11 @@ public abstract class Atom implements Sexp {
         return null;
     }
 
+    /**
+     * TODO: AtomCharが持つべき
+     * @param s
+     * @return
+     */
     private static String getChar(String s) {
         Matcher matcher = pattern_char.matcher(s);
         if (matcher.matches()) {
@@ -92,8 +104,24 @@ public abstract class Atom implements Sexp {
         return null;
     }
 
+    /**
+     * TODO: このメソッドがここにあることは正しい？評価器が持つべきでは？
+     * @return
+     */
     @Override
     public Sexp[] getList() {
         return new Sexp[]{this};
+    }
+
+    /**
+     * Atom生成時に発生したExceptionを表す
+     */
+    public class AtomException extends Exception{
+        public AtomException(String message){
+            super(message);
+        }
+        public AtomException(Exception e){
+            super(e);
+        }
     }
 }

@@ -1,45 +1,51 @@
 package mylisp;
 
 import mylisp.core.*;
-import mylisp.func.FunctionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyLispParserTest {
 
     @Test
-    public void consCellParseTest() throws MyLispPerser.ParseException {
-        Sexp[] ret = MyLispPerser.parses("(+ 3 4)");
+    public void consCellParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+        Sexp[] ret = MyLispParser.parses("(+ 3 4)");
 
         Sexp actual = ret[0];
-        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(3), new ConsCell(Atom.newAtom(4), Atom.NIL)));
+        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(3), new ConsCell(Atom.newAtom(4), AtomNil.INSTANCE)));
 
-        //TODO: Atom, ISexp の Equalsが実装できるまでは Stringでの検証を行う
-        assertEquals(actual.toString(), expect.toString());
+        assertEquals(actual, expect);
     }
 
     @Test
-    public void dotPairParseTest() throws MyLispPerser.ParseException {
-        Sexp[] ret = MyLispPerser.parses("(+ 2 . 1)");
+    public void nestConsCellParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+        Sexp[] ret = MyLispParser.parses("(+ 2 (+ 3 4 (+ 5 6)))");
+        Sexp actual = ret[0];
+        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(2),
+                new ConsCell(new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(3), new ConsCell(Atom.newAtom(4),
+                        new ConsCell(new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(5), new ConsCell(Atom.newAtom(6)
+                                , AtomNil.INSTANCE))), AtomNil.INSTANCE)))), AtomNil.INSTANCE)));
+        assertEquals(actual, expect);
+    }
+
+
+    //@Test
+    //TODO: dotted pair に対応する
+    public void dotPairParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+        Sexp[] ret = MyLispParser.parses("(+ 2 . 1)");
 
         Sexp actual = ret[0];
         Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(2), Atom.newAtom(1)));
 
-        //TODO: Atom, ISexp の Equalsが実装できるまでは Stringでの検証を行う
-        assertEquals(actual.toString(), expect.toString());
+        assertEquals(actual, expect);
     }
 
 
     @ParameterizedTest
     @CsvSource({
             "(), ()",
-            "(1 . 2), (1 . 2)",
             "(#t), (#t)",
             "(#f), (#f)",
             "(() ()), (() ())",
@@ -68,11 +74,9 @@ public class MyLispParserTest {
             "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x))))), (define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
             "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount)), (define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))"
     })
-    void testParse(String test_code, String expected_code) throws MyLispPerser.ParseException{
-        Sexp[] ss = MyLispPerser.parses(test_code);
-        String actual_code = MyLispPerser.sexpToString(ss);
-
-        assertEquals(expected_code, actual_code);
+    void testParse(String test_code, String expected_code) throws MyLispParser.ParseException, Atom.AtomException {
+        Sexp[] ss = MyLispParser.parses(test_code);
+        assertEquals(expected_code, ss[0].toString());
     }
 
 }

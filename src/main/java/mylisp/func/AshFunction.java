@@ -22,7 +22,7 @@ public class AshFunction extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 2);
+        super.checkArgument(cons, 2);
 
         Sexp[] list = cons.getCdr().getList();
         long sexp_apply1 = ((AtomNumber) MyLisp.apply(list[0], env)).getValue().longValue();

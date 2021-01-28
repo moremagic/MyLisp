@@ -21,7 +21,7 @@ public class IsSymbol extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
         return Atom.newAtom(sexp instanceof AtomSymbol);

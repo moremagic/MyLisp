@@ -1,37 +1,34 @@
 package mylisp.core;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  * Char Atom
+ * //TODO: char 型を扱うのではなく、一文字を扱うように変更をすると便利かも
  *
  * @author moremagic
  */
 public class AtomChar extends Atom {
+    private static final String PREFIX = "#\\";
     private static final String SPACE = "space";
     private static final String TAB = "tab";
     private static final String NEWLINE = "newline";
     private char value;
 
     AtomChar(String value) {
-        if (value.startsWith("#\\")) {
-            value = value.substring(2);
+        if (!value.startsWith(PREFIX)) {
+            throw new RuntimeException("not char syntax.");
         }
 
-        //TODO: マクロで実装すべき？？
-        if (value.equals(SPACE)) {
+        if (value.equals(PREFIX + SPACE)) {
             this.value = ' ';
-        } else if (value.equals(TAB)) {
+        } else if (value.equals(PREFIX + TAB)) {
             this.value = '\t';
-        } else if (value.equals(NEWLINE)) {
+        } else if (value.equals(PREFIX + NEWLINE)) {
             this.value = '\n';
         } else {
-            this.value = value.charAt(0);
+            this.value = value.substring(PREFIX.length()).charAt(0);
         }
     }
-    
+
     public AtomChar(char value) {
         this.value = value;
     }

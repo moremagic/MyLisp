@@ -3,42 +3,38 @@ package mylisp.core;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * symbol Atom
+ *
  * @author moremagic
  */
-public class AtomPort extends Atom{
+public class AtomPort extends Atom {
     private InputStream input_value = null;
     private OutputStream output_value = null;
-    
-    AtomPort(InputStream input){
+
+    AtomPort(InputStream input) {
         this.input_value = input;
     }
-    
-    AtomPort(OutputStream output){
+
+    AtomPort(OutputStream output) {
         this.output_value = output;
     }
-    
+
     @Override
-    public Object getValue(){
-        return (input_value != null)?input_value: output_value;
+    public Object getValue() {
+        return (input_value != null) ? input_value : output_value;
     }
 
     @Override
     public String toString() {
         return getValue().toString();
     }
-    
-   @Override
+
+    @Override
     public boolean equals(Object object) {
-        if(object instanceof AtomPort){
-            return ((AtomPort)object).getValue().equals(getValue());
-        }else{
+        if (object instanceof AtomPort) {
+            return ((AtomPort) object).getValue().equals(getValue());
+        } else {
             return false;
         }
     }

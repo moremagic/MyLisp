@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp;
 
 import java.io.BufferedReader;
@@ -13,16 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mylisp.core.Atom;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
-import mylisp.core.FunctionController;
-import mylisp.core.TailCallOperator;
+
+import mylisp.core.*;
 import mylisp.func.FunctionException;
 
 /**
- *
  * @author moremagic
  */
 public class MyLisp {
@@ -59,7 +50,8 @@ public class MyLisp {
 
     /**
      * TODO:  最終的に import的なLispFunction化したい
-     * @param file 
+     *
+     * @param file
      */
     final private void callEvalFile(File file) {
         try {
@@ -81,7 +73,7 @@ public class MyLisp {
             }
         } catch (FunctionException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MyLispPerser.ParseException ex) {
+        } catch (MyLispParser.ParseException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,8 +112,8 @@ public class MyLisp {
      * @return
      * @throws FunctionException
      */
-    private void evals(String sexps) throws FunctionException, MyLispPerser.ParseException {
-        for (Sexp sexp : MyLispPerser.parses(sexps)) {
+    private void evals(String sexps) throws FunctionException, MyLispParser.ParseException {
+        for (Sexp sexp : MyLispParser.parses(sexps)) {
             try {
                 System.out.println(">> " + eval(sexp));
             } catch (Exception err) {
@@ -139,28 +131,28 @@ public class MyLisp {
         //eval実行 ＋ 末尾再帰実行
         Sexp ret = MyLisp.eval(sexp, env);
         ret = TailCallOperator.evalTailCall(ret, env);
-        
+
         return ret;
     }
-    
-    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException{
-        Sexp ret;
-        if(sexp instanceof IPair){
-            IPair pair = (IPair)sexp;
 
-            if( pair.getCdr() == Atom.NIL ){
+    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        Sexp ret;
+        if (sexp instanceof IPair) {
+            IPair pair = (IPair) sexp;
+
+            if (pair.getCdr() == AtomNil.INSTANCE) {
                 //末尾再帰最適化
                 ret = TailCallOperator.reserveTailCall(pair.getCar(), env);
-            }else{
+            } else {
                 MyLisp.eval(pair.getCar(), env);
                 ret = MyLisp.evals(pair.getCdr(), env);
             }
-        }else{
+        } else {
             ret = MyLisp.apply(sexp, env);
         }
         return ret;
     }
-    
+
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
      *
@@ -170,7 +162,8 @@ public class MyLisp {
      * @throws FunctionException
      */
     private static long evalStackCnt = 0;
-    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {    
+
+    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         evalStackCnt++;
 //        {//debug-print
 //            StringBuilder sb = new StringBuilder();
@@ -198,13 +191,13 @@ public class MyLisp {
 
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
         Sexp ret = sexp;
-        
-        sexp = (sexp instanceof IPair && ((IPair)sexp).getCdr() == Atom.NIL)?((IPair)sexp).getCar():sexp;
+
+        sexp = (sexp instanceof IPair && ((IPair) sexp).getCdr() == AtomNil.INSTANCE) ? ((IPair) sexp).getCar() : sexp;
         if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
             ret = env.get((AtomSymbol) sexp);
         } else if (sexp instanceof IPair && ((IPair) sexp).getList().length == 1 && ((IPair) sexp).getList()[0] instanceof AtomSymbol) {
             AtomSymbol buf = (AtomSymbol) ((IPair) sexp).getList()[0];
-            if(env.containsKey(buf)){
+            if (env.containsKey(buf)) {
                 ret = env.get(buf);
             }
         } else if (sexp instanceof IPair) {

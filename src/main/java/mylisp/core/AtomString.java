@@ -1,39 +1,34 @@
 package mylisp.core;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * String Atom
+ *
  * @author moremagic
  */
-public class AtomString extends Atom{
-    private String value;
-    AtomString(String value){
-        if(value.startsWith("\"") && value.endsWith("\"")){
-            this.value = value.substring(1, value.length() -1);
-        }else{
+public class AtomString extends Atom {
+    private String value = "";
+
+    AtomString(String value) {
+        if (value.startsWith("\"") && value.endsWith("\"")) {
             this.value = value;
         }
     }
-    
+
     @Override
-    public String getValue(){
+    public String getValue() {
         return this.value;
     }
 
     @Override
     public String toString() {
-        return "\"" + value + "\"";
+        return value;
     }
-    
-   @Override
+
+    @Override
     public boolean equals(Object object) {
-        if(object instanceof AtomString){
-            return ((AtomString)object).value == value;
-        }else{
+        if (object instanceof AtomString) {
+            return ((AtomString) object).value.equals(value);
+        } else {
             return false;
         }
     }

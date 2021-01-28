@@ -6,13 +6,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import mylisp.MyLisp;
 import mylisp.func.FunctionException;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  * Lambda
  *
@@ -20,8 +17,8 @@ import mylisp.func.FunctionException;
  */
 public class Lambda implements IPair {
     public static final String LAMBDA_SYMBOL = "lambda";
-    private ConsCell consCell;
-    private Map<AtomSymbol, Sexp> localEnv = new HashMap<AtomSymbol, Sexp>();
+    private final ConsCell consCell;
+    private Map<AtomSymbol, Sexp> localEnv = new HashMap<>();
 
     public Lambda(Sexp car, Sexp cdr) {
         assert car.toString().equals(LAMBDA_SYMBOL) : "car for lambda pair must be 'lambda'";
@@ -29,25 +26,24 @@ public class Lambda implements IPair {
     }
 
     public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
-        Sexp[] keys = ((IPair) ((IPair) getCdr()).getCar()).getList();//cdar
+        Sexp[] keys = ((IPair) getCdr()).getCar().getList();//cdar
         Sexp cddr = ((IPair) getCdr()).getCdr();
 
         //全てコピー
-        LambdaEnv<AtomSymbol, Sexp> mapp = new LambdaEnv<AtomSymbol, Sexp>(env);
+        LambdaEnv<AtomSymbol, Sexp> mapp = new LambdaEnv<>(env);
         mapp.putAll(localEnv);
         localEnv = mapp;
 
 
         for (int i = 0; i < keys.length; i++) {
             Sexp buf = MyLisp.eval(value[i], env);
-            ((LambdaEnv)localEnv).lambdaMap.put((AtomSymbol) keys[i], buf);
+            ((LambdaEnv<AtomSymbol, Sexp>) localEnv).lambdaMap.put((AtomSymbol) keys[i], buf);
         }
 
-        Sexp ret = MyLisp.evals(cddr, localEnv);
-        return ret;
+        return MyLisp.evals(cddr, localEnv);
     }
 
-    public void lambdaApply(Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public void lambdaApply(Map<AtomSymbol, Sexp> env) {
         localEnv = env;
     }
 
@@ -80,48 +76,48 @@ public class Lambda implements IPair {
     public String toString() {
         return consCell.toString();
     }
-    
-    public class LambdaEnv<K, V> implements Map<K, V> {
-        private Map<K, V> pearentMap;
-        private HashMap<K, V> lambdaMap;
 
-        public LambdaEnv(Map<K, V> pearentMap) {
-            this.pearentMap = (pearentMap instanceof LambdaEnv)?((LambdaEnv)pearentMap).getParentMap():pearentMap;
-            this.lambdaMap = new HashMap<K, V>();
+    public static class LambdaEnv<K, V> implements Map<K, V> {
+        private final Map<K, V> parentMap;
+        private final HashMap<K, V> lambdaMap;
+
+        public LambdaEnv(Map<K, V> parentMap) {
+            this.parentMap = (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K,V>) parentMap).getParentMap() : parentMap;
+            this.lambdaMap = new HashMap<>();
         }
-        
-        private Map<K, V> getParentMap(){
-            return (pearentMap instanceof LambdaEnv)?((LambdaEnv)pearentMap).getParentMap():pearentMap;
+
+        private Map<K, V> getParentMap() {
+            return (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K,V>) parentMap).getParentMap() : parentMap;
         }
 
         @Override
         public int size() {
-            return pearentMap.size() + lambdaMap.size();
+            return parentMap.size() + lambdaMap.size();
         }
 
         @Override
         public boolean isEmpty() {
-            return pearentMap.isEmpty() && lambdaMap.isEmpty();
+            return parentMap.isEmpty() && lambdaMap.isEmpty();
         }
 
         @Override
         public boolean containsKey(Object key) {
-            return pearentMap.containsKey(key) || lambdaMap.containsKey(key);
+            return parentMap.containsKey(key) || lambdaMap.containsKey(key);
         }
 
         @Override
         public boolean containsValue(Object value) {
-            return pearentMap.containsValue(value) || lambdaMap.containsValue(value);
+            return parentMap.containsValue(value) || lambdaMap.containsValue(value);
         }
 
         @Override
         public V get(Object key) {
-            return (lambdaMap.containsKey(key))?lambdaMap.get(key) : pearentMap.get(key);
+            return (lambdaMap.containsKey(key)) ? lambdaMap.get(key) : parentMap.get(key);
         }
 
         @Override
         public V put(K key, V value) {
-            return (pearentMap.containsKey(key))?pearentMap.put(key, value):lambdaMap.put(key, value);
+            return (parentMap.containsKey(key)) ? parentMap.put(key, value) : lambdaMap.put(key, value);
         }
 
         @Override
@@ -132,7 +128,7 @@ public class Lambda implements IPair {
         @Override
         public void putAll(Map<? extends K, ? extends V> m) {
             Iterator<? extends K> it = m.keySet().iterator();
-            while(it.hasNext()){
+            while (it.hasNext()) {
                 K key = it.next();
                 this.put(key, m.get(key));
             }
@@ -145,25 +141,25 @@ public class Lambda implements IPair {
 
         @Override
         public Set<K> keySet() {
-            Set<K> ret = new HashSet<K>( pearentMap.keySet() );
+            Set<K> ret = new HashSet<>(parentMap.keySet());
             ret.addAll(lambdaMap.keySet());
-            
+
             return ret;
         }
 
         @Override
         public Collection<V> values() {
-            Collection<V> ret = pearentMap.values();
+            Collection<V> ret = parentMap.values();
             ret.addAll(lambdaMap.values());
-            
+
             return ret;
         }
 
         @Override
         public Set<Entry<K, V>> entrySet() {
-            Set<Entry<K, V>> ret = new HashSet<Entry<K, V>>( pearentMap.entrySet() );
+            Set<Entry<K, V>> ret = new HashSet<>(parentMap.entrySet());
             ret.addAll(lambdaMap.entrySet());
-            
+
             return ret;
         }
     }

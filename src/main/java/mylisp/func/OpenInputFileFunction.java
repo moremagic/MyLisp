@@ -27,7 +27,7 @@ public class OpenInputFileFunction extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         Sexp cdr = MyLisp.apply(cons.getCdr(), env);
         if (cdr instanceof AtomString) {

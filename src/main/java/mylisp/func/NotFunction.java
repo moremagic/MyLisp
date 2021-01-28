@@ -22,7 +22,7 @@ public class NotFunction extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cell, 1);
+        super.checkArgument(cell, 1);
 
         Sexp sexp = MyLisp.apply(cell.getCdr(), env);
         return Atom.newAtom(sexp == AtomBoolean.AtomFalse);

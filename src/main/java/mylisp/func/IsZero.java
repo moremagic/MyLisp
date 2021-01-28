@@ -23,10 +23,12 @@ public class IsZero extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         boolean ret = false;
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
+
+        //TODO: sexp がConsCellになってるので常にFalseになるバグを見つけた
         if(sexp instanceof AtomNumber){
             Number val = ((AtomNumber) sexp).getValue();
             if (val instanceof Integer) {

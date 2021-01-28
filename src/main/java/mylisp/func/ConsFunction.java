@@ -19,7 +19,7 @@ import mylisp.core.Sexp;
 public class ConsFunction extends AbstractOperator{
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException{
-        super.checkArgmunet(cons, 2);
+        super.checkArgument(cons, 2);
         
         Sexp[] list = cons.getCdr().getList();
         

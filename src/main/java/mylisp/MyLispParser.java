@@ -5,28 +5,20 @@
 package mylisp;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import mylisp.core.Atom;
-import mylisp.core.ConsCell;
-import mylisp.core.IPair;
-import mylisp.core.Lambda;
-import mylisp.core.Sexp;
+
+import mylisp.core.*;
 
 /**
- *
  * @author moremagic
  */
-public class MyLispPerser {
+public class MyLispParser {
     /**
      * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う
      *
      * @param sExps
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
+     * @throws MyLispParser.ParseException
      */
     public static Sexp[] parses(String sExps) throws ParseException {
         //改行とコメント行の削除
@@ -83,7 +75,7 @@ public class MyLispPerser {
             return parseAtomString(sExps);
         } else if (sExps.startsWith("'")) {
             Sexp atom = parse(sExps.substring(1));
-            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL));
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE));
         } else {
             return parseAtom(sExps);
         }
@@ -133,10 +125,9 @@ public class MyLispPerser {
     }
 
     /**
-     *
      * @param sCell
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
+     * @throws MyLispParser.ParseException
      */
     private static Sexp parseCell(String sCell) {
         // ( .... ) の中をパースします    
@@ -151,7 +142,7 @@ public class MyLispPerser {
                 Sexp atom = parse(sCell.substring(i + 1));
                 i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL)));
+                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
             } else if (s.equals("\"")) {
                 Sexp atom = parseAtomString(sCell.substring(i));
                 i += atom.toString().length() - 1;
@@ -165,15 +156,15 @@ public class MyLispPerser {
             }
         }
 
-        if(sexpList.isEmpty()){
+        if (sexpList.isEmpty()) {
             // () の場合
-            return new ConsCell(Atom.NIL, Atom.NIL);
-        }else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
+            return new ConsCell(AtomNil.INSTANCE, AtomNil.INSTANCE);
+        } else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
             return new Lambda(cons.getCar(), cons.getCdr());
         } else {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
-            return cons;            
+            return cons;
         }
     }
 
@@ -206,20 +197,6 @@ public class MyLispPerser {
             }
         }
         return i;
-    }
-
-    /**
-     * 内部オブジェクト表現をコードの形に直す
-     *
-     * @param sexsps 内部オブジェクト配列
-     * @return
-     */
-    public static String sexpToString(Sexp[] sexsps){
-        StringBuilder sb = new StringBuilder();
-        for (Sexp s : sexsps) {
-            sb.append(s.toString());
-        }
-        return sb.toString();
     }
 
     public static class ParseException extends Exception {

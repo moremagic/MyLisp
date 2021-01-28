@@ -22,9 +22,11 @@ public class IsNumber extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+        super.checkArgument(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
+
+        //TODO: sexp がConsCellになってるので常にFalseになるバグを見つけた
         return Atom.newAtom(sexp instanceof AtomNumber);
     }
 

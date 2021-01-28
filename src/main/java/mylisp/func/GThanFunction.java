@@ -23,7 +23,7 @@ public class GThanFunction extends AbstractOperator {
 
     @Override
     public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 2);
+        super.checkArgument(cons, 2);
 
         Sexp[] list = cons.getCdr().getList();
         Sexp sexp_apply1 = MyLisp.apply(list[0], env);
