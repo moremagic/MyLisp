@@ -33,9 +33,6 @@ public class MyLisp {
         try {
             //組み込み関数実行部
             callEvalFile(new File(getClass().getResource("/embedded/mylisp.ss").toURI()));
-            callEvalFile(new File(getClass().getResource("/embedded/r5rs_test.ss").toURI()));
-
-            callEvalFile(new File(getClass().getResource("/embedded/newfile").toURI()));
         } catch (Exception ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,8 +136,6 @@ public class MyLisp {
      * @throws FunctionException
      */
     private Sexp eval(Sexp sexp) throws FunctionException {
-        System.out.println("[eval] " + sexp.toString());
-
         //eval実行 ＋ 末尾再帰実行
         Sexp ret = MyLisp.eval(sexp, env);
         ret = TailCallOperator.evalTailCall(ret, env);
