@@ -20,7 +20,7 @@ public class MyLispParser {
      * @return
      * @throws MyLispParser.ParseException
      */
-    public static Sexp[] parses(String sExps) throws ParseException {
+    public static Sexp[] parses(String sExps) throws ParseException, Atom.AtomException {
         //改行とコメント行の削除
         StringBuilder sb = new StringBuilder();
         for (String line : sExps.split("\n")) {
@@ -67,7 +67,7 @@ public class MyLispParser {
      * @param sExps
      * @return
      */
-    private static Sexp parse(String sExps) {
+    private static Sexp parse(String sExps) throws Atom.AtomException {
         sExps = sExps.trim();
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
@@ -85,7 +85,7 @@ public class MyLispParser {
      * @param sAtom
      * @return
      */
-    private static Sexp parseAtom(String sAtom) {
+    private static Sexp parseAtom(String sAtom) throws Atom.AtomException {
         StringBuilder atom = new StringBuilder();
         for (int i = 0; i < sAtom.length(); i++) {
             String s = sAtom.substring(i, i + 1);
@@ -101,7 +101,7 @@ public class MyLispParser {
         return Atom.newAtom(atom.toString());
     }
 
-    private static Sexp parseAtomString(String sAtom) {
+    private static Sexp parseAtomString(String sAtom) throws Atom.AtomException {
         boolean bQuote = true;
 
         StringBuilder atom = new StringBuilder();
@@ -129,7 +129,7 @@ public class MyLispParser {
      * @return
      * @throws MyLispParser.ParseException
      */
-    private static Sexp parseCell(String sCell) {
+    private static Sexp parseCell(String sCell) throws Atom.AtomException {
         // ( .... ) の中をパースします    
         List<Sexp> sexpList = new ArrayList<Sexp>();
         for (int i = 1; i < sCell.length() - 1; i++) {
@@ -199,7 +199,7 @@ public class MyLispParser {
         return i;
     }
 
-    public static class ParseException extends Exception {
+    public static class ParseException extends MyLispException {
         public ParseException(String message) {
             super(message);
         }

@@ -1,21 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
+
+import mylisp.MyLisp;
+import mylisp.core.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.AtomChar;
-import mylisp.core.AtomPort;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
 
 /**
  * read-char Function
@@ -25,7 +17,7 @@ import mylisp.core.Sexp;
 public class ReadCharFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         Sexp ret = null;

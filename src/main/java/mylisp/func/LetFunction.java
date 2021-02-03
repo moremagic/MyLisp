@@ -1,8 +1,8 @@
 package mylisp.func;
 
-import java.util.Map;
-
 import mylisp.core.*;
+
+import java.util.Map;
 
 /**
  * Let class
@@ -12,7 +12,7 @@ import mylisp.core.*;
 public class LetFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         assert (cons.getCdr().getList().length < 2) : "not let format!";
 
         Sexp env_list;
@@ -39,7 +39,7 @@ public class LetFunction implements SpecialOperator {
                     keys[i] = buf.getCar();
                     values[i] = buf.getCdr();
                 } else {
-                    throw new FunctionException("let: bad syntax in: " + cons.toString());
+                    throw new AbstractOperator.FunctionException("let: bad syntax in: " + cons.toString());
                 }
             }
 
@@ -59,7 +59,7 @@ public class LetFunction implements SpecialOperator {
                 return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.list2Cons(values)), env);
             }
         } else {
-            throw new FunctionException("let: bad syntax in: " + cons.toString());
+            throw new AbstractOperator.FunctionException("let: bad syntax in: " + cons.toString());
         }
     }
 

@@ -1,7 +1,5 @@
 package mylisp.core;
 
-import mylisp.func.FunctionException;
-
 /**
  * Abstract Operator class
  *
@@ -13,6 +11,12 @@ public abstract class AbstractOperator implements Operator {
             StringBuilder sb = new StringBuilder();
             sb.append(operatorSymbol()).append(": expects ").append(argsLength).append(" argument, given ").append(cons.getCdr().getList().length);
             throw new FunctionException(sb.toString());
+        }
+    }
+
+    public static class FunctionException extends MyLispException {
+        public FunctionException(String message) {
+            super(message);
         }
     }
 }

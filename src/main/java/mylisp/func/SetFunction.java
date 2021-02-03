@@ -1,9 +1,9 @@
 package mylisp.func;
 
-import java.util.Map;
-
 import mylisp.MyLisp;
 import mylisp.core.*;
+
+import java.util.Map;
 
 /**
  * set! class
@@ -13,17 +13,16 @@ import mylisp.core.*;
 public class SetFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 2);
 
-        Sexp ret = AtomNil.INSTANCE;
         Sexp[] cdrs = cons.getCdr().getList();
-        if (env.containsKey((AtomSymbol) cdrs[0])) {
-            ret = MyLisp.apply(cdrs[1], env);
-            env.put((AtomSymbol) cdrs[0], ret);
-        } else {
+        if (!env.containsKey(cdrs[0])) {
             throw new FunctionException("set!: cannot set undefined identifier: " + cdrs[0].toString());
         }
+
+        Sexp ret = MyLisp.apply(cdrs[1], env);
+        env.put((AtomSymbol) cdrs[0], ret);
         return ret;
     }
 

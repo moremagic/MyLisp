@@ -22,11 +22,6 @@ class AtomCharTest {
 
     @ParameterizedTest
     @CsvSource({
-            "'', '\u0000'",
-            "'あああ', '\u0000'",
-            "'sdf', '\u0000'",
-            "'123545', '\u0000'",
-            "'!!!@#', '\u0000'",
             "'#\\a', 'a'",
             "'#\\b', 'b'",
             "'#\\x', 'x'",
@@ -45,11 +40,6 @@ class AtomCharTest {
 
     @ParameterizedTest
     @CsvSource({
-            "'', '\u0000'",
-            "'あああ', '\u0000'",
-            "'sdf', '\u0000'",
-            "'123545', '\u0000'",
-            "'!!!@#', '\u0000'",
             "'#\\b', 'b'",
             "'#\\x', 'x'",
             "'#\\dfaksldjkf', 'd'",

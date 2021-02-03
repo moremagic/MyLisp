@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.core;
 
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mylisp.MyLisp;
-import mylisp.func.FunctionException;
 
 /**
  * 末尾再帰用トランポリン？関数
@@ -29,7 +24,7 @@ public class TailCallOperator {
      * @return
      * @throws FunctionException
      */
-    public static Sexp reserveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws FunctionException {
+    public static Sexp reserveTailCall(Sexp sexp, Map<AtomSymbol, Sexp> tailCallEnv) throws MyLispException {
         //末尾再帰判定
         if (!tailCall && isTailCall(sexp, tailCallEnv)) {
             TailCallOperator.tailCall = true;
@@ -47,7 +42,7 @@ public class TailCallOperator {
         }
     }
 
-    public static Sexp evalTailCall(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public static Sexp evalTailCall(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = sexp;
         while (TailCallOperator.tailCall) {
             TailCallOperator.tailCall = false;
@@ -80,7 +75,7 @@ public class TailCallOperator {
 //                ret = (sexp instanceof Lambda) && pair.getCdr().getList().length == 1;
             }
 if(ret)System.err.println("[ " + pair.toString() + "  car: " + sexp + " ] " + ret);
-        } catch (FunctionException ex) {
+        } catch (MyLispException ex) {
             ret = false;
             Logger.getLogger(TailCallOperator.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -15,35 +15,35 @@ class AtomTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"#t", "#f"})
-    void newAtomForBoolean(String value) {
+    void newAtomForBoolean(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomBoolean.class, expect.getClass());
     }
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void newAtomForBoolean(boolean value) {
+    void newAtomForBoolean(boolean value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomBoolean.class, expect.getClass());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 34, 345, -2, -4354, -34, 3})
-    void newAtomforNumber(int value) {
+    void newAtomforNumber(int value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
     }
 
     @ParameterizedTest
     @ValueSource(longs = {44567654, 65539, -4524322})
-    void newAtomforNumber(long value) {
+    void newAtomforNumber(long value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {23.45, -4534.67, 34.2345})
-    void newAtomForNumber(double value) {
+    void newAtomForNumber(double value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
     }
@@ -55,13 +55,13 @@ class AtomTest {
             "-9283748",
             "-928374972999999999999999993948",
             "-983794283.9287397293847"})
-    void newAtomForNumber(String value) {
+    void newAtomForNumber(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
     }
 
     @Test
-    void newAtomForStream() {
+    void newAtomForStream() throws Atom.AtomException {
         Atom expect_inputstream = Atom.newAtom(new InputStream() {
             @Override
             public int read() throws IOException {
@@ -88,7 +88,7 @@ class AtomTest {
             "\"日本語\"",
             "\"🛹\"",
     })
-    void newAtomString(String value) {
+    void newAtomString(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomString.class, expect.getClass());
     }
@@ -102,7 +102,7 @@ class AtomTest {
             "日本語",
             "🛹",
     })
-    void newAtomSymbol(String value) {
+    void newAtomSymbol(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomSymbol.class, expect.getClass());
     }
@@ -122,7 +122,7 @@ class AtomTest {
             "#\\#\\",
             "#\\%$#",
     })
-    void newAtomChar(String value) {
+    void newAtomChar(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomChar.class, expect.getClass());
     }
@@ -139,7 +139,7 @@ class AtomTest {
             "-928",
             "-928374972999999999999999993948",
             "-983794283.9287397293847"})
-    void getList(String value) {
+    void getList(String value) throws Atom.AtomException {
         assertEquals(Sexp[].class, Atom.newAtom(value).getList().getClass());
     }
 

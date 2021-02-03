@@ -1,6 +1,5 @@
 package mylisp.core;
 
-import mylisp.func.FunctionException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -15,7 +14,7 @@ class AbstractOperatorTest {
         }
 
         @Override
-        public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+        public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws AbstractOperator.FunctionException {
             return null;
         }
     };
@@ -23,7 +22,7 @@ class AbstractOperatorTest {
     @Test
     void checkArgument() throws Atom.AtomException {
         IPair cons = new ConsCell(Atom.newAtom("hoge"), new ConsCell(Atom.newAtom(1), AtomNil.INSTANCE));
-        assertThrows(FunctionException.class, () -> testOperator.checkArgument(cons, 2));
+        assertThrows(AbstractOperator.FunctionException.class, () -> testOperator.checkArgument(cons, 2));
         assertDoesNotThrow(() -> testOperator.checkArgument(cons, 1));
     }
 }

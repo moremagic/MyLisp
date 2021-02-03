@@ -4,43 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mylisp.MyLisp;
-import mylisp.func.AddFunction;
-import mylisp.func.AndFunction;
-import mylisp.func.AshFunction;
-import mylisp.func.CarFunction;
-import mylisp.func.CdrFunction;
-import mylisp.func.CloseInputFileFunction;
-import mylisp.func.CloseOutputFileFunction;
-import mylisp.func.CondFunction;
-import mylisp.func.ConsFunction;
-import mylisp.func.DefineFunction;
-import mylisp.func.DisplayFunction;
-import mylisp.func.EnvPrintFunction;
-import mylisp.func.EqualFunction;
-import mylisp.func.FunctionException;
-import mylisp.func.GThanFunction;
-import mylisp.func.IFFunction;
-import mylisp.func.IsBoolean;
-import mylisp.func.IsChar;
-import mylisp.func.IsEOF;
-import mylisp.func.IsNull;
-import mylisp.func.IsNumber;
-import mylisp.func.IsPair;
-import mylisp.func.IsPort;
-import mylisp.func.IsString;
-import mylisp.func.IsSymbol;
-import mylisp.func.IsZero;
-import mylisp.func.LetFunction;
-import mylisp.func.MultiFunction;
-import mylisp.func.NotFunction;
-import mylisp.func.OpenInputFileFunction;
-import mylisp.func.OpenOutputFileFunction;
-import mylisp.func.OrFunction;
-import mylisp.func.QuoteFunction;
-import mylisp.func.ReadCharFunction;
-import mylisp.func.SetFunction;
-import mylisp.func.SubFunction;
-import mylisp.func.TimeFunction;
+import mylisp.func.*;
 
 /**
  * function callable class
@@ -110,7 +74,7 @@ public class FunctionController {
         }
     }
 
-    public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (pair instanceof Lambda) {
             Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
             ll.lambdaApply(env);
@@ -133,7 +97,7 @@ public class FunctionController {
         } else if (car instanceof Atom) {
             return car;
         } else {
-            throw new FunctionException("reference to undefined identifier:" + pair.toString());
+            throw new AbstractOperator.FunctionException("reference to undefined identifier:" + pair.toString());
         }
     }
 

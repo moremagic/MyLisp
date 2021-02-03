@@ -1,19 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
+
+import mylisp.MyLisp;
+import mylisp.core.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
-import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.Atom;
-import mylisp.core.AtomNumber;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
 
 /**
  * +(Plus) Function
@@ -23,12 +15,12 @@ import mylisp.core.Sexp;
 public class AddFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = Atom.newAtom(0);
-        for (Sexp s : ((IPair)cons.getCdr()).getList()) {
-            Sexp buf = MyLisp.eval(s, env);    
+        for (Sexp s : ((IPair) cons.getCdr()).getList()) {
+            Sexp buf = MyLisp.eval(s, env);
             if (buf instanceof AtomNumber) {
-                ret = Atom.newAtom(addNumber(((AtomNumber)ret).getValue(), ((AtomNumber) buf).getValue()));
+                ret = Atom.newAtom(addNumber(((AtomNumber) ret).getValue(), ((AtomNumber) buf).getValue()));
             } else {
                 throw new FunctionException("reference to undefined identifier: " + buf.toString());
             }

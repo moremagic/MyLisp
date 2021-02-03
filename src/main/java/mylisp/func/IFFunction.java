@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
 
-import java.util.Map;
 import mylisp.MyLisp;
-import mylisp.core.AtomBoolean;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
-import mylisp.core.SpecialOperator;
-import mylisp.core.TailCallOperator;
+import mylisp.core.*;
+
+import java.util.Map;
 
 /**
  * IF class
@@ -21,9 +13,9 @@ import mylisp.core.TailCallOperator;
 public class IFFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (cons.getCdr().getList().length < 3) {
-            throw new FunctionException("if: bad syntax (has 1 part after keyword) in: " + cons.toString());
+            throw new AbstractOperator.FunctionException("if: bad syntax (has 1 part after keyword) in: " + cons.toString());
         }
 
         Sexp[] list = cons.getCdr().getList();

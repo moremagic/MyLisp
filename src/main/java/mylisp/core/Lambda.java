@@ -1,14 +1,8 @@
 package mylisp.core;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import mylisp.MyLisp;
-import mylisp.func.FunctionException;
+
+import java.util.*;
 
 /**
  * Lambda
@@ -25,7 +19,7 @@ public class Lambda implements IPair {
         consCell = new ConsCell(car, cdr);
     }
 
-    public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws FunctionException {
+    public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws MyLispException {
         Sexp[] keys = ((IPair) getCdr()).getCar().getList();//cdar
         Sexp cddr = ((IPair) getCdr()).getCdr();
 
@@ -33,7 +27,6 @@ public class Lambda implements IPair {
         LambdaEnv<AtomSymbol, Sexp> mapp = new LambdaEnv<>(env);
         mapp.putAll(localEnv);
         localEnv = mapp;
-
 
         for (int i = 0; i < keys.length; i++) {
             Sexp buf = MyLisp.eval(value[i], env);
@@ -82,12 +75,12 @@ public class Lambda implements IPair {
         private final HashMap<K, V> lambdaMap;
 
         public LambdaEnv(Map<K, V> parentMap) {
-            this.parentMap = (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K,V>) parentMap).getParentMap() : parentMap;
+            this.parentMap = (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K, V>) parentMap).getParentMap() : parentMap;
             this.lambdaMap = new HashMap<>();
         }
 
         private Map<K, V> getParentMap() {
-            return (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K,V>) parentMap).getParentMap() : parentMap;
+            return (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K, V>) parentMap).getParentMap() : parentMap;
         }
 
         @Override

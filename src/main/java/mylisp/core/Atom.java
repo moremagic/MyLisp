@@ -21,7 +21,7 @@ public abstract class Atom implements Sexp {
 
     public abstract boolean equals(Object object);
 
-    public static Atom newAtom(Object value) {
+    public static Atom newAtom(Object value) throws AtomException {
         if (value instanceof Boolean) {
             return AtomBoolean.createAtomBoolean(((Boolean) value).booleanValue());
         } else if (value.toString().equals(AtomBoolean.T) || value.toString().equals(AtomBoolean.F)) {
@@ -54,6 +54,7 @@ public abstract class Atom implements Sexp {
 
     /**
      * TODO: このメソッドはAtomNumberが持つべき
+     *
      * @param s
      * @return
      */
@@ -80,6 +81,7 @@ public abstract class Atom implements Sexp {
 
     /**
      * TODO：このメソッドは各具象Atomクラスが持つべき
+     *
      * @param s
      * @return
      */
@@ -93,6 +95,7 @@ public abstract class Atom implements Sexp {
 
     /**
      * TODO: AtomCharが持つべき
+     *
      * @param s
      * @return
      */
@@ -106,6 +109,7 @@ public abstract class Atom implements Sexp {
 
     /**
      * TODO: このメソッドがここにあることは正しい？評価器が持つべきでは？
+     *
      * @return
      */
     @Override
@@ -116,11 +120,12 @@ public abstract class Atom implements Sexp {
     /**
      * Atom生成時に発生したExceptionを表す
      */
-    public class AtomException extends Exception{
-        public AtomException(String message){
+    public class AtomException extends MyLispException {
+        public AtomException(String message) {
             super(message);
         }
-        public AtomException(Exception e){
+
+        public AtomException(Exception e) {
             super(e);
         }
     }

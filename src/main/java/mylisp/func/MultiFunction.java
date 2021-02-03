@@ -1,19 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
+
+import mylisp.MyLisp;
+import mylisp.core.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
-import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.Atom;
-import mylisp.core.AtomNumber;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
 
 /**
  * *(multiply) Function
@@ -23,7 +15,7 @@ import mylisp.core.Sexp;
 public class MultiFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Number ret = null;
         for (Sexp s : cons.getCdr().getList()) {
             Sexp buf = MyLisp.apply(s, env);
@@ -45,10 +37,10 @@ public class MultiFunction extends AbstractOperator {
     private Number multiNumber(Number a, Number b) {
         Number ret;
         if (a instanceof Integer && b instanceof Integer) {
-            ret = new BigInteger(((Integer) a).toString()).multiply(new BigInteger(((Integer) b).toString()));
+            ret = BigInteger.valueOf(Long.parseLong(a.toString())).multiply(BigInteger.valueOf(Long.parseLong(b.toString())));
         } else {
-            BigDecimal ab = (a instanceof BigDecimal) ? (BigDecimal) a : new BigDecimal((double) a.doubleValue());
-            BigDecimal bb = (b instanceof BigDecimal) ? (BigDecimal) b : new BigDecimal((double) b.doubleValue());
+            BigDecimal ab = (a instanceof BigDecimal) ? (BigDecimal) a : BigDecimal.valueOf(a.doubleValue());
+            BigDecimal bb = (b instanceof BigDecimal) ? (BigDecimal) b : BigDecimal.valueOf(b.doubleValue());
             ret = ab.multiply(bb);
         }
 

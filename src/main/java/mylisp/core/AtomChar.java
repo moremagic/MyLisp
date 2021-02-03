@@ -13,9 +13,9 @@ public class AtomChar extends Atom {
     private static final String NEWLINE = "newline";
     private char value;
 
-    AtomChar(String value) {
+    AtomChar(String value) throws AtomException {
         if (!value.startsWith(PREFIX)) {
-            throw new RuntimeException("not char syntax.");
+            throw new Atom.AtomException("not char syntax.");
         }
 
         if (value.equals(PREFIX + SPACE)) {

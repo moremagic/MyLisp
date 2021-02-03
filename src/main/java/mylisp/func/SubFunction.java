@@ -1,18 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
+
+import mylisp.MyLisp;
+import mylisp.core.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.Atom;
-import mylisp.core.AtomNumber;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
 
 /**
  * -(subtract) Function
@@ -22,7 +14,7 @@ import mylisp.core.Sexp;
 public class SubFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Number ret = null;
         for (Sexp s : cons.getCdr().getList()) {
             Sexp buf = MyLisp.eval(s, env);
@@ -48,7 +40,7 @@ public class SubFunction extends AbstractOperator {
         } else if (a instanceof Integer && b instanceof Integer) {
             ret = (Integer) a - (Integer) b;
         } else {
-            ret = new BigDecimal((double) a.doubleValue()).subtract(new BigDecimal((double) b.doubleValue()));
+            ret = BigDecimal.valueOf(a.doubleValue()).subtract(BigDecimal.valueOf(b.doubleValue()));
         }
 
         return ret;

@@ -1,9 +1,9 @@
 package mylisp.func;
 
-import java.util.Map;
-
 import mylisp.MyLisp;
 import mylisp.core.*;
+
+import java.util.Map;
 
 /**
  * pair? class
@@ -13,7 +13,7 @@ import mylisp.core.*;
 public class IsPair extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);

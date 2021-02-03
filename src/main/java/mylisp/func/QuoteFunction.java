@@ -1,14 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
 
+import mylisp.core.*;
+
 import java.util.Map;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
-import mylisp.core.SpecialOperator;
 
 /**
  * quote Function
@@ -18,9 +12,9 @@ import mylisp.core.SpecialOperator;
 public class QuoteFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = cons.getCdr();
-        return (ret instanceof IPair)?((IPair)ret).getCar():ret;
+        return (ret instanceof IPair) ? ((IPair) ret).getCar() : ret;
     }
 
     @Override

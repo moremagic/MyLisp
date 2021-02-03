@@ -13,7 +13,7 @@ import mylisp.core.*;
 public class CondFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = AtomNil.INSTANCE;
 
         Sexp[] buf = cons.getCdr().getList();
@@ -28,7 +28,7 @@ public class CondFunction implements SpecialOperator {
                     break;
                 }
             } else {
-                throw new FunctionException("cond: bad syntax (clause is not a test-value pair) in: " + buf[i].toString());
+                throw new AbstractOperator.FunctionException("cond: bad syntax (clause is not a test-value pair) in: " + buf[i].toString());
             }
         }
         return ret;
