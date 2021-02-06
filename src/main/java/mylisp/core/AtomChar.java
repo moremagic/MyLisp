@@ -15,7 +15,7 @@ public class AtomChar extends Atom {
 
     AtomChar(String value) throws AtomException {
         if (!value.startsWith(PREFIX)) {
-            throw new Atom.AtomException("not char syntax.");
+            throw new Atom.AtomException(String.format("value is not %s syntax for [%s]", getClass().getName(), value));
         }
 
         if (value.equals(PREFIX + SPACE)) {

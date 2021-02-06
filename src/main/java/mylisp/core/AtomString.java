@@ -6,12 +6,14 @@ package mylisp.core;
  * @author moremagic
  */
 public class AtomString extends Atom {
-    private String value = "";
+    private final String value;
 
-    AtomString(String value) {
-        if (value.startsWith("\"") && value.endsWith("\"")) {
-            this.value = value;
+    AtomString(String value) throws AtomException {
+        if (!value.startsWith("\"") || !value.endsWith("\"")) {
+            throw new Atom.AtomException(String.format("value is not %s syntax for [%s]", getClass().getName(), value));
         }
+
+        this.value = value;
     }
 
     @Override
