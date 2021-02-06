@@ -17,6 +17,7 @@ class AtomCharTest {
             "!!!@#",
     })
     void failNewTest(String value) {
+        assertFalse(AtomChar.isAtomChar(value));
         assertThrows(Atom.AtomException.class, () ->new AtomChar(value));
     }
 

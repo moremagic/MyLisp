@@ -19,20 +19,21 @@ class AtomStringTest {
             "sdf",
             "123545",
             "!!!@#",
-            "'', ''",
-            "'aaaaa', ''",
-            "'123', ''",
-            "'-893', ''",
-            "'3.14159', ''",
-            "'-1.732', ''",
-            "'あいうえお', ''",
-            "'漢字', ''",
-            "'🛹🛹', ''",
-            "'!@#$', ''",
-            "'\"aaaaa', ''",
-            "'あいうえお\"', ''",
+            "''",
+            "'aaaaa'",
+            "123",
+            "-893",
+            "3.14159",
+            "-1.732",
+            "あいうえお",
+            "漢字",
+            "🛹🛹",
+            "!@#$",
+            "\"aaaaa",
+            "あいうえお\"",
     })
     void failNewTest(String value) {
+        assertFalse(AtomString.isAtomString(value));
         assertThrows(Atom.AtomException.class, () ->new AtomString(value));
     }
 

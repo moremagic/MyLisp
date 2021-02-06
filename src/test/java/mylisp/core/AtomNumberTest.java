@@ -2,7 +2,6 @@ package mylisp.core;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
@@ -10,6 +9,53 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AtomNumberTest {
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            "aa\"b\"bb",
+            "\"hoge",
+            "hoge\"",
+            "hoge",
+            "あああ",
+            "sdf",
+            "!!!@#",
+            "''",
+            "'aaaaa'",
+            "あいうえお",
+            "漢字",
+            "🛹🛹",
+            "!@#$",
+            "\"aaaaa",
+            "あいうえお\"",
+            "-123.-129",
+            "+-0.0987",
+            "１２３",
+    })
+    void failNewTest(String value) {
+        assertFalse(AtomNumber.isAtomNumber(value));
+        assertThrows(Atom.AtomException.class, () ->new AtomNumber(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "0",
+            "-0",
+            "0.00000",
+            "-0.00000",
+            "12345",
+            "67739",
+            "12398754",
+            "0.01",
+            "-9209384109723049172",
+            "12341234.563457373473456",
+            "10000000000000000000.0000",
+            "-999999999999999999999.99999",
+    })
+    void successNewTest(String value) throws Atom.AtomException {
+        AtomNumber atomNumber = new AtomNumber(value);
+    }
+
 
     @ParameterizedTest
     @ValueSource(

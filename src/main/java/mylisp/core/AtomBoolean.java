@@ -46,4 +46,14 @@ public class AtomBoolean extends Atom {
         hash = 83 * hash + (this.value ? 1 : 0);
         return hash;
     }
+
+    /**
+     * AtomBoolean表現かを検査する
+     *
+     * @param value 検査したいString
+     * @return AtomBooleanであればTrue
+     */
+    public static boolean isAtomBoolean(String value) {
+        return value.equals(T) || value.equals(F);
+    }
 }

@@ -2,7 +2,6 @@ package mylisp.core;
 
 /**
  * nil atom class
- * //TODO インスタンスが必ず同じものになるようにしたほうが良い
  *
  * @author moremagic
  */

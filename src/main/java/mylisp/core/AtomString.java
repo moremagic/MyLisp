@@ -9,7 +9,7 @@ public class AtomString extends Atom {
     private final String value;
 
     AtomString(String value) throws AtomException {
-        if (!value.startsWith("\"") || !value.endsWith("\"")) {
+        if (!isAtomString(value)) {
             throw new Atom.AtomException(String.format("value is not %s syntax for [%s]", getClass().getName(), value));
         }
 
@@ -40,5 +40,15 @@ public class AtomString extends Atom {
         int hash = 7;
         hash = 79 * hash + (this.value != null ? this.value.hashCode() : 0);
         return hash;
+    }
+
+    /**
+     * AtomString表現かを検査する
+     *
+     * @param value 検査したいString
+     * @return AtomStringであればTrue
+     */
+    public static boolean isAtomString(String value) {
+        return value.startsWith("\"") && value.endsWith("\"");
     }
 }

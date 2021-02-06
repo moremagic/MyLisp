@@ -14,7 +14,7 @@ public class AtomChar extends Atom {
     private char value;
 
     AtomChar(String value) throws AtomException {
-        if (!value.startsWith(PREFIX)) {
+        if (!isAtomChar(value)) {
             throw new Atom.AtomException(String.format("value is not %s syntax for [%s]", getClass().getName(), value));
         }
 
@@ -57,5 +57,15 @@ public class AtomChar extends Atom {
         int hash = 5;
         hash = 67 * hash + this.value;
         return hash;
+    }
+
+    /**
+     * AtomChar表現かを検査する
+     *
+     * @param value 検査したいString
+     * @return AtomCharであればTrue
+     */
+    public static boolean isAtomChar(String value){
+        return value.startsWith(PREFIX);
     }
 }
