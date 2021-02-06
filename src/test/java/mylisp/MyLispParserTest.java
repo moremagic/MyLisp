@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MyLispParserTest {
 
     @Test
-    public void consCellParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+    public void consCellParseTest() throws Atom.AtomException {
         Sexp[] ret = MyLispParser.parses("(+ 3 4)");
 
         Sexp actual = ret[0];
@@ -20,7 +20,7 @@ public class MyLispParserTest {
     }
 
     @Test
-    public void nestConsCellParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+    public void nestConsCellParseTest() throws Atom.AtomException {
         Sexp[] ret = MyLispParser.parses("(+ 2 (+ 3 4 (+ 5 6)))");
         Sexp actual = ret[0];
         Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(2),
@@ -33,7 +33,7 @@ public class MyLispParserTest {
 
     //@Test
     //TODO: dotted pair に対応する
-    public void dotPairParseTest() throws MyLispParser.ParseException, Atom.AtomException {
+    public void dotPairParseTest() throws Atom.AtomException {
         Sexp[] ret = MyLispParser.parses("(+ 2 . 1)");
 
         Sexp actual = ret[0];
@@ -74,7 +74,7 @@ public class MyLispParserTest {
             "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x))))), (define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
             "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount)), (define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))"
     })
-    void testParse(String test_code, String expected_code) throws MyLispParser.ParseException, Atom.AtomException {
+    void testParse(String test_code, String expected_code) throws Atom.AtomException {
         Sexp[] ss = MyLispParser.parses(test_code);
         assertEquals(expected_code, ss[0].toString());
     }

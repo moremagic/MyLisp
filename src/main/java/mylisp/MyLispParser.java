@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp;
 
 import java.util.ArrayList;
@@ -18,23 +14,22 @@ public class MyLispParser {
      *
      * @param sExps
      * @return
-     * @throws MyLispParser.ParseException
      */
-    public static Sexp[] parses(String sExps) throws ParseException, Atom.AtomException {
+    public static Sexp[] parses(String sExps) throws Atom.AtomException {
         //改行とコメント行の削除
         StringBuilder sb = new StringBuilder();
         for (String line : sExps.split("\n")) {
-            if (line.indexOf(";") == -1) {
+            if (!line.contains(";")) {
                 sb.append(line);
             } else {
-                sb.append(line.substring(0, line.indexOf(";")));
+                sb.append(line, 0, line.indexOf(";"));
             }
         }
 
         String ss = sb.toString();
         ss = ss.replaceAll("\t", "");
 
-        List<Sexp> ret = new ArrayList<Sexp>();
+        List<Sexp> ret = new ArrayList<>();
         if (ss.startsWith("(")) {
             //Cellだった場合、1つのCellを取り出してパースを行う
             int kakkoCnt = 0;
@@ -111,7 +106,7 @@ public class MyLispParser {
 
             if (s.equals("\\")) {
                 i++;
-                atom.append(sAtom.substring(i, i + 1));
+                atom.append(sAtom.charAt(i));
             } else if (s.equals("\"")) {
                 bQuote = !bQuote;
             }
@@ -127,32 +122,40 @@ public class MyLispParser {
     /**
      * @param sCell
      * @return
-     * @throws MyLispParser.ParseException
+     * @throws Atom.AtomException
      */
     private static Sexp parseCell(String sCell) throws Atom.AtomException {
         // ( .... ) の中をパースします    
-        List<Sexp> sexpList = new ArrayList<Sexp>();
+        List<Sexp> sexpList = new ArrayList<>();
+        label:
         for (int i = 1; i < sCell.length() - 1; i++) {
             String s = sCell.substring(i, i + 1);
-            if (s.equals(" ")) {
-                continue;
-            } else if (s.equals(")")) {
-                break;
-            } else if (s.equals("'")) {
-                Sexp atom = parse(sCell.substring(i + 1));
-                i += getAtomLength(sCell.substring(i + 1)) + 1;
+            switch (s) {
+                case " ":
+                    continue;
+                case ")":
+                    break label;
+                case "'": {
+                    Sexp atom = parse(sCell.substring(i + 1));
+                    i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
-            } else if (s.equals("\"")) {
-                Sexp atom = parseAtomString(sCell.substring(i));
-                i += atom.toString().length() - 1;
+                    sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
+                    break;
+                }
+                case "\"": {
+                    Sexp atom = parseAtomString(sCell.substring(i));
+                    i += atom.toString().length() - 1;
 
-                sexpList.add(atom);
-            } else {
-                Sexp atom = parse(sCell.substring(i));
-                i += getAtomLength(sCell.substring(i));
+                    sexpList.add(atom);
+                    break;
+                }
+                default: {
+                    Sexp atom = parse(sCell.substring(i));
+                    i += getAtomLength(sCell.substring(i));
 
-                sexpList.add(atom);
+                    sexpList.add(atom);
+                    break;
+                }
             }
         }
 
@@ -163,8 +166,7 @@ public class MyLispParser {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
             return new Lambda(cons.getCar(), cons.getCdr());
         } else {
-            IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
-            return cons;
+            return ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
         }
     }
 
@@ -186,12 +188,13 @@ public class MyLispParser {
                 kakkoCnt--;
             }
 
-            if (!sexpStr.startsWith("(") && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+            final boolean b = s.equals("(") || s.equals(")") || s.equals(" ");
+            if (!sexpStr.startsWith("(") && b) {
                 //最初が 「 ( 」 で始まっていないときは組み合わせ数を無視して「(」「)」「 」 で break; する。
                 i -= 1;
                 break;
             } else {
-                if (kakkoCnt == 0 && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+                if (kakkoCnt == 0 && b) {
                     break;
                 }
             }
@@ -199,9 +202,4 @@ public class MyLispParser {
         return i;
     }
 
-    public static class ParseException extends MyLispException {
-        public ParseException(String message) {
-            super(message);
-        }
-    }
 }
