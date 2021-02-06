@@ -11,14 +11,18 @@ public class AtomBoolean extends Atom {
     public static final AtomBoolean AtomTrue = new AtomBoolean(T);
     public static final AtomBoolean AtomFalse = new AtomBoolean(F);
 
-    private boolean value;
+    private final boolean value;
 
     private AtomBoolean(String value) {
-        this.value = value.equals(T) ? true : false;
+        this.value = value.equals(T);
     }
 
-    public static AtomBoolean createAtomBoolean(boolean b) {
-        return b ? AtomTrue : AtomFalse;
+    public static AtomBoolean createAtomBoolean(boolean value) {
+        return value ? AtomTrue : AtomFalse;
+    }
+
+    public static AtomBoolean createAtomBoolean(String value) {
+        return value.equals(T) ? AtomTrue : AtomFalse;
     }
 
     @Override
