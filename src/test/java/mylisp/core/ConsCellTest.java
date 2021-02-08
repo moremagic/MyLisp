@@ -85,7 +85,7 @@ class ConsCellTest {
         }
 
         //Sexp の数が一致していることを確認
-        assertEquals( count + 1, consCell.getList().length);
+        assertEquals(count + 1, consCell.getList().length);
 
         List<Sexp> list = new ArrayList<>(Arrays.asList(consCell.getList()));
         Predicate<? super Sexp> isCar = Predicate.isEqual(consCell.getCar());
@@ -108,5 +108,31 @@ class ConsCellTest {
 
         assertNotSame(a, b);
         assertEquals(a, b);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'123', '456'",
+            "'-233', '99999999999999'",
+            "'123', 'あいう'",
+            "'#t', '#f'",
+    })
+    void testDotPairToString(String first, String second) throws Atom.AtomException {
+        ConsCell consCell = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
+        assertEquals( String.format("(%s . %s)", first, second), consCell.toString());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'123', '456'",
+            "'-233', '99999999999999'",
+            "'123', 'あいう'",
+            "'#t', '#f'",
+    })
+    void createConsCell(String first, String second) throws Atom.AtomException {
+        ConsCell expect = new ConsCell(Atom.newAtom(first), new ConsCell(Atom.newAtom(second), AtomNil.getInstance()));
+        ConsCell actual = ConsCell.createConsCell(new Sexp[]{Atom.newAtom(first), Atom.newAtom(second)});
+
+        assertEquals(expect, actual);
     }
 }
