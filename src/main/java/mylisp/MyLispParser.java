@@ -1,48 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import mylisp.core.Atom;
-import mylisp.core.ConsCell;
-import mylisp.core.IPair;
-import mylisp.core.Lambda;
-import mylisp.core.Sexp;
+
+import mylisp.core.*;
 
 /**
- *
  * @author moremagic
  */
-public class MyLispPerser {
+public class MyLispParser {
     /**
      * 複数行のパースを行い、S式の配列を返却する。 改行が含まれるテキストのパースと コメント文を無視したパースを行う
      *
      * @param sExps
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
      */
-    public static Sexp[] parses(String sExps) throws ParseException {
+    public static Sexp[] parses(String sExps) throws Atom.AtomException {
         //改行とコメント行の削除
         StringBuilder sb = new StringBuilder();
         for (String line : sExps.split("\n")) {
-            if (line.indexOf(";") == -1) {
+            if (!line.contains(";")) {
                 sb.append(line);
             } else {
-                sb.append(line.substring(0, line.indexOf(";")));
+                sb.append(line, 0, line.indexOf(";"));
             }
         }
 
         String ss = sb.toString();
         ss = ss.replaceAll("\t", "");
 
-        List<Sexp> ret = new ArrayList<Sexp>();
+        List<Sexp> ret = new ArrayList<>();
         if (ss.startsWith("(")) {
             //Cellだった場合、1つのCellを取り出してパースを行う
             int kakkoCnt = 0;
@@ -75,7 +62,7 @@ public class MyLispPerser {
      * @param sExps
      * @return
      */
-    private static Sexp parse(String sExps) {
+    private static Sexp parse(String sExps) throws Atom.AtomException {
         sExps = sExps.trim();
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
@@ -83,7 +70,7 @@ public class MyLispPerser {
             return parseAtomString(sExps);
         } else if (sExps.startsWith("'")) {
             Sexp atom = parse(sExps.substring(1));
-            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL));
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE));
         } else {
             return parseAtom(sExps);
         }
@@ -93,7 +80,7 @@ public class MyLispPerser {
      * @param sAtom
      * @return
      */
-    private static Sexp parseAtom(String sAtom) {
+    private static Sexp parseAtom(String sAtom) throws Atom.AtomException {
         StringBuilder atom = new StringBuilder();
         for (int i = 0; i < sAtom.length(); i++) {
             String s = sAtom.substring(i, i + 1);
@@ -109,7 +96,7 @@ public class MyLispPerser {
         return Atom.newAtom(atom.toString());
     }
 
-    private static Sexp parseAtomString(String sAtom) {
+    private static Sexp parseAtomString(String sAtom) throws Atom.AtomException {
         boolean bQuote = true;
 
         StringBuilder atom = new StringBuilder();
@@ -119,7 +106,7 @@ public class MyLispPerser {
 
             if (s.equals("\\")) {
                 i++;
-                atom.append(sAtom.substring(i, i + 1));
+                atom.append(sAtom.charAt(i));
             } else if (s.equals("\"")) {
                 bQuote = !bQuote;
             }
@@ -133,47 +120,53 @@ public class MyLispPerser {
     }
 
     /**
-     *
      * @param sCell
      * @return
-     * @throws mylisp.MyLispPerser.ParseException
+     * @throws Atom.AtomException
      */
-    private static Sexp parseCell(String sCell) {
+    private static Sexp parseCell(String sCell) throws Atom.AtomException {
         // ( .... ) の中をパースします    
-        List<Sexp> sexpList = new ArrayList<Sexp>();
+        List<Sexp> sexpList = new ArrayList<>();
+        label:
         for (int i = 1; i < sCell.length() - 1; i++) {
             String s = sCell.substring(i, i + 1);
-            if (s.equals(" ")) {
-                continue;
-            } else if (s.equals(")")) {
-                break;
-            } else if (s.equals("'")) {
-                Sexp atom = parse(sCell.substring(i + 1));
-                i += getAtomLength(sCell.substring(i + 1)) + 1;
+            switch (s) {
+                case " ":
+                    continue;
+                case ")":
+                    break label;
+                case "'": {
+                    Sexp atom = parse(sCell.substring(i + 1));
+                    i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, Atom.NIL)));
-            } else if (s.equals("\"")) {
-                Sexp atom = parseAtomString(sCell.substring(i));
-                i += atom.toString().length() - 1;
+                    sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
+                    break;
+                }
+                case "\"": {
+                    Sexp atom = parseAtomString(sCell.substring(i));
+                    i += atom.toString().length() - 1;
 
-                sexpList.add(atom);
-            } else {
-                Sexp atom = parse(sCell.substring(i));
-                i += getAtomLength(sCell.substring(i));
+                    sexpList.add(atom);
+                    break;
+                }
+                default: {
+                    Sexp atom = parse(sCell.substring(i));
+                    i += getAtomLength(sCell.substring(i));
 
-                sexpList.add(atom);
+                    sexpList.add(atom);
+                    break;
+                }
             }
         }
 
-        if(sexpList.isEmpty()){
+        if (sexpList.isEmpty()) {
             // () の場合
-            return new ConsCell(Atom.NIL, Atom.NIL);
-        }else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
+            return new ConsCell(AtomNil.INSTANCE, AtomNil.INSTANCE);
+        } else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
             IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
             return new Lambda(cons.getCar(), cons.getCdr());
         } else {
-            IPair cons = (IPair) ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
-            return cons;            
+            return ConsCell.list2Cons(sexpList.toArray(new Sexp[0]));
         }
     }
 
@@ -195,12 +188,13 @@ public class MyLispPerser {
                 kakkoCnt--;
             }
 
-            if (!sexpStr.startsWith("(") && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+            final boolean b = s.equals("(") || s.equals(")") || s.equals(" ");
+            if (!sexpStr.startsWith("(") && b) {
                 //最初が 「 ( 」 で始まっていないときは組み合わせ数を無視して「(」「)」「 」 で break; する。
                 i -= 1;
                 break;
             } else {
-                if (kakkoCnt == 0 && (s.equals("(") || s.equals(")") || s.equals(" "))) {
+                if (kakkoCnt == 0 && b) {
                     break;
                 }
             }
@@ -208,23 +202,4 @@ public class MyLispPerser {
         return i;
     }
 
-    /**
-     * 内部オブジェクト表現をコードの形に直す
-     *
-     * @param sexsps 内部オブジェクト配列
-     * @return
-     */
-    public static String sexpToString(Sexp[] sexsps){
-        StringBuilder sb = new StringBuilder();
-        for (Sexp s : sexsps) {
-            sb.append(s.toString());
-        }
-        return sb.toString();
-    }
-
-    public static class ParseException extends Exception {
-        public ParseException(String message) {
-            super(message);
-        }
-    }
 }

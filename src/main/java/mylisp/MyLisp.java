@@ -1,33 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import mylisp.core.*;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mylisp.core.Atom;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
-import mylisp.core.FunctionController;
-import mylisp.core.TailCallOperator;
-import mylisp.func.FunctionException;
 
 /**
- *
  * @author moremagic
  */
 public class MyLisp {
 
-    private Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
+    private final Map<AtomSymbol, Sexp> env = new HashMap<>();
 
     public MyLisp() {
         try {
@@ -59,56 +46,37 @@ public class MyLisp {
 
     /**
      * TODO:  最終的に import的なLispFunction化したい
-     * @param file 
+     *
+     * @param file lispファイル
      */
-    final private void callEvalFile(File file) {
-        try {
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-                StringBuilder sb = new StringBuilder();
+    private void callEvalFile(File file) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
 
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-
-                evals(sb.toString());
-            } finally {
-                if (br != null) {
-                    br.close();
-                }
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
             }
-        } catch (FunctionException ex) {
-            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MyLispPerser.ParseException ex) {
-            Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+
+            evals(sb.toString());
+        } catch (MyLispException | IOException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void callREPL() {
-        try {
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
 
-                String line;
+            String line;
+            System.out.print("MyLisp > ");
+            while ((line = br.readLine()) != null) {
+                try {
+                    evals(line);
+                } catch (Exception ex) {
+                    Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 System.out.print("MyLisp > ");
-                while ((line = br.readLine()) != null) {
-                    try {
-                        evals(line);
-                    } catch (Exception ex) {
-                        Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    System.out.print("MyLisp > ");
-                }
-            } finally {
-                if (br != null) {
-                    br.close();
-                }
             }
         } catch (IOException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,12 +84,11 @@ public class MyLisp {
     }
 
     /**
-     * @param sexp
-     * @return
-     * @throws FunctionException
+     * @param sexps 評価対象S式
+     * @throws MyLispException 評価に失敗した場合
      */
-    private void evals(String sexps) throws FunctionException, MyLispPerser.ParseException {
-        for (Sexp sexp : MyLispPerser.parses(sexps)) {
+    private void evals(String sexps) throws MyLispException {
+        for (Sexp sexp : MyLispParser.parses(sexps)) {
             try {
                 System.out.println(">> " + eval(sexp));
             } catch (Exception err) {
@@ -131,46 +98,55 @@ public class MyLisp {
     }
 
     /**
-     * @param sexp
-     * @return
-     * @throws FunctionException
+     * @param sexp 評価対象S式
+     * @return 評価後のS式
+     * @throws MyLispException 評価失敗
      */
-    private Sexp eval(Sexp sexp) throws FunctionException {
+    private Sexp eval(Sexp sexp) throws MyLispException {
         //eval実行 ＋ 末尾再帰実行
         Sexp ret = MyLisp.eval(sexp, env);
         ret = TailCallOperator.evalTailCall(ret, env);
-        
+
         return ret;
     }
-    
-    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException{
-        Sexp ret;
-        if(sexp instanceof IPair){
-            IPair pair = (IPair)sexp;
 
-            if( pair.getCdr() == Atom.NIL ){
+    /**
+     * @param sexp 評価対象S式（複数）
+     * @param env  環境
+     * @return 評価後S式
+     * @throws MyLispException 評価失敗
+     */
+    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
+        Sexp ret;
+        if (sexp instanceof IPair) {
+            IPair pair = (IPair) sexp;
+
+            if (pair.getCdr() == AtomNil.INSTANCE) {
                 //末尾再帰最適化
                 ret = TailCallOperator.reserveTailCall(pair.getCar(), env);
-            }else{
+            } else {
                 MyLisp.eval(pair.getCar(), env);
                 ret = MyLisp.evals(pair.getCdr(), env);
             }
-        }else{
+        } else {
             ret = MyLisp.apply(sexp, env);
         }
         return ret;
     }
-    
+
+
+    private static long evalStackCnt = 0;
+
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
+     * TODO: evalは全体を評価するだけに作り替える
      *
-     * @param sexp
-     * @param env
-     * @return
-     * @throws FunctionException
+     * @param sexp 評価対象S式
+     * @param env  環境
+     * @return 評価後S式
+     * @throws MyLispException 評価失敗
      */
-    private static long evalStackCnt = 0;
-    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {    
+    public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         evalStackCnt++;
 //        {//debug-print
 //            StringBuilder sb = new StringBuilder();
@@ -192,23 +168,45 @@ public class MyLisp {
         return ret;
     }
 
-    public static void tranporin(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    public static void tranporin(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         System.out.println("\t" + evalStackCnt + "  " + env.toString() + " " + sexp);
     }
 
-    public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws FunctionException {
+    /**
+     * TODO: Apply の引数を使用に合わせ、Apply で スペシャルフォームを実施するように作り替える
+     *
+     * (apply proc arg1 . . . args) 手続き
+     * proc は手続きでなければならず，args はリストでなければな
+     * らない。proc を，リスト (append (list arg1 . . . ) args)
+     * の各要素を各実引数として呼び出す。
+     * (apply + (list 3 4)) =⇒ 7
+     * (define compose
+     * (lambda (f g)
+     * (lambda args
+     * (f (apply g args)))))
+     * ((compose sqrt *) 12 75) =⇒ 30
+     *
+     *
+     *
+     * @param sexp
+     * @param env
+     * @return
+     * @throws MyLispException
+     */
+    public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = sexp;
-        
-        sexp = (sexp instanceof IPair && ((IPair)sexp).getCdr() == Atom.NIL)?((IPair)sexp).getCar():sexp;
-        if (sexp instanceof AtomSymbol && env.containsKey((AtomSymbol) sexp)) {
-            ret = env.get((AtomSymbol) sexp);
-        } else if (sexp instanceof IPair && ((IPair) sexp).getList().length == 1 && ((IPair) sexp).getList()[0] instanceof AtomSymbol) {
-            AtomSymbol buf = (AtomSymbol) ((IPair) sexp).getList()[0];
-            if(env.containsKey(buf)){
+
+        //TODO: この辺でやっていることがevalの仕事
+        sexp = (sexp instanceof IPair && ((IPair) sexp).getCdr() == AtomNil.INSTANCE) ? ((IPair) sexp).getCar() : sexp;
+        if (sexp instanceof AtomSymbol && env.containsKey(sexp)) {
+            ret = env.get(sexp);
+        } else if (sexp instanceof IPair && sexp.getList().length == 1 && sexp.getList()[0] instanceof AtomSymbol) {
+            AtomSymbol buf = (AtomSymbol) sexp.getList()[0];
+            if (env.containsKey(buf)) {
                 ret = env.get(buf);
             }
         } else if (sexp instanceof IPair) {
-            ret = eval((IPair) sexp, env);
+            ret = eval(sexp, env);
         }
 
         return ret;

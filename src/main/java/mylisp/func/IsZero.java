@@ -1,18 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
 
 import java.math.BigDecimal;
 import java.util.Map;
+
 import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.Atom;
-import mylisp.core.AtomNumber;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
+import mylisp.core.*;
 
 /**
  * zero? class
@@ -22,17 +14,19 @@ import mylisp.core.Sexp;
 public class IsZero extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cons, 1);
+    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+        super.checkArgument(cons, 1);
 
         boolean ret = false;
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);
-        if(sexp instanceof AtomNumber){
+
+        //TODO: sexp がConsCellになってるので常にFalseになるバグを見つけた
+        if (sexp instanceof AtomNumber) {
             Number val = ((AtomNumber) sexp).getValue();
             if (val instanceof Integer) {
-                ret = ((Integer)val).intValue() == 0;
+                ret = val.intValue() == 0;
             } else {
-                BigDecimal buf = (val instanceof BigDecimal) ? (BigDecimal) val : new BigDecimal((double) val.doubleValue());
+                BigDecimal buf = (val instanceof BigDecimal) ? (BigDecimal) val : BigDecimal.valueOf(val.doubleValue());
                 ret = buf.equals(BigDecimal.ZERO);
             }
         }

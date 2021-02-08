@@ -1,43 +1,45 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.core;
 
 /**
  * boolean atom class
+ *
  * @author moremagic
  */
-public class AtomBoolean extends Atom{
+public class AtomBoolean extends Atom {
     static final String T = "#t";
     static final String F = "#f";
     public static final AtomBoolean AtomTrue = new AtomBoolean(T);
     public static final AtomBoolean AtomFalse = new AtomBoolean(F);
-    
-    private boolean value;
-    private AtomBoolean(String value){
-        this.value = value.equals(T)?true:false;
+
+    private final boolean value;
+
+    private AtomBoolean(String value) {
+        this.value = value.equals(T);
     }
- 
-    public static AtomBoolean createAtomBoolean(boolean b){
-        return b?AtomTrue:AtomFalse;
+
+    public static AtomBoolean createAtomBoolean(boolean value) {
+        return value ? AtomTrue : AtomFalse;
     }
-    
+
+    public static AtomBoolean createAtomBoolean(String value) {
+        return value.equals(T) ? AtomTrue : AtomFalse;
+    }
+
     @Override
     public Object getValue() {
-        return value?T:F;
+        return value ? T : F;
     }
-    
+
     @Override
-    public String toString(){
-        return value?T:F;
-    }    
+    public String toString() {
+        return value ? T : F;
+    }
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof AtomBoolean){
-            return ((AtomBoolean)object).value == value;
-        }else{
+        if (object instanceof AtomBoolean) {
+            return ((AtomBoolean) object).value == value;
+        } else {
             return false;
         }
     }
@@ -49,4 +51,13 @@ public class AtomBoolean extends Atom{
         return hash;
     }
 
+    /**
+     * AtomBoolean表現かを検査する
+     *
+     * @param value 検査したいString
+     * @return AtomBooleanであればTrue
+     */
+    public static boolean isAtomBoolean(String value) {
+        return value.equals(T) || value.equals(F);
+    }
 }

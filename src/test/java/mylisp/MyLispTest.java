@@ -5,6 +5,6 @@ import org.junit.jupiter.api.Test;
 public class MyLispTest {
     @Test
     public void r5rsTest() {
-        //ファイルをどう読み込むのか考え中・・・
+        //TODO: ファイルをどう読み込むのか考え中・・・
     }
 }

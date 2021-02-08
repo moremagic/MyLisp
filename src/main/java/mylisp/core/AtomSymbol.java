@@ -1,22 +1,23 @@
 package mylisp.core;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * symbol Atom
+ *
  * @author moremagic
  */
-public class AtomSymbol extends Atom{
+public class AtomSymbol extends Atom {
     private String value;
-    AtomSymbol(String value){
+
+    AtomSymbol(String value) throws AtomException {
+        if (!isAtomSymbol(value)) {
+            throw new Atom.AtomException(String.format("value is not %s syntax for [%s]", getClass().getName(), value));
+        }
+
         this.value = value;
     }
-    
+
     @Override
-    public String getValue(){
+    public String getValue() {
         return this.value;
     }
 
@@ -24,12 +25,12 @@ public class AtomSymbol extends Atom{
     public String toString() {
         return value;
     }
-    
-   @Override
+
+    @Override
     public boolean equals(Object object) {
-        if(object instanceof AtomSymbol){
-            return ((AtomSymbol)object).value.equals(value);
-        }else{
+        if (object instanceof AtomSymbol) {
+            return ((AtomSymbol) object).value.equals(value);
+        } else {
             return false;
         }
     }
@@ -39,5 +40,15 @@ public class AtomSymbol extends Atom{
         int hash = 7;
         hash = 67 * hash + (this.value != null ? this.value.hashCode() : 0);
         return hash;
+    }
+
+    /**
+     * AtomSymbol表現かを検査する
+     *
+     * @param value 検査したいString
+     * @return AtomSymbolであればTrue
+     */
+    public static boolean isAtomSymbol(String value) {
+        return !AtomString.isAtomString(value) && !AtomChar.isAtomChar(value);
     }
 }

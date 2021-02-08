@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.func;
 
-import java.util.Map;
 import mylisp.MyLisp;
-import mylisp.core.AbstractOperator;
-import mylisp.core.Atom;
-import mylisp.core.AtomBoolean;
-import mylisp.core.AtomSymbol;
-import mylisp.core.IPair;
-import mylisp.core.Sexp;
+import mylisp.core.*;
+
+import java.util.Map;
 
 /**
  * not class
@@ -21,8 +13,8 @@ import mylisp.core.Sexp;
 public class NotFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cell, Map<AtomSymbol, Sexp> env) throws FunctionException {
-        super.checkArgmunet(cell, 1);
+    public Sexp eval(IPair cell, Map<AtomSymbol, Sexp> env) throws MyLispException {
+        super.checkArgument(cell, 1);
 
         Sexp sexp = MyLisp.apply(cell.getCdr(), env);
         return Atom.newAtom(sexp == AtomBoolean.AtomFalse);

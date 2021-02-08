@@ -9,6 +9,22 @@
 ;;自作
 (define < (lambda (n m) (> m n)))
 
+;;自作
+(define zero?
+  (lambda (n)
+    (cond
+      ((= n 0) #t)
+      (else #f))))
+
+;;#1 p67
+;; StackOverFlowを起こしやすいのでJava組み込み関数として実装
+;;(define *
+;;    (lambda (n m)
+;;      (cond
+;;         ((zero? m) 0)
+;;         (else
+;;           (+ n (* n (sub1 m)))))))
+
 ;;整数のみ対応版。
 ;;小数を含むとStackOverFlow
 ;;そのため 小数を含む数値でも対応できる GThanfunction.class + (define <) を通常は使用します。
