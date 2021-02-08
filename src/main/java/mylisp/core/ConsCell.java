@@ -17,7 +17,7 @@ public class ConsCell implements IPair {
     private Sexp car = AtomNil.INSTANCE;
     private Sexp cdr = AtomNil.INSTANCE;
 
-    private ConsCell() {
+    public ConsCell() {
         //NIL Object
     }
 
@@ -61,7 +61,7 @@ public class ConsCell implements IPair {
 
     @Override
     /**
-     * TODO: このメソッドいる？
+     * TODO: ArrayのSetにListを使うのはだめ
      */
     public Sexp[] getList() {
         List<Sexp> ret = new ArrayList<Sexp>();
