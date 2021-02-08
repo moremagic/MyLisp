@@ -60,6 +60,9 @@ public class ConsCell implements IPair {
     }
 
     @Override
+    /**
+     * TODO: このメソッドいる？
+     */
     public Sexp[] getList() {
         List<Sexp> ret = new ArrayList<Sexp>();
 
@@ -103,6 +106,12 @@ public class ConsCell implements IPair {
     }
 
 
+    /**
+     * TODO: LetFunctionでしか使われていないのでLetFunctionで実装されるべき
+     *
+     * @param list
+     * @return
+     */
     public static Sexp list2Cons(Sexp[] list) {
         if (list.length == 0) {
             return AtomNil.INSTANCE;
