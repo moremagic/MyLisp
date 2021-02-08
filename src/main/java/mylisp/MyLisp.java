@@ -139,6 +139,7 @@ public class MyLisp {
 
     /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
+     * TODO: evalは全体を評価するだけに作り替える
      *
      * @param sexp 評価対象S式
      * @param env  環境
@@ -171,9 +172,31 @@ public class MyLisp {
         System.out.println("\t" + evalStackCnt + "  " + env.toString() + " " + sexp);
     }
 
+    /**
+     * TODO: Apply の引数を使用に合わせ、Apply で スペシャルフォームを実施するように作り替える
+     *
+     * (apply proc arg1 . . . args) 手続き
+     * proc は手続きでなければならず，args はリストでなければな
+     * らない。proc を，リスト (append (list arg1 . . . ) args)
+     * の各要素を各実引数として呼び出す。
+     * (apply + (list 3 4)) =⇒ 7
+     * (define compose
+     * (lambda (f g)
+     * (lambda args
+     * (f (apply g args)))))
+     * ((compose sqrt *) 12 75) =⇒ 30
+     *
+     *
+     *
+     * @param sexp
+     * @param env
+     * @return
+     * @throws MyLispException
+     */
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = sexp;
 
+        //TODO: この辺でやっていることがevalの仕事
         sexp = (sexp instanceof IPair && ((IPair) sexp).getCdr() == AtomNil.INSTANCE) ? ((IPair) sexp).getCar() : sexp;
         if (sexp instanceof AtomSymbol && env.containsKey(sexp)) {
             ret = env.get(sexp);

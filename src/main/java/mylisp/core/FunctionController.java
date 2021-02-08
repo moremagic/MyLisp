@@ -74,6 +74,14 @@ public class FunctionController {
         }
     }
 
+    /**
+     * TODO: メソッド名がおかしい。Applyになるべき
+     *
+     * @param pair
+     * @param env
+     * @return
+     * @throws MyLispException
+     */
     public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (pair instanceof Lambda) {
             Lambda ll = new Lambda(pair.getCar(), pair.getCdr());

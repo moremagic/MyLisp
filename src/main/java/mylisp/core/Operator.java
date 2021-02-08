@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Operator interface
+ * TODO スペシャルフォームの実行メソッドはapply　であるべき
  *
  * @author moremagic
  */
