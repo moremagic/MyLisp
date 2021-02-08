@@ -13,6 +13,12 @@ public abstract class Atom implements Sexp {
 
     public abstract boolean equals(Object object);
 
+    /**
+     * TODO: メソッド名が気に入らないので変更する（候補；createAtom, makeAtom, getAtomInstance...)
+     * @param value
+     * @return
+     * @throws AtomException
+     */
     public static Atom newAtom(Object value) throws AtomException {
         if (value instanceof Boolean) {
             return AtomBoolean.createAtomBoolean(((Boolean) value).booleanValue());
