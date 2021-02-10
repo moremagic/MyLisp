@@ -211,4 +211,8 @@ public class MyLisp {
 
         return ret;
     }
+
+    public static Sexp apply(Operator proc, Sexp... args) {
+        return null;
+    }
 }
