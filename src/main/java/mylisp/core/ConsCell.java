@@ -77,7 +77,7 @@ public class ConsCell implements IPair {
 
     @Override
     public String toString() {
-        return "(" + createConsString(this) + ")";
+        return String.format("(%s)",createConsString(this));
     }
 
     @Override
@@ -94,15 +94,14 @@ public class ConsCell implements IPair {
             return "";
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(cons.getCar());
         if (cons.getCdr() instanceof Atom && cons.getCdr() != AtomNil.INSTANCE) {
             //Cdr が Atom の場合は Dotpair 表示を行うが Nil の場合は Dotpair 表示を行わない
-            sb.append(" . ").append(cons.getCdr());
+            return String.format("%s . %s", cons.getCar(), cons.getCdr());
         } else if (cons.getCdr() instanceof IPair) {
-            sb.append(" ").append(createConsString((IPair) cons.getCdr()));
+            return String.format("%s %s", cons.getCar(), createConsString((IPair) cons.getCdr()));
+        } else{
+            return String.format("%s", cons.getCar());
         }
-        return sb.toString();
     }
 
 

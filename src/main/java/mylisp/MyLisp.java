@@ -213,7 +213,12 @@ public class MyLisp {
         return ret;
     }
 
-    public static Sexp apply(Procedure proc, Sexp args) {
+
+    public Sexp eval2(Sexp sexp, Map<AtomSymbol, Sexp> env){
+        return null;
+    }
+
+    public Sexp apply(Procedure proc, Sexp args) throws Procedure.ProcedureException {
         return proc.apply(args);
     }
 }
