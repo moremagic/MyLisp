@@ -45,18 +45,18 @@ public class LetFunction implements SpecialOperator {
 
             if (cdr.getCar() instanceof IPair) {
                 //名前なしLet
-                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.createConsCell(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
 
                 //末尾再帰最適化
-                return TailCallOperator.reserveTailCall(new ConsCell(lambda, ConsCell.list2Cons(values)), env);
+                return TailCallOperator.reserveTailCall(new ConsCell(lambda, ConsCell.createConsCell(values)), env);
             } else {
                 //名前ありLet     
-                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.list2Cons(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
+                Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.createConsCell(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
                 env.put((AtomSymbol) cdr.getCar(), lambda);
                 lambda.lambdaApply(env);
 
                 //末尾再帰最適化
-                return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.list2Cons(values)), env);
+                return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.createConsCell(values)), env);
             }
         } else {
             throw new AbstractOperator.FunctionException("let: bad syntax in: " + cons.toString());

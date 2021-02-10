@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mylisp.core;
 
 import java.util.ArrayList;
@@ -17,7 +13,7 @@ public class ConsCell implements IPair {
     private Sexp car = AtomNil.INSTANCE;
     private Sexp cdr = AtomNil.INSTANCE;
 
-    private ConsCell() {
+    public ConsCell() {
         //NIL Object
     }
 
@@ -59,9 +55,17 @@ public class ConsCell implements IPair {
         this.cdr = cdr;
     }
 
+    /**
+     * ConsCell表現からフラットなSexp配列を取得する
+     * メソッド createConsCell(Sexp[]) と逆の動きをします
+     * <p>
+     * TODO:フラットなSexpを作れないConsCellがある気がするので論理的にバグがありそう
+     *
+     * @return フラットなSexp配列
+     */
     @Override
     public Sexp[] getList() {
-        List<Sexp> ret = new ArrayList<Sexp>();
+        List<Sexp> ret = new ArrayList<>();
 
         ret.add(this.car);
         if (this.cdr != null && this.cdr != AtomNil.INSTANCE) {
@@ -90,11 +94,10 @@ public class ConsCell implements IPair {
             return "";
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(cons.getCar());
-        if (cons.getCdr() == AtomNil.INSTANCE) {
-            //NOP
-        } else if (cons.getCdr() instanceof Atom) {
+        if (cons.getCdr() instanceof Atom && cons.getCdr() != AtomNil.INSTANCE) {
+            //Cdr が Atom の場合は Dotpair 表示を行うが Nil の場合は Dotpair 表示を行わない
             sb.append(" . ").append(cons.getCdr());
         } else if (cons.getCdr() instanceof IPair) {
             sb.append(" ").append(createConsString((IPair) cons.getCdr()));
@@ -103,12 +106,17 @@ public class ConsCell implements IPair {
     }
 
 
-    public static Sexp list2Cons(Sexp[] list) {
-        if (list.length == 0) {
-            return AtomNil.INSTANCE;
+    /**
+     * Sexp配列からConsCellを生成する
+     *
+     * @param sexps sexp配列
+     * @return ConsCell
+     */
+    public static ConsCell createConsCell(Sexp[] sexps) {
+        if (sexps.length == 1) {
+            return new ConsCell(sexps[0], AtomNil.INSTANCE);
         } else {
-            Sexp ret = new ConsCell(list[0], list2Cons(Arrays.asList(list).subList(1, list.length).toArray(new Sexp[0])));
-            return ret;
+            return new ConsCell(sexps[0], createConsCell(Arrays.copyOfRange(sexps, 1, sexps.length)));
         }
     }
 }
