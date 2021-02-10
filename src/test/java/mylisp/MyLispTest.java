@@ -1,10 +1,8 @@
 package mylisp;
 
-import mylisp.core.Atom;
-import mylisp.core.AtomChar;
-import mylisp.core.Operator;
-import mylisp.core.Sexp;
+import mylisp.core.*;
 import mylisp.func.AddFunction;
+import mylisp.func.CarProcedure;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,11 +12,12 @@ public class MyLispTest {
     @Test
     void apply() throws Atom.AtomException {
 
-        Operator op = new AddFunction();
-        Sexp[] args = new Sexp[]{Atom.newAtom(3), AtomChar.newAtom(4)};
-        Sexp expect = AtomChar.newAtom(7);
+        Procedure proc = new CarProcedure();
 
-        Sexp ret = MyLisp.apply(op, args);
+        Sexp args = MyLispParser.parses("(1 2 3)")[0];
+        Sexp expect = MyLispParser.parses("1")[0];
+
+        Sexp ret = MyLisp.apply(proc, args);
         assertEquals(expect, ret);
     }
 }
