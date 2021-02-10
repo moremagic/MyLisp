@@ -6,6 +6,8 @@ import java.util.List;
 import mylisp.core.*;
 
 /**
+ * TODO: あまりにも汚いので整理、再実装をしたい。
+ *
  * @author moremagic
  */
 public class MyLispParser {
