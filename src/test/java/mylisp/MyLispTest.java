@@ -19,4 +19,8 @@ public class MyLispTest {
         Sexp ret = new MyLisp().apply(proc, args);
         assertEquals(expect, ret);
     }
+
+    @Test
+    void eval2() {
+    }
 }
