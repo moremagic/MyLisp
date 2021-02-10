@@ -76,6 +76,7 @@ public class MyLispParserTest {
     })
     void testParse(String test_code, String expected_code) throws Atom.AtomException {
         Sexp[] ss = MyLispParser.parses(test_code);
+        assertEquals(1, ss.length);
         assertEquals(expected_code, ss[0].toString());
     }
 
