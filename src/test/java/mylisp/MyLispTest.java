@@ -3,6 +3,11 @@ package mylisp;
 import mylisp.core.*;
 import mylisp.proc.CarProcedure;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,7 +25,16 @@ public class MyLispTest {
         assertEquals(expect, ret);
     }
 
-    @Test
-    void eval2() {
+    @ParameterizedTest
+    @CsvSource({
+            "'(cdr '((car '(1 2)) 2)', '2'",
+    })
+    void eval2(String value, String expect) throws Atom.AtomException {
+        Map<AtomSymbol, Sexp> map = new HashMap<>();
+        Sexp sexp = MyLispParser.parses(value)[0];
+
+        Sexp ret = new MyLisp().eval2(sexp, map);
+
+        assertEquals(MyLispParser.parses(expect)[0], ret);
     }
 }
