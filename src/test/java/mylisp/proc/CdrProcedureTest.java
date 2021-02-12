@@ -1,5 +1,6 @@
 package mylisp.proc;
 
+import mylisp.MyLisp;
 import mylisp.MyLispParser;
 import mylisp.core.Atom;
 import mylisp.core.Procedure;
@@ -29,5 +30,10 @@ class CdrProcedureTest {
     void apply(String actual, String expected) throws Atom.AtomException, Procedure.ProcedureException {
         Procedure proc = new CdrProcedure();
         assertEquals(MyLispParser.parses(expected)[0], proc.apply(MyLispParser.parses(actual)[0]));
+    }
+
+    void errorApply(){
+        Procedure proc = new CdrProcedure();
+        assertThrows(Procedure.ProcedureException.class, () -> proc.apply(MyLispParser.parses("()")[0]));
     }
 }
