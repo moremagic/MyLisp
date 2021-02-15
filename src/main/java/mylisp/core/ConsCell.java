@@ -69,15 +69,24 @@ public class ConsCell implements IPair {
 
         ret.add(this.car);
         if (this.cdr != null && this.cdr != AtomNil.INSTANCE) {
-            ret.addAll(Arrays.asList(this.cdr.getList()));
+            ret.addAll(Arrays.asList(cdr.getList()));
         }
 
         return ret.toArray(new Sexp[0]);
     }
 
     @Override
+    public boolean isPair() {
+        return cdr != AtomNil.INSTANCE;
+    }
+
+    @Override
     public String toString() {
-        return isNil() ? AtomNil.INSTANCE.toString() : String.format("(%s)", createConsString(this));
+        if (isNil()){
+            return AtomNil.INSTANCE.toString();
+        } else {
+            return String.format("(%s)", createConsString(this));
+        }
     }
 
     @Override
@@ -89,7 +98,7 @@ public class ConsCell implements IPair {
         return false;
     }
 
-    private boolean isNil(){
+    private boolean isNil() {
         return car == AtomNil.INSTANCE && cdr == AtomNil.INSTANCE;
     }
 
@@ -97,11 +106,18 @@ public class ConsCell implements IPair {
         if (cons.getCdr() instanceof Atom && cons.getCdr() != AtomNil.INSTANCE) {
             //Cdr が Atom の場合は Dotpair 表示を行うが Nil の場合は Dotpair 表示を行わない
             return String.format("%s . %s", cons.getCar(), cons.getCdr());
-        } else if (cons.getCdr() instanceof IPair) {
-            return String.format("%s %s", cons.getCar(), createConsString((IPair) cons.getCdr()));
-        } else {
-            return String.format("%s", cons.getCar());
         }
+
+        StringBuilder sb = new StringBuilder();
+Sexp[] buf = cons.getList();
+        for (Sexp sexp : cons.getList()) {
+            if (sexp instanceof ConsCell) {
+                sb.append(String.format(" %s", ((ConsCell) sexp).toString()));
+            } else {
+                sb.append(String.format(" %s", sexp.toString()));
+            }
+        }
+        return sb.toString().trim();
     }
 
 

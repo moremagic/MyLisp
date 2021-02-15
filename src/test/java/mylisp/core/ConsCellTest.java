@@ -14,6 +14,51 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConsCellTest {
 
+    @Test
+    public void toStringTest1() throws Atom.AtomException {
+        String expect = "(+ 2 (+ 3 4 (+ 5 6)))";
+
+        Sexp sexp56 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(5),
+                        new ConsCell(Atom.newAtom(6), AtomNil.INSTANCE)));
+
+        Sexp sexp34 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(3),
+                        new ConsCell(Atom.newAtom(4),
+                                new ConsCell(sexp56, AtomNil.INSTANCE))));
+
+        Sexp sexp2 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(2),
+                        new ConsCell(sexp34, AtomNil.INSTANCE)));
+        Sexp actual = sexp2;
+
+
+        assertEquals(actual.toString(), expect);
+    }
+
+    @Test
+    public void toStringTest2() throws Atom.AtomException {
+        String expect = "(((+ 1 2) 3 4) 5 6)";
+
+        Sexp sexp12 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(1),
+                        new ConsCell(Atom.newAtom(2), AtomNil.INSTANCE)));
+
+        Sexp sexp34 = new ConsCell(sexp12,
+                new ConsCell(Atom.newAtom(3),
+                        new ConsCell(Atom.newAtom(4), AtomNil.INSTANCE)));
+
+        Sexp sexp56 = new ConsCell(sexp34,
+                new ConsCell(Atom.newAtom(5),
+                        new ConsCell(Atom.newAtom(6), AtomNil.INSTANCE)));
+
+        Sexp actual = sexp56;
+
+
+        assertEquals(actual.toString(), expect);
+    }
+
+
     @ParameterizedTest
     @CsvSource({
             "'123', '456'",
@@ -24,6 +69,7 @@ class ConsCellTest {
     void getCar(String first, String second) throws Atom.AtomException {
         ConsCell consCell = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
         assertEquals(Atom.newAtom(first), consCell.getCar());
+        assertTrue(consCell.isPair());
     }
 
     @ParameterizedTest
@@ -36,6 +82,8 @@ class ConsCellTest {
     void setCar(String value) throws Atom.AtomException {
         ConsCell consCell = new ConsCell();
         consCell.setCar(Atom.newAtom(value));
+
+        assertFalse(consCell.isPair());
         assertEquals(Atom.newAtom(value), consCell.getCar());
     }
 
@@ -48,6 +96,8 @@ class ConsCellTest {
     })
     void getCdr(String first, String second) throws Atom.AtomException {
         ConsCell consCell = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
+
+        assertTrue(consCell.isPair());
         assertEquals(Atom.newAtom(second), consCell.getCdr());
     }
 
@@ -59,8 +109,12 @@ class ConsCellTest {
             "123",
     })
     void setCdr(String value) throws Atom.AtomException {
-        ConsCell consCell = new ConsCell();
+        ConsCell consCell = new ConsCell(AtomBoolean.newAtom("a"), AtomNil.INSTANCE);
+        assertFalse(consCell.isPair());
+
         consCell.setCdr(Atom.newAtom(value));
+
+        assertTrue(consCell.isPair());
         assertEquals(Atom.newAtom(value), consCell.getCdr());
     }
 
@@ -84,6 +138,8 @@ class ConsCellTest {
             consCell.setCdr(new ConsCell(Atom.newAtom(first), consCell.getCdr()));
         }
 
+        assertTrue(consCell.isPair());
+
         //Sexp の数が一致していることを確認
         assertEquals(count + 1, consCell.getList().length);
 
@@ -106,6 +162,8 @@ class ConsCellTest {
         ConsCell a = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
         ConsCell b = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
 
+        assertTrue(a.isPair());
+        assertTrue(b.isPair());
         assertNotSame(a, b);
         assertEquals(a, b);
     }
@@ -119,7 +177,9 @@ class ConsCellTest {
     })
     void testDotPairToString(String first, String second) throws Atom.AtomException {
         ConsCell consCell = new ConsCell(Atom.newAtom(first), Atom.newAtom(second));
-        assertEquals( String.format("(%s . %s)", first, second), consCell.toString());
+
+        assertTrue(consCell.isPair());
+        assertEquals(String.format("(%s . %s)", first, second), consCell.toString());
     }
 
     @ParameterizedTest
@@ -133,6 +193,8 @@ class ConsCellTest {
         ConsCell expect = new ConsCell(Atom.newAtom(first), new ConsCell(Atom.newAtom(second), AtomNil.getInstance()));
         ConsCell actual = ConsCell.createConsCell(new Sexp[]{Atom.newAtom(first), Atom.newAtom(second)});
 
+        assertTrue(expect.isPair());
+        assertTrue(actual.isPair());
         assertEquals(expect, actual);
     }
 }

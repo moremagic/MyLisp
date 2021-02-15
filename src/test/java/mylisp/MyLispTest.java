@@ -21,15 +21,17 @@ public class MyLispTest {
         Sexp args = new ConsCell(Atom.newAtom(1), new ConsCell(Atom.newAtom(2), new ConsCell(Atom.newAtom(3), AtomNil.INSTANCE)));
         Sexp expect = Atom.newAtom(1);
 
-        Sexp ret = new MyLisp().apply(proc, args);
+        Sexp ret = new MyLisp().apply((AtomSymbol) Atom.newAtom(proc.procedureSymbol()), args);
         assertEquals(expect, ret);
     }
 
     @ParameterizedTest
     @CsvSource({
-            "'(cdr '((car '(1 2)) 2)', '2'",
+            "(car '(1)), 1",
+            "(car '(1 2 3)), 1",
+            "(cdr '(1 (car '(2 3 4)))), 2",
     })
-    void eval2(String value, String expect) throws Atom.AtomException {
+    void eval2(String value, String expect) throws Atom.AtomException, Procedure.ProcedureException, MyLisp.EvalException {
         Map<AtomSymbol, Sexp> map = new HashMap<>();
         Sexp sexp = MyLispParser.parses(value)[0];
 

@@ -7,8 +7,10 @@ package mylisp.core;
  */
 public interface Sexp {
     //TODO: ListではなくArray
-    public Sexp[] getList();
+    Sexp[] getList();
+
+    default boolean isPair(){return false;}
 
     @Override
-    public abstract String toString();
+    String toString();
 }

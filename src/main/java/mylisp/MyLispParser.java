@@ -69,8 +69,8 @@ public class MyLispParser {
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
         } else if (sExps.startsWith("'")) {
-            Sexp atom = parse(sExps.substring(1));
-            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE));
+            Sexp sexp = parse(sExps.substring(1));
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(sexp, AtomNil.INSTANCE));
         } else {
             return parseAtom(sExps);
         }
@@ -136,10 +136,11 @@ public class MyLispParser {
                 case ")":
                     break label;
                 case "'": {
-                    Sexp atom = parse(sCell.substring(i + 1));
+                    Sexp atom = parse(sCell.substring(i));
                     i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                    sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
+                    sexpList.add(atom);
+
                     break;
                 }
                 case "\"": {

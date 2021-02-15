@@ -1,6 +1,9 @@
 package mylisp;
 
 import mylisp.core.*;
+import mylisp.func.*;
+import mylisp.proc.CarProcedure;
+import mylisp.proc.CdrProcedure;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -175,7 +178,7 @@ public class MyLisp {
 
     /**
      * TODO: Apply の引数を使用に合わせ、Apply で スペシャルフォームを実施するように作り替える
-     *
+     * <p>
      * (apply proc arg1 . . . args) 手続き
      * proc は手続きでなければならず，args はリストでなければな
      * らない。proc を，リスト (append (list arg1 . . . ) args)
@@ -186,8 +189,6 @@ public class MyLisp {
      * (lambda args
      * (f (apply g args)))))
      * ((compose sqrt *) 12 75) =⇒ 30
-     *
-     *
      *
      * @param sexp
      * @param env
@@ -214,12 +215,107 @@ public class MyLisp {
     }
 
 
-    public Sexp eval2(Sexp sexp, Map<AtomSymbol, Sexp> env){
-        //TODO 未実装
-        return null;
+    /**
+     * eval
+     * 参考；https://sicp.iijlab.net/fulltext/x411.html
+     * <p>
+     * 基本式
+     * • 数値のような自己評価式に対してevalは式それ自身を返す.
+     * • evalは値を得るため, 環境で変数を探す必要がある.
+     * <p>
+     * 特殊形式
+     * • クォート式に対して, evalはクォートされている式を返す.
+     * • 変数への代入(または変数の定義)は変数に対応づける新しい値を計算するため, evalを再帰的に呼び出す必要がある. 変数の束縛を修正し(または作り出し)て環境を修正する.
+     * • if式は, 述語が真なら帰結式を評価し, そうでなければ代替式を評価するよう, 要素式の特別な処理を必要とする.
+     * • lambda式はlambda式が指定したパラメタと本体を, 評価の環境とともに詰め合せ, 作用可能な手続きへ変換する必要がある.
+     * • begin式は, 要素式の並びを現れる順に評価する必要がある.
+     * • condによる場合分けはif式の入れ子に変換してから評価する.
+     * <p>
+     * TODO: SICP 問題4.3(p221) に対応する
+     *
+     * @param sexp 評価する式
+     * @param env  環境
+     * @return 評価された式
+     * @throws EvalException 評価時にエラーとなった場合
+     */
+    public Sexp eval2(Sexp sexp, Map<AtomSymbol, Sexp> env) throws Procedure.ProcedureException, EvalException {
+
+        //self-evaluating? : 自己評価式（単独で存在しうるAtom）かどうか
+        //if ((sexp instanceof IPair) && !sexp.isPair()) return eval2(((IPair) sexp).getCar(), env);
+        if ((sexp instanceof Atom) && !(sexp instanceof AtomSymbol) && !(sexp instanceof AtomPort)) return sexp;
+
+        // valiable? : Symbol だった場合環境から値を探す
+        if (sexp instanceof AtomSymbol && env.containsKey(sexp)) return env.get(sexp);
+
+        //quoted? : quote かどうか
+        // TODO: quote を実装する
+        if (sexp instanceof IPair && sexp.isPair() && ((IPair) sexp).getCar().toString().equals("quote")) {
+            //cadr を返却する
+            return eval2(((IPair) ((IPair) sexp).getCdr()).getCar(), env);
+        }
+
+        //assignment? : set! かどうか
+        // TODO: set! を実装する
+
+        //difinition? : define かどうか
+        // TODO: define を実装する
+
+        //if? : if かどうか
+        //TODO if を実装する
+
+        //lambbda? : lambda かどうか
+        //TODO lambda を実装する
+
+        //begin? : begin かどうか
+        //TODO begin を実装する
+
+        //cond? : cond かどうか
+        //TODO cond を実装する
+
+
+        if(sexp instanceof AtomSymbol)return sexp;
+
+        //application? : pairだったら
+        if (sexp instanceof IPair && sexp.isPair()) {
+
+            Sexp car = eval2(((IPair) sexp).getCar(), env);
+            return apply((AtomSymbol) car,
+                    listOfValue(((IPair) sexp).getCdr(), env));
+        }
+
+        throw new EvalException(String.format("Unknown expression type -- EVAL: %s", sexp));
     }
 
-    public Sexp apply(Procedure proc, Sexp args) throws Procedure.ProcedureException {
-        return proc.apply(args);
+
+    public Sexp listOfValue(Sexp sexp, Map<AtomSymbol, Sexp> env) throws Procedure.ProcedureException, EvalException {
+        if (sexp instanceof IPair) {
+            IPair pair = (IPair) sexp;
+
+            Sexp car = eval2(pair.getCar(), env);
+            return new ConsCell(car, listOfValue(pair.getCdr(), env));
+        }
+        return sexp;
+    }
+
+    public Sexp apply(AtomSymbol proc, Sexp args) throws Procedure.ProcedureException {
+        return getSpecialform(proc).apply(args);
+    }
+
+    private static Procedure getSpecialform(AtomSymbol symbol) throws Procedure.ProcedureException {
+        Procedure[] procArray = {
+                new CarProcedure(),
+                new CdrProcedure()
+        };
+        for (Procedure proc : procArray) {
+            if (symbol.toString().equals(proc.procedureSymbol())) return proc;
+        }
+        throw new Procedure.ProcedureException(String.format("Unknown procedure type -- APPLY: %s", symbol));
+    }
+
+
+    public static class EvalException extends MyLispException {
+        public EvalException(String message) {
+            super(message);
+        }
     }
 }
