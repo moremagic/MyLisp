@@ -6,6 +6,7 @@ import java.util.Map;
 /**
  * Operator interface
  * TODO スペシャルフォームの実行メソッドはapply　であるべき
+ * TODO このInterfaceは廃止予定で全てProcedureに変わる
  *
  * @author moremagic
  */

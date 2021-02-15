@@ -23,10 +23,21 @@ public class MyLispParserTest {
     public void nestConsCellParseTest() throws Atom.AtomException {
         Sexp[] ret = MyLispParser.parses("(+ 2 (+ 3 4 (+ 5 6)))");
         Sexp actual = ret[0];
-        Sexp expect = new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(2),
-                new ConsCell(new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(3), new ConsCell(Atom.newAtom(4),
-                        new ConsCell(new ConsCell(Atom.newAtom("+"), new ConsCell(Atom.newAtom(5), new ConsCell(Atom.newAtom(6)
-                                , AtomNil.INSTANCE))), AtomNil.INSTANCE)))), AtomNil.INSTANCE)));
+
+        Sexp sexp56 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(5),
+                        new ConsCell(Atom.newAtom(6), AtomNil.INSTANCE)));
+
+        Sexp sexp34 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(3),
+                        new ConsCell(Atom.newAtom(4),
+                                new ConsCell(sexp56, AtomNil.INSTANCE))));
+
+        Sexp sexp2 = new ConsCell(Atom.newAtom("+"),
+                new ConsCell(Atom.newAtom(2),
+                        new ConsCell(sexp34, AtomNil.INSTANCE)));
+        Sexp expect = sexp2;
+
         assertEquals(actual, expect);
     }
 
@@ -45,6 +56,8 @@ public class MyLispParserTest {
 
     @ParameterizedTest
     @CsvSource({
+            "(1 '2 3), (1 (quote 2) 3)",
+            "(salada 'hoge), (salada (quote hoge))",
             "(), ()",
             "(#t), (#t)",
             "(#f), (#f)",
@@ -54,6 +67,9 @@ public class MyLispParserTest {
             "(1 2 3), (1 2 3)",
             "(+ 2 3), (+ 2 3)",
             "(quote (eq? a #f)), (quote (eq? a #f))", //quote省略記法（'） の指定方法が不明のためとりあえずそのまま
+            "(1 '2 3), (1 (quote 2) 3)",
+            "'(1 '2 3), (quote (1 (quote 2) 3))",
+            "(car '(1 2 3)),(car (quote (1 2 3)))",
             "'#\\(', '('",
             "'#\\)', ')'",
             "'#\\a', 'a'",
@@ -63,7 +79,6 @@ public class MyLispParserTest {
             "(if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\")), (if (eq? (< 1 2) #t) (display \"OK\") (display \"NG\"))",
             "(define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport))), (define (type1 filename) (let ((iport (open-input-file filename))) (let loop ((c (read-char iport))) (cond ((not (eof-object? c)) (display c) (loop (read-char iport))))) (close-input-port iport)))",
             "(\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa), (\"aa bb  cc & (asdf) '(asdfasd) \' \\\" \" aaa)",
-            "'(1 '2 3), (quote (1 (quote 2) 3))",
             "(let loop((n1 n) (p n))), (let loop ((n1 n) (p n)))",
             "(\" a b c '() '(quote) \\\" \" aaa), (\" a b c '() '(quote) \\\" \" aaa)",
             "('a 'b 'c ('d 'e)), ((quote a) (quote b) (quote c) ((quote d) (quote e)))",
@@ -76,6 +91,7 @@ public class MyLispParserTest {
     })
     void testParse(String test_code, String expected_code) throws Atom.AtomException {
         Sexp[] ss = MyLispParser.parses(test_code);
+        assertEquals(1, ss.length);
         assertEquals(expected_code, ss[0].toString());
     }
 

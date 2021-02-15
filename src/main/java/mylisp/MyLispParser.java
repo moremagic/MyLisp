@@ -6,6 +6,8 @@ import java.util.List;
 import mylisp.core.*;
 
 /**
+ * TODO: あまりにも汚いので整理、再実装をしたい。
+ *
  * @author moremagic
  */
 public class MyLispParser {
@@ -66,11 +68,9 @@ public class MyLispParser {
         sExps = sExps.trim();
         if (sExps.startsWith("(") && sExps.endsWith(")")) {
             return parseCell(sExps);
-        } else if (sExps.startsWith("\"")) {
-            return parseAtomString(sExps);
         } else if (sExps.startsWith("'")) {
-            Sexp atom = parse(sExps.substring(1));
-            return new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE));
+            Sexp sexp = parse(sExps.substring(1));
+            return new ConsCell(Atom.newAtom("quote"), new ConsCell(sexp, AtomNil.INSTANCE));
         } else {
             return parseAtom(sExps);
         }
@@ -136,10 +136,11 @@ public class MyLispParser {
                 case ")":
                     break label;
                 case "'": {
-                    Sexp atom = parse(sCell.substring(i + 1));
+                    Sexp atom = parse(sCell.substring(i));
                     i += getAtomLength(sCell.substring(i + 1)) + 1;
 
-                    sexpList.add(new ConsCell(Atom.newAtom("quote"), new ConsCell(atom, AtomNil.INSTANCE)));
+                    sexpList.add(atom);
+
                     break;
                 }
                 case "\"": {
@@ -161,7 +162,7 @@ public class MyLispParser {
 
         if (sexpList.isEmpty()) {
             // () の場合
-            return new ConsCell(AtomNil.INSTANCE, AtomNil.INSTANCE);
+            return AtomNil.INSTANCE;
         } else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
             IPair cons = (IPair) ConsCell.createConsCell(sexpList.toArray(new Sexp[0]));
             return new Lambda(cons.getCar(), cons.getCdr());

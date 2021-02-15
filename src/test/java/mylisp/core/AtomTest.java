@@ -25,6 +25,7 @@ class AtomTest {
     void newAtomForBoolean(boolean value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomBoolean.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -32,6 +33,7 @@ class AtomTest {
     void newAtomforNumber(int value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -39,6 +41,7 @@ class AtomTest {
     void newAtomforNumber(long value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -46,6 +49,7 @@ class AtomTest {
     void newAtomForNumber(double value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -58,6 +62,7 @@ class AtomTest {
     void newAtomForNumber(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomNumber.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @Test
@@ -77,6 +82,7 @@ class AtomTest {
             }
         });
         assertEquals(AtomPort.class, expect_outputstream.getClass());
+        assertFalse(expect_inputstream.isPair());
     }
 
     @ParameterizedTest
@@ -91,6 +97,7 @@ class AtomTest {
     void newAtomString(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomString.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -105,6 +112,7 @@ class AtomTest {
     void newAtomSymbol(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomSymbol.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
     @ParameterizedTest
@@ -125,6 +133,7 @@ class AtomTest {
     void newAtomChar(String value) throws Atom.AtomException {
         Atom expect = Atom.newAtom(value);
         assertEquals(AtomChar.class, expect.getClass());
+        assertFalse(expect.isPair());
     }
 
 

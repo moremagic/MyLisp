@@ -24,4 +24,9 @@ public class AtomNil extends Atom {
     public boolean equals(Object object) {
         return object instanceof AtomNil;
     }
+
+    @Override
+    public String toString() {
+        return "()";
+    }
 }
