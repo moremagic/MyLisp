@@ -12,7 +12,7 @@ import java.util.Map;
 public class EnvPrintFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         System.out.println("<<env-list>>");
         for (Map.Entry<AtomSymbol, Sexp> item : env.entrySet()) {
             System.out.println("[" + item.getKey() + " : " + item.getValue() + "] , ");
@@ -22,6 +22,6 @@ public class EnvPrintFunction extends AbstractOperator {
 
     @Override
     public String operatorSymbol() {
-        return "env-print";
+        return "print-env";
     }
 }

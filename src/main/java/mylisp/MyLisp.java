@@ -58,7 +58,7 @@ public class MyLisp {
                 sb.append(line).append("\n");
             }
 
-            evals(sb.toString());
+            replEvals(sb.toString());
         } catch (MyLispException | IOException ex) {
             Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -71,7 +71,7 @@ public class MyLisp {
             System.out.print("MyLisp > ");
             while ((line = br.readLine()) != null) {
                 try {
-                    evals(line);
+                    replEvals(line);
                 } catch (Exception ex) {
                     Logger.getLogger(MyLisp.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -87,7 +87,7 @@ public class MyLisp {
      * @param sexps 評価対象S式
      * @throws MyLispException 評価に失敗した場合
      */
-    private void evals(String sexps) throws MyLispException {
+    private void replEvals(String sexps) throws MyLispException {
         for (Sexp sexp : MyLispParser.parses(sexps)) {
             try {
                 System.out.println(">> " + eval(sexp));
@@ -111,33 +111,6 @@ public class MyLisp {
     }
 
     /**
-     * @param sexp 評価対象S式（複数）
-     * @param env  環境
-     * @return 評価後S式
-     * @throws MyLispException 評価失敗
-     */
-    public static Sexp evals(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        Sexp ret;
-        if (sexp instanceof IPair) {
-            IPair pair = (IPair) sexp;
-
-            if (pair.getCdr() == AtomNil.INSTANCE) {
-                //末尾再帰最適化
-                ret = TailCallOperator.reserveTailCall(pair.getCar(), env);
-            } else {
-                MyLisp.eval(pair.getCar(), env);
-                ret = MyLisp.evals(pair.getCdr(), env);
-            }
-        } else {
-            ret = MyLisp.apply(sexp, env);
-        }
-        return ret;
-    }
-
-
-    private static long evalStackCnt = 0;
-
-    /**
      * Cdr Apply は 遅延評価を実現するため各ファンクション内で実施する
      * TODO: evalは全体を評価するだけに作り替える
      *
@@ -147,30 +120,30 @@ public class MyLisp {
      * @throws MyLispException 評価失敗
      */
     public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        evalStackCnt++;
-//        {//debug-print
-//            StringBuilder sb = new StringBuilder();
-//            for (int i = 0; i < evalStackCnt; i++) {
-//                sb.append(" ");
-//            }
-//            System.out.println(sb.append(sexp).toString());
-//        }
+        // eval；carが iPairである限り evalを呼ぶ。そうでなければApply
+        // apply; cdr が IPairである限りevalを呼ぶ。そうでなければexec
 
-        Sexp ret;
-        if (sexp instanceof IPair) {
+        System.out.println("MyLisp.eval: " + sexp);
+
+        if( sexp instanceof AtomSymbol ){
+            if(env.containsKey((AtomSymbol) sexp)) {
+                System.out.println("MyLisp.eval.containsKey: " + sexp);
+                System.out.println("MyLisp.eval.containsKey: " + env.get((AtomSymbol) sexp));
+                return env.get((AtomSymbol) sexp);
+            }
+        }else if( sexp instanceof IPair ) {
             IPair pair = (IPair) sexp;
-            ret = FunctionController.getInstance().exec(pair, env);
-        } else {
-            ret = apply(sexp, env);
+            if (pair.getCar() instanceof IPair) {
+                return apply(new ConsCell(eval((IPair) pair.getCar(), env), pair.getCdr()), env);
+            } else if(pair.getCar() instanceof AtomSymbol) {
+                return apply(new ConsCell(eval(pair.getCar(), env), pair.getCdr()), env);
+            }
+            return apply(sexp, env);
         }
 
-        evalStackCnt--;
-        return ret;
+        return sexp;
     }
 
-    public static void tranporin(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        System.out.println("\t" + evalStackCnt + "  " + env.toString() + " " + sexp);
-    }
 
     /**
      * TODO: Apply の引数を使用に合わせ、Apply で スペシャルフォームを実施するように作り替える
@@ -194,21 +167,13 @@ public class MyLisp {
      * @throws MyLispException
      */
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        Sexp ret = sexp;
-
-        //TODO: この辺でやっていることがevalの仕事
-        sexp = (sexp instanceof IPair && ((IPair) sexp).getCdr() == AtomNil.INSTANCE) ? ((IPair) sexp).getCar() : sexp;
-        if (sexp instanceof AtomSymbol && env.containsKey(sexp)) {
-            ret = env.get(sexp);
-        } else if (sexp instanceof IPair && sexp.getList().length == 1 && sexp.getList()[0] instanceof AtomSymbol) {
-            AtomSymbol buf = (AtomSymbol) sexp.getList()[0];
-            if (env.containsKey(buf)) {
-                ret = env.get(buf);
-            }
-        } else if (sexp instanceof IPair) {
-            ret = eval(sexp, env);
+        if (sexp instanceof IPair) {
+            System.out.println("apply exec [ " + sexp + " ]");
+            IPair pair = (IPair) sexp;
+            return FunctionController.getInstance().apply(new ConsCell(pair.getCar(), pair.getCdr()), env);
+        }else{
+            System.out.println("apply -> eval [ " + sexp + " ]");
+            return eval(sexp, env);
         }
-
-        return ret;
     }
 }

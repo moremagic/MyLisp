@@ -32,7 +32,7 @@ public class DefineFunction extends AbstractOperator implements SpecialOperator 
      */
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         //super.checkArgmunet(cons, 2);
         Sexp ret;
 

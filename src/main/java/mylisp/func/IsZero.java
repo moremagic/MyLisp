@@ -14,7 +14,7 @@ import mylisp.core.*;
 public class IsZero extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         boolean ret = false;

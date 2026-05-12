@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class OpenInputFileFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         Sexp cdr = MyLisp.apply(cons.getCdr(), env);

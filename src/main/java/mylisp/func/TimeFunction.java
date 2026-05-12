@@ -13,7 +13,7 @@ import java.util.Map;
 public class TimeFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         long start_time = System.currentTimeMillis();
         Sexp ret = MyLisp.eval(cons.getCdr(), env);
         System.out.println((System.currentTimeMillis() - start_time) + "[ms]");

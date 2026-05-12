@@ -33,10 +33,12 @@ public class Lambda implements IPair {
             ((LambdaEnv<AtomSymbol, Sexp>) localEnv).lambdaMap.put((AtomSymbol) keys[i], buf);
         }
 
-        return MyLisp.evals(cddr, localEnv);
+        System.out.println("LambdaEval; " + cddr);
+
+        return MyLisp.eval(cddr, localEnv);
     }
 
-    public void lambdaApply(Map<AtomSymbol, Sexp> env) {
+    public void setLocalEnv(Map<AtomSymbol, Sexp> env) {
         localEnv = env;
     }
 

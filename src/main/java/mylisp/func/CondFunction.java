@@ -13,7 +13,7 @@ import mylisp.core.*;
 public class CondFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = AtomNil.INSTANCE;
 
         Sexp[] buf = cons.getCdr().getList();
@@ -24,7 +24,7 @@ public class CondFunction implements SpecialOperator {
                 Sexp cddr = cdr.getCdr();
 
                 if (cadr == AtomBoolean.AtomTrue || (i == buf.length - 1 && cadr.toString().equals("else"))) {
-                    ret = MyLisp.evals(cddr, env);
+                    ret = MyLisp.eval(cddr, env);
                     break;
                 }
             } else {

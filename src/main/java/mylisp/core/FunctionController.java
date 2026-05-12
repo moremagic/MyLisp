@@ -3,7 +3,6 @@ package mylisp.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import mylisp.MyLisp;
 import mylisp.func.*;
 
 /**
@@ -75,34 +74,39 @@ public class FunctionController {
     }
 
     /**
-     * TODO: メソッド名がおかしい。Applyになるべき
      *
      * @param pair
      * @param env
      * @return
      * @throws MyLispException
      */
-    public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (pair instanceof Lambda) {
             Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
-            ll.lambdaApply(env);
+            ll.setLocalEnv(env);
             return ll;
         }
 
         //各ファンクション内でApplyすることで、遅延評価を実現します
         // TODO: 各ファンクション内でApplyするのはおかしいのではないか・・・
-        Sexp car = MyLisp.apply(pair.getCar(), env);
+        Sexp car = pair.getCar();
+        System.out.println("FunctionController exec [ " + car + " ]");
         if (car == null || car == AtomNil.INSTANCE) {
+            System.out.println("----> Nil");
             return AtomNil.INSTANCE;
         } else if (car instanceof Lambda) {
+            System.out.println("----> Lambda");
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair) car).getCar().toString())) {
-            return exec((IPair) car, env);
+            System.out.println("----> funcMap");
+            return apply((IPair) car, env);
         } else if (funcMap.containsKey(car.toString())) {
+            System.out.println("----> op");
             //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
-            return op.eval(pair, env);
+            return op.apply(pair, env);
         } else if (car instanceof Atom) {
+            System.out.println("----> atom");
             return car;
         } else {
             throw new AbstractOperator.FunctionException("reference to undefined identifier:" + pair.toString());

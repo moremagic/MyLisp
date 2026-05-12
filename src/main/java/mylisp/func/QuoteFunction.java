@@ -12,7 +12,7 @@ import java.util.Map;
 public class QuoteFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Sexp ret = cons.getCdr();
         return (ret instanceof IPair) ? ((IPair) ret).getCar() : ret;
     }

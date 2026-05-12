@@ -15,7 +15,7 @@ import java.util.Map;
 public class MultiFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         Number ret = null;
         for (Sexp s : cons.getCdr().getList()) {
             Sexp buf = MyLisp.apply(s, env);

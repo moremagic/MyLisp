@@ -13,7 +13,7 @@ import java.util.Map;
 public class IFFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (cons.getCdr().getList().length < 3) {
             throw new AbstractOperator.FunctionException("if: bad syntax (has 1 part after keyword) in: " + cons.toString());
         }

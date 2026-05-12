@@ -268,3 +268,10 @@
 (define *eof*
   (let ((port (open-input-string "")))
   (read port)))
+
+;;test
+(define (fib n)
+  (if (< n 2)
+      n
+      (+ (fib (- n 1))
+         (fib (- n 2)))))

@@ -13,7 +13,7 @@ import java.util.Map;
 public class CallCCFunction extends AbstractOperator implements SpecialOperator{
     
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         //TODO たぶんこんな感じで行ける

@@ -72,7 +72,8 @@ public class MyLispParserTest {
             "((x) (1 2)), ((x) (1 2))",
             "(lambda (x) (and (not (pair? x)))), (lambda (x) (and (not (pair? x))))",
             "(define atom? (lambda (x) (and (not (pair? x)) (not (null? x))))), (define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))",
-            "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount)), (define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))"
+            "(define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount)), (define (make-bank-account amount) (lambda (n) (set! amount (+ amount n)) amount))",
+            "(apply + (list 3 4)), (apply + (list 3 4))"
     })
     void testParse(String test_code, String expected_code) throws Atom.AtomException {
         Sexp[] ss = MyLispParser.parses(test_code);
