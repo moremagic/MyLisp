@@ -19,12 +19,13 @@ public class IFFunction implements SpecialOperator {
         }
 
         Sexp[] list = cons.getCdr().getList();
-        Sexp sexp = MyLisp.apply(list[0], env);
-        if (sexp == AtomBoolean.AtomFalse) {
-            //末尾再帰コード
-            return TailCallOperator.reserveTailCall(list[2], env);
-        } else {
+        Sexp sexp = MyLisp.eval(list[0], env);
+        if (sexp == AtomBoolean.AtomTrue) {
             return MyLisp.eval(list[1], env);
+        } else {
+//            //末尾再帰コード
+//            return TailCallOperator.reserveTailCall(list[2], env);
+            return MyLisp.eval(list[2], env);
         }
     }
 

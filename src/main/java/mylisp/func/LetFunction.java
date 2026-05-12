@@ -53,7 +53,6 @@ public class LetFunction implements SpecialOperator {
                 //名前ありLet     
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.createConsCell(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
                 env.put((AtomSymbol) cdr.getCar(), lambda);
-                lambda.setLocalEnv(env);
 
                 //末尾再帰最適化
                 return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.createConsCell(values)), env);

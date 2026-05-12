@@ -81,32 +81,19 @@ public class FunctionController {
      * @throws MyLispException
      */
     public Sexp apply(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        if (pair instanceof Lambda) {
-            Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
-            ll.setLocalEnv(env);
-            return ll;
-        }
-
         //各ファンクション内でApplyすることで、遅延評価を実現します
-        // TODO: 各ファンクション内でApplyするのはおかしいのではないか・・・
         Sexp car = pair.getCar();
-        System.out.println("FunctionController exec [ " + car + " ]");
         if (car == null || car == AtomNil.INSTANCE) {
-            System.out.println("----> Nil");
             return AtomNil.INSTANCE;
         } else if (car instanceof Lambda) {
-            System.out.println("----> Lambda");
             return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair) car).getCar().toString())) {
-            System.out.println("----> funcMap");
             return apply((IPair) car, env);
         } else if (funcMap.containsKey(car.toString())) {
-            System.out.println("----> op");
             //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
             return op.apply(pair, env);
         } else if (car instanceof Atom) {
-            System.out.println("----> atom");
             return car;
         } else {
             throw new AbstractOperator.FunctionException("reference to undefined identifier:" + pair.toString());

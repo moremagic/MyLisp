@@ -122,23 +122,12 @@ public class MyLisp {
     public static Sexp eval(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         // eval；carが iPairである限り evalを呼ぶ。そうでなければApply
         // apply; cdr が IPairである限りevalを呼ぶ。そうでなければexec
-
-        System.out.println("MyLisp.eval: " + sexp);
-
         if( sexp instanceof AtomSymbol ){
             if(env.containsKey((AtomSymbol) sexp)) {
-                System.out.println("MyLisp.eval.containsKey: " + sexp);
-                System.out.println("MyLisp.eval.containsKey: " + env.get((AtomSymbol) sexp));
                 return env.get((AtomSymbol) sexp);
             }
         }else if( sexp instanceof IPair ) {
-            IPair pair = (IPair) sexp;
-            if (pair.getCar() instanceof IPair) {
-                return apply(new ConsCell(eval((IPair) pair.getCar(), env), pair.getCdr()), env);
-            } else if(pair.getCar() instanceof AtomSymbol) {
-                return apply(new ConsCell(eval(pair.getCar(), env), pair.getCdr()), env);
-            }
-            return apply(sexp, env);
+            return apply(new ConsCell(eval(((IPair)sexp).getCar(), env), ((IPair)sexp).getCdr()), env);
         }
 
         return sexp;
@@ -168,11 +157,9 @@ public class MyLisp {
      */
     public static Sexp apply(Sexp sexp, Map<AtomSymbol, Sexp> env) throws MyLispException {
         if (sexp instanceof IPair) {
-            System.out.println("apply exec [ " + sexp + " ]");
             IPair pair = (IPair) sexp;
             return FunctionController.getInstance().apply(new ConsCell(pair.getCar(), pair.getCdr()), env);
         }else{
-            System.out.println("apply -> eval [ " + sexp + " ]");
             return eval(sexp, env);
         }
     }
