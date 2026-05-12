@@ -67,7 +67,10 @@ public class ConsCell implements IPair {
     public Sexp[] getList() {
         List<Sexp> ret = new ArrayList<>();
 
-        ret.add(this.car);
+        if(this.car != null && this.car != AtomNil.INSTANCE){
+            ret.add(this.car);
+        }
+
         if (this.cdr != null && this.cdr != AtomNil.INSTANCE) {
             ret.addAll(Arrays.asList(this.cdr.getList()));
         }

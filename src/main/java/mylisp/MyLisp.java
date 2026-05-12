@@ -127,7 +127,8 @@ public class MyLisp {
                 return env.get((AtomSymbol) sexp);
             }
         }else if( sexp instanceof IPair ) {
-            return apply(new ConsCell(eval(((IPair)sexp).getCar(), env), ((IPair)sexp).getCdr()), env);
+            IPair p = (IPair) sexp;
+            return apply(new ConsCell(eval(p.getCar(), env), p.getCdr()), env);
         }
 
         return sexp;

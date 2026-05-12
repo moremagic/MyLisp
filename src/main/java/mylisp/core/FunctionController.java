@@ -85,8 +85,12 @@ public class FunctionController {
         Sexp car = pair.getCar();
         if (car == null || car == AtomNil.INSTANCE) {
             return AtomNil.INSTANCE;
+        } else if (car.toString().equals(Lambda.LAMBDA_SYMBOL)) {
+            Lambda l = new Lambda(car, pair.getCdr());
+            l.captureEnv(env);
+            return l;
         } else if (car instanceof Lambda) {
-            return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
+            return ((Lambda) car).lambdaApply(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair) car).getCar().toString())) {
             return apply((IPair) car, env);
         } else if (funcMap.containsKey(car.toString())) {

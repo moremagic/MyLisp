@@ -12,23 +12,29 @@ import java.util.*;
 public class Lambda implements IPair {
     public static final String LAMBDA_SYMBOL = "lambda";
     private final ConsCell consCell;
+    private Map<AtomSymbol, Sexp> captureEnv = new HashMap<>();
 
     public Lambda(Sexp car, Sexp cdr) {
         assert car.toString().equals(LAMBDA_SYMBOL) : "car for lambda pair must be 'lambda'";
         consCell = new ConsCell(car, cdr);
     }
 
-    public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws MyLispException {
-        Sexp[] keys = ((IPair) getCdr()).getCar().getList();//cdar
-        Sexp cddr = ((IPair) getCdr()).getCdr();
+    public Sexp lambdaApply(Map<AtomSymbol, Sexp> env, Sexp[] value) throws MyLispException {
+        // ✅ capturedEnvをベースにすべき
+        Map<AtomSymbol, Sexp> newEnv = new HashMap<>(captureEnv);
 
-        //環境のシャローコピー
-        Map<AtomSymbol, Sexp> newEnv = new HashMap<>(env);
-        for (int i = 0; i < keys.length; i++) {
+        //環境のコピー
+        Sexp[] keys = ((IPair) getCdr()).getCar().getList();//cdar
+        for (int i = 0; i < keys.length ; i++) {
             newEnv.put((AtomSymbol) keys[i], MyLisp.eval(value[i], env));
         }
 
+        Sexp cddr = ((IPair) getCdr()).getCdr();
         return MyLisp.eval(cddr, newEnv);
+    }
+
+    public void captureEnv(Map<AtomSymbol, Sexp> env) {
+        this.captureEnv = new HashMap<>(env);
     }
 
     @Override

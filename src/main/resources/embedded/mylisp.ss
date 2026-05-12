@@ -275,3 +275,8 @@
       n
       (+ (fib (- n 1))
          (fib (- n 2)))))
+
+(define x 10)
+(define f (lambda () x))
+(define x 20)
+(f)
