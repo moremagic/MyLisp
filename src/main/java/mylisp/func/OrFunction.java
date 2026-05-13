@@ -13,7 +13,7 @@ import java.util.Map;
 public class OrFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         for (Sexp sexp : cons.getCdr().getList()) {
             Sexp sexp_apply = MyLisp.apply(sexp, env);
             if (sexp_apply == AtomBoolean.AtomTrue) {

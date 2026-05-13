@@ -14,7 +14,7 @@ import java.util.Map;
 public class GThanFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 2);
 
         Sexp[] list = cons.getCdr().getList();

@@ -162,9 +162,6 @@ public class MyLispParser {
         if (sexpList.isEmpty()) {
             // () の場合
             return new ConsCell(AtomNil.INSTANCE, AtomNil.INSTANCE);
-        } else if (sexpList.get(0).toString().equals(Lambda.LAMBDA_SYMBOL)) {
-            IPair cons = (IPair) ConsCell.createConsCell(sexpList.toArray(new Sexp[0]));
-            return new Lambda(cons.getCar(), cons.getCdr());
         } else {
             return ConsCell.createConsCell(sexpList.toArray(new Sexp[0]));
         }

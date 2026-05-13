@@ -13,7 +13,7 @@ import java.util.Map;
 public class IsNull extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cons, 1);
 
         Sexp sexp = MyLisp.apply(cons.getCdr(), env);

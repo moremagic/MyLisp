@@ -12,7 +12,7 @@ import java.util.Map;
 public class LetFunction implements SpecialOperator {
 
     @Override
-    public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws MyLispException {
         assert (cons.getCdr().getList().length < 2) : "not let format!";
 
         Sexp env_list;
@@ -46,6 +46,7 @@ public class LetFunction implements SpecialOperator {
             if (cdr.getCar() instanceof IPair) {
                 //名前なしLet
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.createConsCell(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
+                lambda.captureEnv(env);
 
                 //末尾再帰最適化
                 return TailCallOperator.reserveTailCall(new ConsCell(lambda, ConsCell.createConsCell(values)), env);
@@ -53,7 +54,7 @@ public class LetFunction implements SpecialOperator {
                 //名前ありLet     
                 Lambda lambda = new Lambda(Atom.newAtom(Lambda.LAMBDA_SYMBOL), new ConsCell(ConsCell.createConsCell(keys), new ConsCell(lambda_body, AtomNil.INSTANCE)));
                 env.put((AtomSymbol) cdr.getCar(), lambda);
-                lambda.lambdaApply(env);
+                lambda.captureEnv(env);
 
                 //末尾再帰最適化
                 return TailCallOperator.reserveTailCall(new ConsCell(cdr.getCar(), ConsCell.createConsCell(values)), env);

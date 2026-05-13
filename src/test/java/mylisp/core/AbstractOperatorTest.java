@@ -14,7 +14,7 @@ class AbstractOperatorTest {
         }
 
         @Override
-        public Sexp eval(IPair cons, Map<AtomSymbol, Sexp> env) throws AbstractOperator.FunctionException {
+        public Sexp apply(IPair cons, Map<AtomSymbol, Sexp> env) throws AbstractOperator.FunctionException {
             return null;
         }
     };

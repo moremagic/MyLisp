@@ -13,7 +13,7 @@ import java.util.Map;
 public class NotFunction extends AbstractOperator {
 
     @Override
-    public Sexp eval(IPair cell, Map<AtomSymbol, Sexp> env) throws MyLispException {
+    public Sexp apply(IPair cell, Map<AtomSymbol, Sexp> env) throws MyLispException {
         super.checkArgument(cell, 1);
 
         Sexp sexp = MyLisp.apply(cell.getCdr(), env);

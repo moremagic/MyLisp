@@ -12,32 +12,29 @@ import java.util.*;
 public class Lambda implements IPair {
     public static final String LAMBDA_SYMBOL = "lambda";
     private final ConsCell consCell;
-    private Map<AtomSymbol, Sexp> localEnv = new HashMap<>();
+    private Map<AtomSymbol, Sexp> captureEnv = new HashMap<>();
 
     public Lambda(Sexp car, Sexp cdr) {
         assert car.toString().equals(LAMBDA_SYMBOL) : "car for lambda pair must be 'lambda'";
         consCell = new ConsCell(car, cdr);
     }
 
-    public Sexp lambdaEvals(Map<AtomSymbol, Sexp> env, Sexp[] value) throws MyLispException {
+    public Sexp lambdaApply(Map<AtomSymbol, Sexp> env, Sexp[] value) throws MyLispException {
+        // ✅ capturedEnvをベースにすべき
+        Map<AtomSymbol, Sexp> newEnv = new HashMap<>(captureEnv);
+
+        //環境のコピー
         Sexp[] keys = ((IPair) getCdr()).getCar().getList();//cdar
-        Sexp cddr = ((IPair) getCdr()).getCdr();
-
-        //全てコピー
-        LambdaEnv<AtomSymbol, Sexp> mapp = new LambdaEnv<>(env);
-        mapp.putAll(localEnv);
-        localEnv = mapp;
-
-        for (int i = 0; i < keys.length; i++) {
-            Sexp buf = MyLisp.eval(value[i], env);
-            ((LambdaEnv<AtomSymbol, Sexp>) localEnv).lambdaMap.put((AtomSymbol) keys[i], buf);
+        for (int i = 0; i < keys.length ; i++) {
+            newEnv.put((AtomSymbol) keys[i], MyLisp.eval(value[i], env));
         }
 
-        return MyLisp.evals(cddr, localEnv);
+        Sexp cddr = ((IPair) getCdr()).getCdr();
+        return MyLisp.eval(cddr, newEnv);
     }
 
-    public void lambdaApply(Map<AtomSymbol, Sexp> env) {
-        localEnv = env;
+    public void captureEnv(Map<AtomSymbol, Sexp> env) {
+        this.captureEnv = new HashMap<>(env);
     }
 
     @Override
@@ -68,92 +65,5 @@ public class Lambda implements IPair {
     @Override
     public String toString() {
         return consCell.toString();
-    }
-
-    public static class LambdaEnv<K, V> implements Map<K, V> {
-        private final Map<K, V> parentMap;
-        private final HashMap<K, V> lambdaMap;
-
-        public LambdaEnv(Map<K, V> parentMap) {
-            this.parentMap = (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K, V>) parentMap).getParentMap() : parentMap;
-            this.lambdaMap = new HashMap<>();
-        }
-
-        private Map<K, V> getParentMap() {
-            return (parentMap instanceof LambdaEnv) ? ((LambdaEnv<K, V>) parentMap).getParentMap() : parentMap;
-        }
-
-        @Override
-        public int size() {
-            return parentMap.size() + lambdaMap.size();
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return parentMap.isEmpty() && lambdaMap.isEmpty();
-        }
-
-        @Override
-        public boolean containsKey(Object key) {
-            return parentMap.containsKey(key) || lambdaMap.containsKey(key);
-        }
-
-        @Override
-        public boolean containsValue(Object value) {
-            return parentMap.containsValue(value) || lambdaMap.containsValue(value);
-        }
-
-        @Override
-        public V get(Object key) {
-            return (lambdaMap.containsKey(key)) ? lambdaMap.get(key) : parentMap.get(key);
-        }
-
-        @Override
-        public V put(K key, V value) {
-            return (parentMap.containsKey(key)) ? parentMap.put(key, value) : lambdaMap.put(key, value);
-        }
-
-        @Override
-        public V remove(Object key) {
-            return lambdaMap.remove(key);
-        }
-
-        @Override
-        public void putAll(Map<? extends K, ? extends V> m) {
-            Iterator<? extends K> it = m.keySet().iterator();
-            while (it.hasNext()) {
-                K key = it.next();
-                this.put(key, m.get(key));
-            }
-        }
-
-        @Override
-        public void clear() {
-            lambdaMap.clear();
-        }
-
-        @Override
-        public Set<K> keySet() {
-            Set<K> ret = new HashSet<>(parentMap.keySet());
-            ret.addAll(lambdaMap.keySet());
-
-            return ret;
-        }
-
-        @Override
-        public Collection<V> values() {
-            Collection<V> ret = parentMap.values();
-            ret.addAll(lambdaMap.values());
-
-            return ret;
-        }
-
-        @Override
-        public Set<Entry<K, V>> entrySet() {
-            Set<Entry<K, V>> ret = new HashSet<>(parentMap.entrySet());
-            ret.addAll(lambdaMap.entrySet());
-
-            return ret;
-        }
     }
 }

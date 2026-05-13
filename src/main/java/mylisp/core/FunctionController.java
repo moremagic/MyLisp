@@ -3,7 +3,6 @@ package mylisp.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import mylisp.MyLisp;
 import mylisp.func.*;
 
 /**
@@ -75,33 +74,29 @@ public class FunctionController {
     }
 
     /**
-     * TODO: メソッド名がおかしい。Applyになるべき
      *
      * @param pair
      * @param env
      * @return
      * @throws MyLispException
      */
-    public Sexp exec(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
-        if (pair instanceof Lambda) {
-            Lambda ll = new Lambda(pair.getCar(), pair.getCdr());
-            ll.lambdaApply(env);
-            return ll;
-        }
-
+    public Sexp apply(IPair pair, Map<AtomSymbol, Sexp> env) throws MyLispException {
         //各ファンクション内でApplyすることで、遅延評価を実現します
-        // TODO: 各ファンクション内でApplyするのはおかしいのではないか・・・
-        Sexp car = MyLisp.apply(pair.getCar(), env);
+        Sexp car = pair.getCar();
         if (car == null || car == AtomNil.INSTANCE) {
             return AtomNil.INSTANCE;
+        } else if (car.toString().equals(Lambda.LAMBDA_SYMBOL)) {
+            Lambda l = new Lambda(car, pair.getCdr());
+            l.captureEnv(env);
+            return l;
         } else if (car instanceof Lambda) {
-            return ((Lambda) car).lambdaEvals(env, pair.getCdr().getList());
+            return ((Lambda) car).lambdaApply(env, pair.getCdr().getList());
         } else if (car instanceof IPair && funcMap.containsKey(((IPair) car).getCar().toString())) {
-            return exec((IPair) car, env);
+            return apply((IPair) car, env);
         } else if (funcMap.containsKey(car.toString())) {
             //スペシャルフォーム実行
             Operator op = funcMap.get(car.toString());
-            return op.eval(pair, env);
+            return op.apply(pair, env);
         } else if (car instanceof Atom) {
             return car;
         } else {

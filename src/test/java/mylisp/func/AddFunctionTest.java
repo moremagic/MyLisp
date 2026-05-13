@@ -19,7 +19,7 @@ public class AddFunctionTest {
         IPair cons = new ConsCell(Atom.newAtom(addFunction.operatorSymbol()), new ConsCell(Atom.newAtom(5), new ConsCell(Atom.newAtom(23), AtomNil.INSTANCE)));
         Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
-        Sexp ret = addFunction.eval(cons, env);
+        Sexp ret = addFunction.apply(cons, env);
 
         assertEquals(Atom.newAtom(28), ret);
     }
@@ -29,7 +29,7 @@ public class AddFunctionTest {
         IPair cons = new ConsCell(Atom.newAtom(addFunction.operatorSymbol()), new ConsCell(Atom.newAtom(2), Atom.newAtom(1)));
         Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
-        Sexp ret = addFunction.eval(cons, env);
+        Sexp ret = addFunction.apply(cons, env);
 
         assertEquals(Atom.newAtom(3), ret);
     }
@@ -58,10 +58,10 @@ public class AddFunctionTest {
         IPair dotPairConsCell = createDotPairConsCell(first, second);
         Map<AtomSymbol, Sexp> env = new HashMap<AtomSymbol, Sexp>();
 
-        Sexp plainPairActual = addFunction.eval(plainPairConsCell, env);
+        Sexp plainPairActual = addFunction.apply(plainPairConsCell, env);
         assertEquals(expectAtom, plainPairActual);
 
-        Sexp dotPairActual = addFunction.eval(dotPairConsCell, env);
+        Sexp dotPairActual = addFunction.apply(dotPairConsCell, env);
         assertEquals(expectAtom, dotPairActual);
     }
 
